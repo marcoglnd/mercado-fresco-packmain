@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers/"
-	"github.com/marcoglnd/mercado-fresco-packmain/internal/buyers/"
+	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/buyers"
 
 	"github.com/gin-gonic/gin"
 )
