@@ -4,9 +4,15 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses"
 )
 
 func warehousesRouter(superRouter *gin.RouterGroup) {
+	repository := warehouses.NewRepository()
+	service := warehouses.NewService(repository)
+	w := controllers.NewWarehouse(service)
+
 	pr := superRouter.Group("/warehouses")
 	{
 		pr.GET("/debug", func(ctx *gin.Context) {
@@ -14,5 +20,6 @@ func warehousesRouter(superRouter *gin.RouterGroup) {
 				"debug": "is running",
 			})
 		})
+		pr.POST("/", w.Create())
 	}
 }
