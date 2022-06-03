@@ -13,8 +13,8 @@ type Controller struct {
 }
 
 func (c *Controller) GetAll() gin.HandlerFunc {
-	data, err := c.service.GetAll()
 	return func(ctx *gin.Context) {
+		data, err := c.service.GetAll()
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{
 				"data": data,
@@ -41,6 +41,39 @@ func (c *Controller) GetById() gin.HandlerFunc {
 			return
 		}
 		ctx.JSON(http.StatusOK, gin.H{"data": p})
+	}
+}
+
+type request struct {
+	Description                    string  `json:"description" binding:"required"`
+	ExpirationRate                 int     `json:"expiration_rate" binding:"required"`
+	FreezingRate                   int     `json:"freezing_rate" binding:"required"`
+	Height                         float64 `json:"height" binding:"required"`
+	Length                         float64 `json:"length" binding:"required"`
+	NetWeight                      float64 `json:"netweight" binding:"required"`
+	ProductCode                    string  `json:"product_code" binding:"required"`
+	RecommendedFreezingTemperature float64 `json:"recommended_freezing_temperature" binding:"required"`
+	Width                          float64 `json:"width" binding:"required"`
+	ProductTypeId                  int     `json:"product_type_id" binding:"required"`
+	SellerId                       int     `json:"seller_id" binding:"required"`
+}
+
+func (c *Controller) CreateNewProduct() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req request
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "invalid imputs"})
+			return
+		}
+		product, err := c.service.CreateNewProduct(
+			req.Description, req.ExpirationRate, req.FreezingRate,
+			req.Height, req.Length, req.NetWeight, req.ProductCode,
+			req.RecommendedFreezingTemperature, req.Width, req.ProductTypeId, req.SellerId)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(http.StatusCreated, gin.H{"data": product})
 	}
 }
 

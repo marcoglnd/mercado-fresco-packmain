@@ -10,8 +10,7 @@ import (
 
 func productsRouter(superRouter *gin.RouterGroup) {
 
-	var listOfProducts []products.Product
-	repo := products.NewRepository(listOfProducts)
+	repo := products.NewRepository()
 	service := products.NewService(repo)
 	controller := controllers.NewProduct(service)
 
@@ -19,6 +18,7 @@ func productsRouter(superRouter *gin.RouterGroup) {
 	{
 		pr.GET("/", controller.GetAll())
 		pr.GET("/:id", controller.GetById())
+		pr.POST("/", controller.CreateNewProduct())
 		pr.GET("/debug", Debug)
 	}
 }

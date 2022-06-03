@@ -3,14 +3,27 @@ package products
 type Service interface {
 	GetAll() ([]Product, error)
 	GetById(id int) ([]Product, error)
+	CreateNewProduct(description string, expirationRate, freezingRate int,
+		height, length, netWeight float64, productCode string,
+		recommendedFreezingTemperature, width float64, productTypeId, sellerId int) ([]Product, error)
 }
 
 type service struct {
 	repository Repository
 }
 
+func NewService(r Repository) Service {
+	return &service{
+		repository: r,
+	}
+}
+
 func (s *service) GetAll() ([]Product, error) {
-	return s.repository.GetAll()
+	listOfProducts, err := s.repository.GetAll()
+	if err != nil {
+		return nil, err
+	}
+	return listOfProducts, nil
 }
 
 func (s service) GetById(id int) ([]Product, error) {
@@ -21,8 +34,20 @@ func (s service) GetById(id int) ([]Product, error) {
 	return []Product{pr}, nil
 }
 
-func NewService(r Repository) Service {
-	return &service{
-		repository: r,
+func (s *service) CreateNewProduct(
+	description string, expirationRate, freezingRate int,
+	height, length, netWeight float64, productCode string,
+	recommendedFreezingTemperature, width float64, productTypeId, sellerId int) ([]Product, error) {
+	id, err := s.repository.LastId()
+	if err != nil {
+		return []Product{}, err
 	}
+	newProd, err := s.repository.CreateNewProduct(
+		id, description, expirationRate, freezingRate, height,
+		length, netWeight, productCode, recommendedFreezingTemperature,
+		width, productTypeId, sellerId)
+	if err != nil {
+		return []Product{}, err
+	}
+	return []Product{newProd}, nil
 }
