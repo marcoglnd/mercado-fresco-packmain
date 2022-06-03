@@ -14,6 +14,7 @@ type Repository interface {
 		id int, description string, expirationRate, freezingRate int,
 		height, length, netWeight float64, productCode string,
 		recommendedFreezingTemperature, width float64, productTypeId, sellerId int) (Product, error)
+	Delete(id int) error
 }
 
 var listOfProducts []Product = []Product{}
@@ -96,9 +97,25 @@ func (repository) Update(
 		}
 	}
 	if !updated {
-		return Product{}, fmt.Errorf("produto %d não encontrado", id)
+		return Product{}, fmt.Errorf("product %d not found", id)
 	}
 	return prod, nil
+}
+
+func (repository) Delete(id int) error {
+	deleted := false
+	var index int
+	for i := range listOfProducts {
+		if listOfProducts[i].Id == id {
+			index = i
+			deleted = true
+		}
+	}
+	if !deleted {
+		return fmt.Errorf("product %d not found", id)
+	}
+	listOfProducts = append(listOfProducts[:index], listOfProducts[index+1:]...)
+	return nil
 }
 
 func NewRepository() Repository {

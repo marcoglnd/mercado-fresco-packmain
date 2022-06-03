@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -87,7 +88,7 @@ func (c *Controller) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req request
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": "invalid imputs"})
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid imputs"})
 			return
 		}
 		id := ctx.Param("id")
@@ -101,9 +102,27 @@ func (c *Controller) Update() gin.HandlerFunc {
 			req.Height, req.Length, req.NetWeight, req.ProductCode,
 			req.RecommendedFreezingTemperature, req.Width, req.ProductTypeId, req.SellerId)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
 		ctx.JSON(http.StatusOK, gin.H{"data": product})
+	}
+}
+
+func (c *Controller) Delete() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+			return
+		}
+
+		err = c.service.Delete(int(id))
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusNoContent, gin.H{"data": fmt.Sprintf("product %d removed", id)})
 	}
 }
