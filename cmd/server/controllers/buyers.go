@@ -1,4 +1,4 @@
-package buyers
+package controllers
 
 import (
 	"fmt"
@@ -29,7 +29,9 @@ func (c *BuyerController) GetAll() gin.HandlerFunc {
 			})
 			return
 		}
-		ctx.JSON(http.StatusOK, b)
+		ctx.JSON(http.StatusOK, gin.H{
+			"data": b,
+		})
 	}
 }
 
