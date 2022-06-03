@@ -12,6 +12,12 @@ type Controller struct {
 	service products.Service
 }
 
+func NewProduct(p products.Service) *Controller {
+	return &Controller{
+		service: p,
+	}
+}
+
 func (c *Controller) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		data, err := c.service.GetAll()
@@ -62,7 +68,7 @@ func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req request
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "invalid imputs"})
+			ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid imputs"})
 			return
 		}
 		product, err := c.service.CreateNewProduct(
@@ -77,8 +83,27 @@ func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 	}
 }
 
-func NewProduct(p products.Service) *Controller {
-	return &Controller{
-		service: p,
+func (c *Controller) Update() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req request
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "invalid imputs"})
+			return
+		}
+		id := ctx.Param("id")
+		intId, err := strconv.Atoi(id)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+			return
+		}
+		product, err := c.service.Update(intId,
+			req.Description, req.ExpirationRate, req.FreezingRate,
+			req.Height, req.Length, req.NetWeight, req.ProductCode,
+			req.RecommendedFreezingTemperature, req.Width, req.ProductTypeId, req.SellerId)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(http.StatusOK, gin.H{"data": product})
 	}
 }

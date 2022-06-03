@@ -19,6 +19,7 @@ func productsRouter(superRouter *gin.RouterGroup) {
 		pr.GET("/", controller.GetAll())
 		pr.GET("/:id", controller.GetById())
 		pr.POST("/", controller.CreateNewProduct())
+		pr.PATCH("/:id", controller.Update())
 		pr.GET("/debug", Debug)
 	}
 }

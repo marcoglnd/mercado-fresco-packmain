@@ -6,6 +6,10 @@ type Service interface {
 	CreateNewProduct(description string, expirationRate, freezingRate int,
 		height, length, netWeight float64, productCode string,
 		recommendedFreezingTemperature, width float64, productTypeId, sellerId int) ([]Product, error)
+	Update(
+		id int, description string, expirationRate, freezingRate int,
+		height, length, netWeight float64, productCode string,
+		recommendedFreezingTemperature, width float64, productTypeId, sellerId int) (Product, error)
 }
 
 type service struct {
@@ -50,4 +54,18 @@ func (s *service) CreateNewProduct(
 		return []Product{}, err
 	}
 	return []Product{newProd}, nil
+}
+
+func (s service) Update(
+	id int, description string, expirationRate, freezingRate int,
+	height, length, netWeight float64, productCode string,
+	recommendedFreezingTemperature, width float64, productTypeId, sellerId int) (Product, error) {
+	product, err := s.repository.Update(
+		id, description, expirationRate, freezingRate, height,
+		length, netWeight, productCode, recommendedFreezingTemperature,
+		width, productTypeId, sellerId)
+	if err != nil {
+		return Product{}, err
+	}
+	return product, err
 }

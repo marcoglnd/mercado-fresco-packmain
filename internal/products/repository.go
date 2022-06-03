@@ -10,6 +10,10 @@ type Repository interface {
 		id int, description string, expirationRate, freezingRate int,
 		height, length, netWeight float64, productCode string,
 		recommendedFreezingTemperature, width float64, productTypeId, sellerId int) (Product, error)
+	Update(
+		id int, description string, expirationRate, freezingRate int,
+		height, length, netWeight float64, productCode string,
+		recommendedFreezingTemperature, width float64, productTypeId, sellerId int) (Product, error)
 }
 
 var listOfProducts []Product = []Product{}
@@ -62,6 +66,38 @@ func (repository) CreateNewProduct(
 		SellerId:                       sellerId,
 	}
 	listOfProducts = append(listOfProducts, prod)
+	return prod, nil
+}
+
+func (repository) Update(
+	id int, description string, expirationRate, freezingRate int,
+	height, length, netWeight float64, productCode string,
+	recommendedFreezingTemperature, width float64, productTypeId, sellerId int) (Product, error) {
+	prod := Product{
+		Id:                             id,
+		Description:                    description,
+		ExpirationRate:                 expirationRate,
+		FreezingRate:                   freezingRate,
+		Height:                         height,
+		Length:                         length,
+		NetWeight:                      netWeight,
+		ProductCode:                    productCode,
+		RecommendedFreezingTemperature: recommendedFreezingTemperature,
+		Width:                          width,
+		ProductTypeId:                  productTypeId,
+		SellerId:                       sellerId,
+	}
+	updated := false
+	for i := range listOfProducts {
+		if listOfProducts[i].Id == id {
+			prod.Id = id
+			listOfProducts[i] = prod
+			updated = true
+		}
+	}
+	if !updated {
+		return Product{}, fmt.Errorf("produto %d não encontrado", id)
+	}
 	return prod, nil
 }
 
