@@ -18,6 +18,7 @@ func productsRouter(superRouter *gin.RouterGroup) {
 	pr := superRouter.Group("/products")
 	{
 		pr.GET("/", controller.GetAll())
+		pr.GET("/:id", controller.GetById())
 		pr.GET("/debug", Debug)
 	}
 }
