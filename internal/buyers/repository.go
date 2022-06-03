@@ -10,7 +10,7 @@ var lastID int
 
 type Repository interface {
 	GetAll() ([]Buyer, error)
-	Store(id int, cardNumberId, firstName, lastName string) (Buyer, error)
+	Create(id int, cardNumberId, firstName, lastName string) (Buyer, error)
 	LastID() (int, error)
 	Update(id int, cardNumberId, firstName, lastName string) (Buyer, error)
 	Delete(id int) error
@@ -26,7 +26,7 @@ func (repository) LastID() (int, error) {
 	return lastID, nil
 }
 
-func (repository) Store(id int, cardNumberId, firstName, lastName string) (Buyer, error) {
+func (repository) Create(id int, cardNumberId, firstName, lastName string) (Buyer, error) {
 	buyer := Buyer{id, cardNumberId, firstName, lastName}
 	buyersList = append(buyersList, buyer)
 	lastID = buyer.ID

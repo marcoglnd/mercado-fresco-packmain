@@ -2,7 +2,7 @@ package buyers
 
 type Service interface {
 	GetAll() ([]Buyer, error)
-	Store(cardNumberId, firstName, lastName string) (Buyer, error)
+	Create(cardNumberId, firstName, lastName string) (Buyer, error)
 	Update(id int, cardNumberId, firstName, lastName string) (Buyer, error)
 	Delete(id int) error
 }
@@ -25,7 +25,7 @@ func (s service) GetAll() ([]Buyer, error) {
 	return buyersList, nil
 }
 
-func (s service) Store(cardNumberId, firstName, lastName string) (Buyer, error) {
+func (s service) Create(cardNumberId, firstName, lastName string) (Buyer, error) {
 
 	lastID, err := s.repository.LastID()
 
@@ -35,7 +35,7 @@ func (s service) Store(cardNumberId, firstName, lastName string) (Buyer, error) 
 
 	lastID++
 
-	buyer, err := s.repository.Store(lastID, cardNumberId, firstName, lastName)
+	buyer, err := s.repository.Create(lastID, cardNumberId, firstName, lastName)
 
 	if err != nil {
 		return Buyer{}, err
