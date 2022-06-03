@@ -2,6 +2,7 @@ package buyers
 
 type Service interface {
 	GetAll() ([]Buyer, error)
+	GetById(id int) (Buyer, error)
 	Create(cardNumberId, firstName, lastName string) (Buyer, error)
 	Update(id int, cardNumberId, firstName, lastName string) (Buyer, error)
 	Delete(id int) error
@@ -23,6 +24,14 @@ func (s service) GetAll() ([]Buyer, error) {
 		return nil, err
 	}
 	return buyersList, nil
+}
+
+func (s service) GetById(id int) (Buyer, error) {
+	buyer, err := s.repository.GetById(id)
+	if err != nil {
+		return Buyer{}, err
+	}
+	return buyer, err
 }
 
 func (s service) Create(cardNumberId, firstName, lastName string) (Buyer, error) {

@@ -10,6 +10,7 @@ var lastID int
 
 type Repository interface {
 	GetAll() ([]Buyer, error)
+	GetById(id int) (Buyer, error)
 	Create(id int, cardNumberId, firstName, lastName string) (Buyer, error)
 	LastID() (int, error)
 	Update(id int, cardNumberId, firstName, lastName string) (Buyer, error)
@@ -20,6 +21,15 @@ type repository struct{}
 
 func (repository) GetAll() ([]Buyer, error) {
 	return buyersList, nil
+}
+
+func (repository) GetById(id int) (Buyer, error) {
+	for i := range buyersList {
+		if buyersList[i].ID == id {
+			return buyersList[i], nil
+		}
+	}
+	return Buyer{}, fmt.Errorf("Buyer %d não encontrado", id)
 }
 
 func (repository) LastID() (int, error) {

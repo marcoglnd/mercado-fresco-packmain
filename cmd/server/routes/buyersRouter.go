@@ -19,6 +19,7 @@ func buyersRouter(superRouter *gin.RouterGroup) {
 	pr := superRouter.Group("/buyers")
 	{
 		pr.GET("/", buyerController.GetAll())
+		pr.GET("/:id", buyerController.GetById())
 		pr.POST("/", buyerController.Create())
 		pr.PATCH("/:id", buyerController.Update())
 		pr.DELETE("/:id", buyerController.Delete())

@@ -35,6 +35,24 @@ func (c *BuyerController) GetAll() gin.HandlerFunc {
 	}
 }
 
+func (c *BuyerController) GetById() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		buyerId, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
+			return
+		}
+		b, err := c.service.GetById(buyerId)
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		ctx.JSON(http.StatusOK, b)
+	}
+}
+
 func (c *BuyerController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req request
@@ -57,7 +75,7 @@ func (c *BuyerController) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": "invalid ID"})
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
 			return
 		}
 
