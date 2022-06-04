@@ -45,6 +45,23 @@ func (c *Employee) GetAll() gin.HandlerFunc {
 	}
 }
 
+func (c *Employee) GetEmployee() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		id := ctx.Param("id")
+		intId, err := strconv.Atoi(id)
+		if err != nil {
+			ctx.JSON(400, gin.H{"error": "Invalid id"})
+			return
+		}
+		e, err := c.service.GetEmployee(intId)
+		if err != nil {
+			ctx.JSON(404, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(200, e)
+	}
+}
+
 func (c *Employee) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")

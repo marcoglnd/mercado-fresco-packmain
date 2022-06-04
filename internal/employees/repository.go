@@ -15,6 +15,7 @@ var lastID int
 
 type Repository interface {
 	GetAll() ([]Employee, error)
+	GetEmployee(id int) (Employee, error)
 	Create(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error)
 	LastID() (int, error)
 	Update(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error)
@@ -29,6 +30,21 @@ func NewRepository() Repository {
 
 func (r *repository) GetAll() ([]Employee, error) {
 	return es, nil
+}
+
+func (r *repository) GetEmployee(id int) (Employee, error) {
+	var e Employee
+	foundEmployee := false
+	for i := range es {
+		if es[i].ID == id {
+			e = es[i]
+			foundEmployee = true
+		}
+	}
+	if !foundEmployee {
+		return Employee{}, fmt.Errorf("Employee %d not found", id)
+	}
+	return e, nil
 }
 
 func (r *repository) LastID() (int, error) {
