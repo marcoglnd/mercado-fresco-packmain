@@ -2,17 +2,6 @@ package employees
 
 import "fmt"
 
-type Employee struct {
-	ID           int    `json:"id"`
-	CardNumberId int    `json:"card_number_id"`
-	FirstName    string `json:"first_name"`
-	LastName     string `json:"last_name"`
-	WarehouseId  int    `json:"warehouse_id"`
-}
-
-var es []Employee
-var lastID int
-
 type Repository interface {
 	GetAll() ([]Employee, error)
 	GetEmployee(id int) (Employee, error)
@@ -21,6 +10,9 @@ type Repository interface {
 	Update(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error)
 	Delete(id int) error
 }
+
+var es []Employee = []Employee{}
+var lastID int
 
 type repository struct{}
 
