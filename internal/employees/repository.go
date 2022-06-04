@@ -40,6 +40,10 @@ func (r *repository) GetEmployee(id int) (Employee, error) {
 }
 
 func (r *repository) LastID() (int, error) {
+	if len(es) == 0 {
+		return 0, nil
+	}
+	lastID := es[len(es)-1].ID + 1
 	return lastID, nil
 }
 
