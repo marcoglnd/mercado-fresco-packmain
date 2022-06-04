@@ -28,15 +28,7 @@ func NewWarehouse(w warehouses.Service) *WarehouseController {
 // @Router /warehouses [post]
 func (wc *WarehouseController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		type CreateWarehouseInput struct {
-			WarehouseCode      string `json:"warehouse_code" binding:"required,len=3"`
-			Address            string `json:"address" binding:"required"`
-			Telephone          string `json:"telephone" binding:"required"`
-			MinimumCapacity    int    `json:"minimum_capacity" binding:"required,gte=1"`
-			MinimumTemperature int    `json:"minimum_temperature" binding:"required,gte=1"`
-		}
-
-		var warehouseInput CreateWarehouseInput
+		var warehouseInput warehouses.CreateWarehouseInput
 		if err := ctx.ShouldBindJSON(&warehouseInput); err != nil {
 			ctx.AbortWithStatusJSON(
 				http.StatusUnprocessableEntity,
@@ -121,15 +113,7 @@ func (wc *WarehouseController) Update() gin.HandlerFunc {
 			return
 		}
 
-		type UpdateWarehouseInput struct {
-			WarehouseCode      string `json:"warehouse_code" binding:"len=3"`
-			Address            string `json:"address"`
-			Telephone          string `json:"telephone"`
-			MinimumCapacity    int    `json:"minimum_capacity" binding:"gte=1"`
-			MinimumTemperature int    `json:"minimum_temperature" binding:"gte=1"`
-		}
-
-		var warehouseInput UpdateWarehouseInput
+		var warehouseInput warehouses.UpdateWarehouseInput
 		if err := ctx.ShouldBindJSON(&warehouseInput); err != nil {
 			ctx.AbortWithStatusJSON(
 				http.StatusUnprocessableEntity,
