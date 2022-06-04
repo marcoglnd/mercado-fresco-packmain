@@ -161,5 +161,14 @@ func (s *service) GetAll() ([]Warehouse, error) {
 }
 
 func (s *service) Delete(id int) error {
+
+	if _, err := s.FindById(id); err != nil {
+		return err
+	}
+
+	if err := s.repository.Delete(id); err != nil {
+		return err
+	}
+
 	return nil
 }

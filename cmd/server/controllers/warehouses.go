@@ -158,3 +158,25 @@ func (wc *WarehouseController) Update() gin.HandlerFunc {
 		)
 	}
 }
+
+func (wc *WarehouseController) Delete() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		warehouseId, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.AbortWithStatusJSON(
+				http.StatusBadRequest,
+				gin.H{"error": "invalid id type"},
+			)
+			return
+		}
+
+		if err := wc.service.Delete(warehouseId); err != nil {
+			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		ctx.JSON(http.StatusNoContent, nil)
+	}
+}

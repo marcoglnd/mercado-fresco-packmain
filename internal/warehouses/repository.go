@@ -75,6 +75,12 @@ func (r *repository) GetAll() ([]Warehouse, error) {
 	return warehouses, nil
 }
 func (r *repository) Delete(id int) error {
+	for i, w := range warehouses {
+		if w.ID == id {
+			warehouses = append(warehouses[:i], warehouses[i+1:]...)
+			break
+		}
+	}
 	return nil
 }
 

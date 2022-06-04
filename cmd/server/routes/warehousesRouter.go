@@ -24,5 +24,6 @@ func warehousesRouter(superRouter *gin.RouterGroup) {
 		pr.GET("/", w.GetAll())
 		pr.GET("/:id", w.GetById())
 		pr.PATCH("/:id", w.Update())
+		pr.DELETE("/:id", w.Delete())
 	}
 }
