@@ -68,10 +68,10 @@ func (c *Employee) Create() gin.HandlerFunc {
 		e, err := c.service.Create(req.ID, req.CardNumberId, req.FirstName, req.LastName, req.WarehouseId)
 
 		if err != nil {
-			ctx.JSON(404, gin.H{"error": err.Error()})
+			ctx.JSON(422, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(200, e)
+		ctx.JSON(201, e)
 	}
 }
 
@@ -107,6 +107,6 @@ func (c *Employee) Delete() gin.HandlerFunc {
 			ctx.JSON(404, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(200, gin.H{"data": fmt.Sprintf("The employee %d was deleted", id)})
+		ctx.JSON(204, gin.H{"data": fmt.Sprintf("The employee %d was deleted", id)})
 	}
 }
