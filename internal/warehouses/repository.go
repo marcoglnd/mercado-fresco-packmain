@@ -41,7 +41,14 @@ func (r *repository) Update(data interface{}) (*Warehouse, error) {
 	return &Warehouse{}, nil
 }
 func (r *repository) FindById(id int) (*Warehouse, error) {
-	return &Warehouse{}, nil
+	var foundWarehouse *Warehouse
+	for _, w := range warehouses {
+		if w.ID == id {
+			foundWarehouse = &w
+			break
+		}
+	}
+	return foundWarehouse, nil
 }
 func (r *repository) FindByWarehouseCode(warehouseCode string) (*Warehouse, error) {
 	var foundWarehouse *Warehouse
@@ -54,7 +61,7 @@ func (r *repository) FindByWarehouseCode(warehouseCode string) (*Warehouse, erro
 	return foundWarehouse, nil
 }
 func (r *repository) GetAll() ([]Warehouse, error) {
-	return []Warehouse{}, nil
+	return warehouses, nil
 }
 func (r *repository) Delete(id int) error {
 	return nil
