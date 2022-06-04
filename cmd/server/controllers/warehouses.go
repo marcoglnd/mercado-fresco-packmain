@@ -28,8 +28,16 @@ func NewWarehouse(w warehouses.Service) *WarehouseController {
 // @Router /warehouses [post]
 func (wc *WarehouseController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		warehouse := &warehouses.Warehouse{}
-		if err := ctx.ShouldBindJSON(&warehouse); err != nil {
+		type CreateWarehouseInput struct {
+			WarehouseCode      string `json:"warehouse_code" binding:"required,len=3"`
+			Address            string `json:"address" binding:"required"`
+			Telephone          string `json:"telephone" binding:"required"`
+			MinimumCapacity    int    `json:"minimum_capacity" binding:"required,gte=1"`
+			MinimumTemperature int    `json:"minimum_temperature" binding:"required,gte=1"`
+		}
+
+		var warehouseInput CreateWarehouseInput
+		if err := ctx.ShouldBindJSON(&warehouseInput); err != nil {
 			ctx.AbortWithStatusJSON(
 				http.StatusUnprocessableEntity,
 				gin.H{"error": err.Error()},
@@ -38,11 +46,11 @@ func (wc *WarehouseController) Create() gin.HandlerFunc {
 		}
 
 		w, err := wc.service.Create(
-			warehouse.WarehouseCode,
-			warehouse.Address,
-			warehouse.Telephone,
-			warehouse.MinimumCapacity,
-			warehouse.MinimumTemperature,
+			warehouseInput.WarehouseCode,
+			warehouseInput.Address,
+			warehouseInput.Telephone,
+			warehouseInput.MinimumCapacity,
+			warehouseInput.MinimumTemperature,
 		)
 
 		if err != nil {
@@ -90,7 +98,7 @@ func (wc *WarehouseController) GetById() gin.HandlerFunc {
 
 		w, err := wc.service.FindById(warehouseId)
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{
+			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
 			})
 			return
@@ -98,6 +106,55 @@ func (wc *WarehouseController) GetById() gin.HandlerFunc {
 
 		ctx.JSON(
 			http.StatusOK, w,
+		)
+	}
+}
+
+func (wc *WarehouseController) Update() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		warehouseId, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.AbortWithStatusJSON(
+				http.StatusBadRequest,
+				gin.H{"error": "invalid id type"},
+			)
+			return
+		}
+
+		type UpdateWarehouseInput struct {
+			WarehouseCode      string `json:"warehouse_code" binding:"len=3"`
+			Address            string `json:"address"`
+			Telephone          string `json:"telephone"`
+			MinimumCapacity    int    `json:"minimum_capacity" binding:"gte=1"`
+			MinimumTemperature int    `json:"minimum_temperature" binding:"gte=1"`
+		}
+
+		var warehouseInput UpdateWarehouseInput
+		if err := ctx.ShouldBindJSON(&warehouseInput); err != nil {
+			ctx.AbortWithStatusJSON(
+				http.StatusUnprocessableEntity,
+				gin.H{"error": err.Error()},
+			)
+			return
+		}
+
+		updatedWarehouse, err := wc.service.Update(
+			warehouseId,
+			warehouseInput.WarehouseCode,
+			warehouseInput.Address,
+			warehouseInput.Telephone,
+			warehouseInput.MinimumCapacity,
+			warehouseInput.MinimumTemperature,
+		)
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		ctx.JSON(
+			http.StatusOK, updatedWarehouse,
 		)
 	}
 }
