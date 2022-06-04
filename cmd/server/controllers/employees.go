@@ -77,11 +77,7 @@ func (c *Employee) Create() gin.HandlerFunc {
 
 func (c *Employee) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-		if token != "123456" {
-			ctx.JSON(401, gin.H{"error": "token inválido"})
-			return
-		}
+
 		var req request
 		if err := ctx.Bind(&req); err != nil {
 			ctx.JSON(404, gin.H{"error": err.Error()})
