@@ -10,7 +10,7 @@ type Repository interface {
 		minimumCapacity int,
 		minimumTemperature int,
 	) (*Warehouse, error)
-	Update(data interface{}) (*Warehouse, error)
+	Update(warehouse *Warehouse) error
 	FindById(id int) (*Warehouse, error)
 	FindByWarehouseCode(warehouseCode string) (*Warehouse, error)
 	GetAll() ([]Warehouse, error)
@@ -37,9 +37,20 @@ func (r *repository) Create(
 	warehouses = append(warehouses, *newWarehouse)
 	return newWarehouse, nil
 }
-func (r *repository) Update(data interface{}) (*Warehouse, error) {
-	return &Warehouse{}, nil
+func (r *repository) Update(warehouse *Warehouse) error {
+	for i := range warehouses {
+		if warehouses[i].ID == warehouse.ID {
+			warehouses[i].WarehouseCode = warehouse.WarehouseCode
+			warehouses[i].Address = warehouse.Address
+			warehouses[i].Telephone = warehouse.Telephone
+			warehouses[i].MinimumCapacity = warehouse.MinimumCapacity
+			warehouses[i].MinimumTemperature = warehouse.MinimumTemperature
+			break
+		}
+	}
+	return nil
 }
+
 func (r *repository) FindById(id int) (*Warehouse, error) {
 	var foundWarehouse *Warehouse
 	for _, w := range warehouses {
