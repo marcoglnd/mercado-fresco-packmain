@@ -99,7 +99,7 @@ func (c *Employee) Delete() gin.HandlerFunc {
 
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(400, gin.H{"error": "invalid ID"})
+			ctx.JSON(404, gin.H{"error": "invalid ID"})
 			return
 		}
 		err = c.service.Delete(int(id))
