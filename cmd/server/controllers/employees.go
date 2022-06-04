@@ -45,7 +45,7 @@ func (c *Employee) GetAll() gin.HandlerFunc {
 	}
 }
 
-func (c *Employee) Store() gin.HandlerFunc {
+func (c *Employee) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
 		if token != "123456" {
@@ -61,7 +61,7 @@ func (c *Employee) Store() gin.HandlerFunc {
 			return
 		}
 
-		e, err := c.service.Store(req.ID, req.CardNumberId, req.FirstName, req.LastName, req.WarehouseId)
+		e, err := c.service.Create(req.ID, req.CardNumberId, req.FirstName, req.LastName, req.WarehouseId)
 
 		if err != nil {
 			ctx.JSON(404, gin.H{"error": err.Error()})
@@ -85,34 +85,6 @@ func (c *Employee) Update() gin.HandlerFunc {
 		}
 
 		e, err := c.service.Update(req.ID, req.CardNumberId, req.FirstName, req.LastName, req.WarehouseId)
-
-		if err != nil {
-			ctx.JSON(404, gin.H{"error": err.Error()})
-			return
-		}
-		ctx.JSON(200, e)
-	}
-}
-
-func (c *Employee) UpdateName() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != "123456" {
-			ctx.JSON(401, gin.H{"error": "token inválido"})
-			return
-		}
-		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
-		if err != nil {
-			ctx.JSON(400, gin.H{"error": "Invalid ID"})
-		}
-
-		var req request
-		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(404, gin.H{"error": err.Error()})
-			return
-		}
-
-		e, err := c.service.UpdateName(int(id), req.FirstName, req.LastName)
 
 		if err != nil {
 			ctx.JSON(404, gin.H{"error": err.Error()})

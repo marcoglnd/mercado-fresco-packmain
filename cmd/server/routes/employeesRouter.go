@@ -20,11 +20,10 @@ func employeesRouter(superRouter *gin.RouterGroup) {
 				"debug": "is running",
 			})
 		})
-		pr.GET("/", e.GetAll()) // Getall
-		pr.GET("/:id")          // Get one employee bi id
-		pr.POST("/", e.Store()) // Store
-		pr.PATCH("/:id", e.UpdateName())
-		pr.PUT("/:id", e.Update()) // Update
+		pr.GET("/", e.GetAll())
+		pr.GET("/:id")
+		pr.POST("/", e.Create())
+		pr.PUT("/:id", e.Update())
 		pr.DELETE("/:id", e.Delete())
 	}
 }

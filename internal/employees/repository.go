@@ -15,10 +15,9 @@ var lastID int
 
 type Repository interface {
 	GetAll() ([]Employee, error)
-	Store(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error)
+	Create(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error)
 	LastID() (int, error)
 	Update(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error)
-	UpdateName(id int, firstName, latName string) (Employee, error)
 	Delete(id int) error
 }
 
@@ -36,7 +35,7 @@ func (r *repository) LastID() (int, error) {
 	return lastID, nil
 }
 
-func (r *repository) Store(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error) {
+func (r *repository) Create(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error) {
 	e := Employee{id, cardNymberId, firstName, lastName, warehouseId}
 	es = append(es, e)
 	lastID = e.ID
@@ -51,23 +50,6 @@ func (r *repository) Update(id, cardNymberId int, firstName, lastName string, wa
 			e.ID = id
 			es[i] = e
 			updated = true
-		}
-	}
-	if !updated {
-		return Employee{}, fmt.Errorf("Employee %d not found", id)
-	}
-	return e, nil
-}
-
-func (r *repository) UpdateName(id int, firstName, lastName string) (Employee, error) {
-	var e Employee
-	updated := false
-	for i := range es {
-		if es[i].ID == id {
-			es[i].FirstName = firstName
-			es[i].LastName = lastName
-			updated = true
-			e = es[i]
 		}
 	}
 	if !updated {
