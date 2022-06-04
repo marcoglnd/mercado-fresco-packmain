@@ -96,11 +96,7 @@ func (c *Employee) Update() gin.HandlerFunc {
 
 func (c *Employee) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != "123456" {
-			ctx.JSON(401, gin.H{"error": "token inválido"})
-			return
-		}
+
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.JSON(400, gin.H{"error": "invalid ID"})
