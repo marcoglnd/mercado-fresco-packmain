@@ -3,6 +3,9 @@ package employees
 type Service interface {
 	GetAll() ([]Employee, error)
 	Store(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error)
+	Update(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error)
+	UpdateName(id int, firstName, lastName string) (Employee, error)
+	Delete(id int) error
 }
 
 type service struct {
@@ -39,4 +42,16 @@ func (s *service) Store(id, cardNymberId int, firstName, lastName string, wareho
 		return Employee{}, err
 	}
 	return employee, nil
+}
+
+func (s *service) Update(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error) {
+	return s.repository.Update(id, cardNymberId, firstName, lastName, warehouseId)
+}
+
+func (s *service) UpdateName(id int, firstName, lastName string) (Employee, error) {
+	return s.repository.UpdateName(id, firstName, lastName)
+}
+
+func (s *service) Delete(id int) error {
+	return s.repository.Delete(id)
 }
