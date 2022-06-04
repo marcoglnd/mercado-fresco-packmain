@@ -28,14 +28,6 @@ func NewEmployee(e employees.Service) *Employee {
 
 func (c *Employee) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-		if token != "123456" {
-			ctx.JSON(401, gin.H{
-				"error": "token inválido",
-			})
-			return
-		}
-
 		e, err := c.service.GetAll()
 		if err != nil {
 			ctx.JSON(404, gin.H{"error": err.Error()})
