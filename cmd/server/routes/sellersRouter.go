@@ -19,7 +19,7 @@ func sellersRouter(superRouter *gin.RouterGroup) {
 		pr.GET("/", controller.GetAll())
 		pr.GET("/:id", controller.GetById())
 		pr.POST("/", controller.CreateNewSeller())
-		//pr.PATCH("/:id", controller.Update())
+		pr.PATCH("/:id", controller.Update())
 		//pr.DELETE("/:id", controller.Delete())
 		pr.GET("/debug", Debug)
 	}

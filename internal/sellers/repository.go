@@ -1,5 +1,7 @@
 package sellers
 
+import "fmt"
+
 // Repositório -> lista de produtos + id
 
 var sr []Seller = []Seller{}
@@ -11,6 +13,7 @@ type Repository interface {
 	GetAll() ([]Seller, error)
 	Store(id int, cid int, company_name string, address string, telephone int) (Seller, error)
 	LastID() (int, error)
+	Update(id int, cid int, company_name string, address string, telephone int) (Seller, error)
 }
 
 // Criamos uma struct repository que irá implementar a interface
@@ -29,6 +32,22 @@ func (repository) Store(id int, cid int, company_name string, address string, te
 	p := Seller{id, cid, company_name, address, telephone}
 	sr = append(sr, p)
 	lastID = p.ID
+	return p, nil
+}
+
+func (repository) Update(id int, cid int, company_name string, address string, telephone int) (Seller, error) {
+	p := Seller{Cid: cid, Company_name: company_name, Address: address, Telephone: telephone}
+	updated := false
+	for i := range sr {
+		if sr[i].ID == id {
+			p.ID = id
+			sr[i] = p
+			updated = true
+		}
+	}
+	if !updated {
+		return Seller{}, fmt.Errorf("seller %d não encontrado", id)
+	}
 	return p, nil
 }
 

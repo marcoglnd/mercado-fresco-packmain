@@ -3,6 +3,7 @@ package sellers
 type Service interface {
 	GetAll() ([]Seller, error)
 	Store(cid int, company_name string, address string, telephone int) (Seller, error)
+	Update(id int, cid int, company_name string, address string, telephone int) (Seller, error)
 }
 
 type service struct {
@@ -34,6 +35,14 @@ func (s service) Store(cid int, company_name string, address string, telephone i
 
 	return seller, nil
 
+}
+
+func (s service) Update(id int, cid int, company_name string, address string, telephone int) (Seller, error) {
+	seller, err := s.repository.Update(id, cid, company_name, address, telephone)
+	if err != nil {
+		return Seller{}, err
+	}
+	return seller, err
 }
 
 // Recebe a interface como parâmetro

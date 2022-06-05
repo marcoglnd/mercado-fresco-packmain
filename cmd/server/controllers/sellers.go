@@ -106,6 +106,52 @@ func (c *SellerController) CreateNewSeller() gin.HandlerFunc {
 	}
 }
 
+func (c *SellerController) Update() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("token")
+		if token != "123456" {
+			ctx.JSON(401, gin.H{"error": "token inválido"})
+			return
+		}
+
+		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+		if err != nil {
+			ctx.JSON(400, gin.H{"error": "invalid ID"})
+			return
+		}
+
+		var req request
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+
+		if req.Cid == 0 {
+			ctx.JSON(400, gin.H{"error": "A identificação da empresa é obrigatória"})
+			return
+		}
+		if req.Company_name == "" {
+			ctx.JSON(400, gin.H{"error": "O nome da empresa é obrigatório"})
+			return
+		}
+		if req.Address == "" {
+			ctx.JSON(400, gin.H{"error": "O endereço é obrigatório"})
+			return
+		}
+		if req.Telephone == 0 {
+			ctx.JSON(400, gin.H{"error": "O telefone é obrigatório"})
+			return
+		}
+
+		p, err := c.service.Update(int(id), req.Cid, req.Company_name, req.Address, req.Telephone)
+		if err != nil {
+			ctx.JSON(404, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(200, p)
+	}
+}
+
 /*
 type Sellers []Seller
 
