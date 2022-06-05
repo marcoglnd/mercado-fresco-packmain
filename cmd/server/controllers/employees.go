@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -30,10 +31,10 @@ func (c *Employee) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		e, err := c.service.GetAll()
 		if err != nil {
-			ctx.JSON(404, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(200, e)
+		ctx.JSON(http.StatusOK, e)
 	}
 }
 
@@ -42,15 +43,15 @@ func (c *Employee) GetEmployee() gin.HandlerFunc {
 		id := ctx.Param("id")
 		intId, err := strconv.Atoi(id)
 		if err != nil {
-			ctx.JSON(400, gin.H{"error": "Invalid id"})
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid id"})
 			return
 		}
 		e, err := c.service.GetEmployee(intId)
 		if err != nil {
-			ctx.JSON(404, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(200, e)
+		ctx.JSON(http.StatusOK, e)
 	}
 }
 
@@ -59,19 +60,17 @@ func (c *Employee) Create() gin.HandlerFunc {
 
 		var req request
 		if err := ctx.Bind(&req); err != nil {
-			ctx.JSON(404, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
 		e, err := c.service.Create(req.ID, req.CardNumberId, req.FirstName, req.LastName, req.WarehouseId)
 
 		if err != nil {
-			ctx.JSON(422, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(201, e)
+		ctx.JSON(http.StatusCreated, e)
 	}
 }
 
@@ -80,17 +79,17 @@ func (c *Employee) Update() gin.HandlerFunc {
 
 		var req request
 		if err := ctx.Bind(&req); err != nil {
-			ctx.JSON(404, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
 		e, err := c.service.Update(req.ID, req.CardNumberId, req.FirstName, req.LastName, req.WarehouseId)
 
 		if err != nil {
-			ctx.JSON(404, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(200, e)
+		ctx.JSON(http.StatusOK, e)
 	}
 }
 
@@ -99,14 +98,14 @@ func (c *Employee) Delete() gin.HandlerFunc {
 
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(404, gin.H{"error": "invalid ID"})
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
 			return
 		}
 		err = c.service.Delete(int(id))
 		if err != nil {
-			ctx.JSON(404, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(204, gin.H{"data": fmt.Sprintf("The employee %d was deleted", id)})
+		ctx.JSON(http.StatusNoContent, gin.H{"data": fmt.Sprintf("The employee %d was deleted", id)})
 	}
 }

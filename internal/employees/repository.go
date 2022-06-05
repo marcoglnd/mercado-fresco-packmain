@@ -43,7 +43,7 @@ func (r *repository) LastID() (int, error) {
 	if len(es) == 0 {
 		return 0, nil
 	}
-	lastID := es[len(es)-1].ID + 1
+	lastID := es[len(es)-1].ID
 	return lastID, nil
 }
 
