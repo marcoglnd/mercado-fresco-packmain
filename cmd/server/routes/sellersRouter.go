@@ -1,5 +1,6 @@
 package routes
 
+/*
 import (
 	"log"
 	"net/http"
@@ -85,15 +86,15 @@ func sellersRouter(superRouter *gin.RouterGroup) {
 			// adicionando na lista de sellers
 			sellers = append(sellers, seller)
 
-			/*
-				if seller.Company_name != "frutaria" {
-					ctx.JSON(http.StatusUnauthorized, gin.H{"status": "não autorizado"})
-					return
-				}
-			*/
+			//		if seller.Company_name != "frutaria" {
+			//		ctx.JSON(http.StatusUnauthorized, gin.H{"status": "não autorizado"})
+			//		return
+			//}
+
 			ctx.JSON(http.StatusOK, gin.H{
 				"data": seller,
 			})
 		})
 	}
 }
+*/
