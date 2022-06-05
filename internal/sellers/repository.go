@@ -14,6 +14,7 @@ type Repository interface {
 	Store(id int, cid int, company_name string, address string, telephone int) (Seller, error)
 	LastID() (int, error)
 	Update(id int, cid int, company_name string, address string, telephone int) (Seller, error)
+	Delete(id int) error
 }
 
 // Criamos uma struct repository que irá implementar a interface
@@ -49,6 +50,23 @@ func (repository) Update(id int, cid int, company_name string, address string, t
 		return Seller{}, fmt.Errorf("seller %d não encontrado", id)
 	}
 	return p, nil
+}
+
+func (repository) Delete(id int) error {
+	deleted := false
+	var index int
+	for i := range sr {
+		if sr[i].ID == id {
+			index = i
+			deleted = true
+		}
+	}
+	if !deleted {
+		return fmt.Errorf("seller %d não encontrado", id)
+	}
+
+	sr = append(sr[:index], sr[index+1:]...)
+	return nil
 }
 
 // Método criado para instanciar o novo repositório

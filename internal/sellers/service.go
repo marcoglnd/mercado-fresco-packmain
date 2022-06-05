@@ -4,6 +4,7 @@ type Service interface {
 	GetAll() ([]Seller, error)
 	Store(cid int, company_name string, address string, telephone int) (Seller, error)
 	Update(id int, cid int, company_name string, address string, telephone int) (Seller, error)
+	Delete(id int) error
 }
 
 type service struct {
@@ -43,6 +44,14 @@ func (s service) Update(id int, cid int, company_name string, address string, te
 		return Seller{}, err
 	}
 	return seller, err
+}
+
+func (s service) Delete(id int) error {
+	err := s.repository.Delete(id)
+	if err != nil {
+		return err
+	}
+	return err
 }
 
 // Recebe a interface como parâmetro

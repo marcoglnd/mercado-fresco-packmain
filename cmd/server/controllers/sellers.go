@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -149,6 +150,30 @@ func (c *SellerController) Update() gin.HandlerFunc {
 			return
 		}
 		ctx.JSON(200, p)
+	}
+}
+
+func (c *SellerController) Delete() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("token")
+		if token != "123456" {
+			ctx.JSON(401, gin.H{"error": "token inválido"})
+			return
+		}
+
+		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+		if err != nil {
+			ctx.JSON(400, gin.H{"error": "invalid ID"})
+			return
+		}
+
+		err = c.service.Delete(int(id))
+		if err != nil {
+			ctx.JSON(404, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.JSON(200, gin.H{"data": fmt.Sprintf("O seller %d foi removido", id)})
 	}
 }
 
