@@ -2,7 +2,7 @@ package sellers
 
 // Repositório -> lista de produtos + id
 
-var sr []Seller
+var sr []Seller = []Seller{}
 
 var lastID int
 
