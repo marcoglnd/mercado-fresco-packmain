@@ -4,7 +4,7 @@ import "fmt"
 
 type Repository interface {
 	GetAll() ([]Employee, error)
-	GetEmployee(id int) (Employee, error)
+	GetById(id int) (Employee, error)
 	Create(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error)
 	LastID() (int, error)
 	Update(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error)
@@ -24,7 +24,7 @@ func (repository) GetAll() ([]Employee, error) {
 	return es, nil
 }
 
-func (repository) GetEmployee(id int) (Employee, error) {
+func (repository) GetById(id int) (Employee, error) {
 	var e Employee
 	foundEmployee := false
 	for i := range es {

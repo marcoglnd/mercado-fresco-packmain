@@ -21,7 +21,7 @@ func employeesRouter(superRouter *gin.RouterGroup) {
 			})
 		})
 		pr.GET("/", e.GetAll())
-		pr.GET("/:id", e.GetEmployee())
+		pr.GET("/:id", e.GetById())
 		pr.POST("/", e.Create())
 		pr.PATCH("/:id", e.Update())
 		pr.DELETE("/:id", e.Delete())

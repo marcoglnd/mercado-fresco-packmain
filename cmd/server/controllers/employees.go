@@ -38,7 +38,7 @@ func (c *Employee) GetAll() gin.HandlerFunc {
 	}
 }
 
-func (c *Employee) GetEmployee() gin.HandlerFunc {
+func (c *Employee) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
 		intId, err := strconv.Atoi(id)
@@ -46,7 +46,7 @@ func (c *Employee) GetEmployee() gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid id"})
 			return
 		}
-		e, err := c.service.GetEmployee(intId)
+		e, err := c.service.GetById(intId)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
