@@ -3,8 +3,8 @@ package employees
 type Service interface {
 	GetAll() ([]Employee, error)
 	GetById(id int) (Employee, error)
-	Create(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error)
-	Update(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error)
+	Create(id int, cardNymberId, firstName, lastName string, warehouseId int) (Employee, error)
+	Update(id int, cardNymberId, firstName, lastName string, warehouseId int) (Employee, error)
 	Delete(id int) error
 }
 
@@ -35,7 +35,7 @@ func (s service) GetById(id int) (Employee, error) {
 	return es, nil
 }
 
-func (s service) Create(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error) {
+func (s service) Create(id int, cardNymberId, firstName, lastName string, warehouseId int) (Employee, error) {
 	lastID, err := s.repository.LastID()
 
 	if err != nil {
@@ -52,7 +52,7 @@ func (s service) Create(id, cardNymberId int, firstName, lastName string, wareho
 	return employee, nil
 }
 
-func (s service) Update(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error) {
+func (s service) Update(id int, cardNymberId, firstName, lastName string, warehouseId int) (Employee, error) {
 	employee, err := s.repository.Update(id, cardNymberId, firstName, lastName, warehouseId)
 	if err != nil {
 		return Employee{}, err

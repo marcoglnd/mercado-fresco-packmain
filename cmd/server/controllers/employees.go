@@ -11,7 +11,7 @@ import (
 
 type request struct {
 	ID           int    `json:"id"`
-	CardNumberId int    `json:"card_number_id"`
+	CardNumberId string `json:"card_number_id"`
 	FirstName    string `json:"first_name"`
 	LastName     string `json:"last_name"`
 	WarehouseId  int    `json:"warehouse_id"`
@@ -64,6 +64,19 @@ func (c *Employee) Create() gin.HandlerFunc {
 			return
 		}
 
+		if req.CardNumberId == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "CardNumberId is required"})
+			return
+		}
+		if req.FirstName == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "FirstName is required"})
+			return
+		}
+		if req.LastName == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "LastName is required"})
+			return
+		}
+
 		e, err := c.service.Create(req.ID, req.CardNumberId, req.FirstName, req.LastName, req.WarehouseId)
 
 		if err != nil {
@@ -85,6 +98,19 @@ func (c *Employee) Update() gin.HandlerFunc {
 		var req request
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		if req.CardNumberId == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "CardNumberId is required"})
+			return
+		}
+		if req.FirstName == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "FirstName is required"})
+			return
+		}
+		if req.LastName == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "LastName is required"})
 			return
 		}
 
