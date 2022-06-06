@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -46,31 +45,17 @@ func (c *SellerController) GetAll() gin.HandlerFunc {
 func (c *SellerController) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
-
-		parsedID, err := strconv.Atoi(id)
+		intId, err := strconv.Atoi(id)
 		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{
-				"error": "erro interno, tente novamente",
-			})
-
-			log.Println(err.Error())
-
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid id"})
 			return
 		}
-
-		if parsedID != 10 {
-			ctx.JSON(http.StatusNotFound, gin.H{
-				"error": "id não encontrado",
-			})
-
-			log.Println("id não encontrado")
-
+		s, err := c.service.GetById(intId)
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
-
-		ctx.JSON(http.StatusOK, gin.H{
-			"message": id,
-		})
+		ctx.JSON(http.StatusOK, s)
 	}
 }
 

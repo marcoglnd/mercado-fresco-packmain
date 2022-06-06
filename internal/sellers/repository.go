@@ -11,6 +11,7 @@ var lastID int
 // Este repositório é uma interface, portanto tem alguns métodos
 type Repository interface {
 	GetAll() ([]Seller, error)
+	GetById(id int) (Seller, error)
 	Store(id int, cid int, company_name string, address string, telephone int) (Seller, error)
 	LastID() (int, error)
 	Update(id int, cid int, company_name string, address string, telephone int) (Seller, error)
@@ -23,6 +24,21 @@ type repository struct{}
 
 func (repository) GetAll() ([]Seller, error) {
 	return sr, nil
+}
+
+func (repository) GetById(id int) (Seller, error) {
+	var s Seller
+	foundEmployee := false
+	for i := range sr {
+		if sr[i].ID == id {
+			s = sr[i]
+			foundEmployee = true
+		}
+	}
+	if !foundEmployee {
+		return Seller{}, fmt.Errorf("Seller %d não encontrado", id)
+	}
+	return s, nil
 }
 
 func (repository) LastID() (int, error) {
