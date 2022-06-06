@@ -79,7 +79,7 @@ func (c *BuyerController) Create() gin.HandlerFunc {
 			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusOK, b)
+		ctx.JSON(http.StatusCreated, b)
 	}
 }
 
@@ -133,7 +133,7 @@ func (c *BuyerController) Delete() gin.HandlerFunc {
 			return
 		}
 
-		ctx.JSON(http.StatusOK, gin.H{"data": fmt.Sprintf("O buyer %d foi removido", id)})
+		ctx.JSON(http.StatusNoContent, gin.H{"data": fmt.Sprintf("O buyer %d foi removido", id)})
 	}
 }
 
