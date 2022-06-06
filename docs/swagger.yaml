@@ -1,0 +1,108 @@
+definitions:
+  controllers.JSONBadReqResult:
+    properties:
+      code:
+        example: 400
+        type: integer
+      data: {}
+      message:
+        example: Wrong parameter
+        type: string
+    type: object
+  controllers.JSONSuccessResult:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data: {}
+      message:
+        example: Success
+        type: string
+    type: object
+  controllers.Product:
+    properties:
+      description:
+        type: string
+      expiration_rate:
+        type: integer
+      freezing_rate:
+        type: integer
+      height:
+        type: number
+      id:
+        type: integer
+      length:
+        type: number
+      netweight:
+        type: number
+      product_code:
+        type: string
+      product_type_id:
+        type: integer
+      recommended_freezing_temperature:
+        type: number
+      seller_id:
+        type: integer
+      width:
+        type: number
+    type: object
+host: localhost:8080
+info:
+  contact:
+    name: API Support
+    url: https://developers.mercadolibre.com.ar/support
+  description: This API Handle MELI Products.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones
+  title: MERCADO FRESCOS
+  version: "1.0"
+paths:
+  /products:
+    get:
+      consumes:
+      - application/json
+      description: get all products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.JSONSuccessResult'
+            - properties:
+                code:
+                  type: integer
+                data:
+                  $ref: '#/definitions/controllers.Product'
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.JSONBadReqResult'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.JSONBadReqResult'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: List products
+      tags:
+      - Products
+swagger: "2.0"

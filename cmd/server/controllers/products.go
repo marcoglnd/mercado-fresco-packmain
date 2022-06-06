@@ -19,6 +19,16 @@ func NewProduct(p products.Service) *Controller {
 	}
 }
 
+
+
+// @Summary List products
+// @Tags Products
+// @Description get all products
+// @Accept json
+// @Produce json
+// @Success 200 {object} controllers.JSONSuccessResult{data=controllers.Product,code=int,message=string}
+// @Failure 404 {object} controllers.JSONBadReqResult{code=int,message=string}
+// @Router /products [get]
 func (c *Controller) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		data, err := c.service.GetAll()
@@ -34,6 +44,15 @@ func (c *Controller) GetAll() gin.HandlerFunc {
 	}
 }
 
+// @Summary List products
+// @Tags Products
+// @Description get all products
+// @Accept json
+// @Produce json
+// @Success 200 {object} controllers.JSONSuccessResult{data=controllers.Product,code=int,message=string}
+// @Failure 400 {object} controllers.JSONBadReqResult{code=int,message=string}
+// @Failure 404 {object} controllers.JSONBadReqResult{code=int,message=string}
+// @Router /products [get]
 func (c *Controller) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
