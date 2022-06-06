@@ -1,0 +1,282 @@
+definitions:
+  controllers.request:
+    properties:
+      current_capacity:
+        type: integer
+      current_temperature:
+        type: integer
+      maximum_capacity:
+        type: integer
+      minimum_capacity:
+        type: integer
+      minimum_temperature:
+        type: integer
+      product_type_id:
+        type: integer
+      section_number:
+        type: integer
+      warehouse_id:
+        type: integer
+    required:
+    - current_capacity
+    - current_temperature
+    - maximum_capacity
+    - minimum_capacity
+    - minimum_temperature
+    - product_type_id
+    - section_number
+    - warehouse_id
+    type: object
+  schemes.JSONBadReqResult:
+    properties:
+      error: {}
+    type: object
+  schemes.JSONSuccessResult:
+    properties:
+      data: {}
+    type: object
+  schemes.Section:
+    properties:
+      current_capacity:
+        type: integer
+      current_temperature:
+        type: integer
+      id:
+        type: integer
+      maximum_capacity:
+        type: integer
+      minimum_capacity:
+        type: integer
+      minimum_temperature:
+        type: integer
+      product_type_id:
+        type: integer
+      section_number:
+        type: integer
+      warehouse_id:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact:
+    name: API Support
+    url: https://developers.mercadolibre.com.ar/support
+  description: This API Handle MELI Products.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones
+  title: MERCADO FRESCOS
+  version: "1.0"
+paths:
+  /sections:
+    get:
+      consumes:
+      - application/json
+      description: get all sections
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schemes.Section'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: List sections
+      tags:
+      - Sections
+  /sections/:
+    post:
+      consumes:
+      - application/json
+      description: Add a new section to the list
+      parameters:
+      - description: Section to create
+        in: body
+        name: section
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.request'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schemes.Section'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Create section
+      tags:
+      - Sections
+  /sections/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete existing sections in list
+      parameters:
+      - description: Section ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schemes.Section'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Delete section
+      tags:
+      - Sections
+    get:
+      consumes:
+      - application/json
+      description: get section by its id
+      parameters:
+      - description: Section ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schemes.Section'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Section by id
+      tags:
+      - Sections
+    patch:
+      consumes:
+      - application/json
+      description: Update existing section in list
+      parameters:
+      - description: Section ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Section to update
+        in: body
+        name: section
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schemes.Section'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Update section
+      tags:
+      - Sections
+swagger: "2.0"
