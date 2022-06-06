@@ -34,7 +34,7 @@ func (c *Employee) GetAll() gin.HandlerFunc {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusOK, e)
+		ctx.JSON(http.StatusOK, gin.H{"data": e})
 	}
 }
 
@@ -65,19 +65,19 @@ func (c *Employee) Create() gin.HandlerFunc {
 		}
 
 		if req.CardNumberId == "" {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "CardNumberId is required"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "CardNumberId is required"})
 			return
 		}
 		if req.FirstName == "" {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "FirstName is required"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "FirstName is required"})
 			return
 		}
 		if req.LastName == "" {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "LastName is required"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "LastName is required"})
 			return
 		}
 		if req.WarehouseId < 0 {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "WarehouseId cannot be negative"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "WarehouseId cannot be negative"})
 			return
 		}
 
@@ -106,15 +106,19 @@ func (c *Employee) Update() gin.HandlerFunc {
 		}
 
 		if req.CardNumberId == "" {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "CardNumberId is required"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "CardNumberId is required"})
 			return
 		}
 		if req.FirstName == "" {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "FirstName is required"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "FirstName is required"})
 			return
 		}
 		if req.LastName == "" {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "LastName is required"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "LastName is required"})
+			return
+		}
+		if req.WarehouseId < 0 {
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "WarehouseId cannot be negative"})
 			return
 		}
 
