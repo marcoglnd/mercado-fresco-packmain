@@ -1,5 +1,7 @@
 package buyers
 
+import "fmt"
+
 type Service interface {
 	GetAll() ([]Buyer, error)
 	GetById(id int) (Buyer, error)
@@ -35,6 +37,16 @@ func (s service) GetById(id int) (Buyer, error) {
 }
 
 func (s service) Create(cardNumberId, firstName, lastName string) (Buyer, error) {
+	buyersList, err := s.repository.GetAll()
+	if err != nil {
+		return Buyer{}, err
+	}
+
+	for i := range buyersList {
+		if buyersList[i].CardNumberID == cardNumberId {
+			return Buyer{}, fmt.Errorf("CardNumberID %s do Buyer já existe", cardNumberId)
+		}
+	}
 
 	lastID, err := s.repository.LastID()
 
