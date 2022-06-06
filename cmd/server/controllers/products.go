@@ -32,7 +32,7 @@ func (c *Controller) GetAll() gin.HandlerFunc {
 		data, err := c.service.GetAll()
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{
-				"data": data,
+				"error": err.Error(),
 			})
 			return
 		}
