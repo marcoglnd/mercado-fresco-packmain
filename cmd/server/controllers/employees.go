@@ -82,7 +82,7 @@ func (c *Employee) GetById() gin.HandlerFunc {
 // @Success 201 {object} schemes.JSONSuccessResult{data=schemes.Employee}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
-// @Router /employees/{id} [post]
+// @Router /employees [post]
 func (c *Employee) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
