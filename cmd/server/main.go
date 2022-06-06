@@ -23,10 +23,11 @@ import (
 // BasePath /api/v1
 // @query.collection.format multi
 func main() {
+	PATH := "/api/v1"
 	router := gin.Default()
-	routerGroup := router.Group("/api/v1")
+	routerGroup := router.Group(PATH)
 	routes.AddRoutes(routerGroup)
-	docs.SwaggerInfo.BasePath = "/api/v1"
+	docs.SwaggerInfo.BasePath = PATH
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	router.Run()

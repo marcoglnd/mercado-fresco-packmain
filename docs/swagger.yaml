@@ -1,5 +1,42 @@
 definitions:
-  controllers.JSONBadReqResult:
+  controllers.request:
+    properties:
+      description:
+        type: string
+      expiration_rate:
+        type: integer
+      freezing_rate:
+        type: integer
+      height:
+        type: number
+      length:
+        type: number
+      netweight:
+        type: number
+      product_code:
+        type: string
+      product_type_id:
+        type: integer
+      recommended_freezing_temperature:
+        type: number
+      seller_id:
+        type: integer
+      width:
+        type: number
+    required:
+    - description
+    - expiration_rate
+    - freezing_rate
+    - height
+    - length
+    - netweight
+    - product_code
+    - product_type_id
+    - recommended_freezing_temperature
+    - seller_id
+    - width
+    type: object
+  schemes.JSONBadReqResult:
     properties:
       code:
         example: 400
@@ -9,7 +46,7 @@ definitions:
         example: Wrong parameter
         type: string
     type: object
-  controllers.JSONSuccessResult:
+  schemes.JSONSuccessResult:
     properties:
       code:
         example: 200
@@ -19,7 +56,7 @@ definitions:
         example: Success
         type: string
     type: object
-  controllers.Product:
+  schemes.Product:
     properties:
       description:
         type: string
@@ -64,6 +101,12 @@ paths:
       consumes:
       - application/json
       description: Delete existing product in list
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -71,12 +114,12 @@ paths:
           description: No Content
           schema:
             allOf:
-            - $ref: '#/definitions/controllers.JSONSuccessResult'
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
             - properties:
                 code:
                   type: integer
                 data:
-                  $ref: '#/definitions/controllers.Product'
+                  $ref: '#/definitions/schemes.Product'
                 message:
                   type: string
               type: object
@@ -84,7 +127,7 @@ paths:
           description: Bad Request
           schema:
             allOf:
-            - $ref: '#/definitions/controllers.JSONBadReqResult'
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
             - properties:
                 code:
                   type: integer
@@ -95,7 +138,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/controllers.JSONBadReqResult'
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
             - properties:
                 code:
                   type: integer
@@ -116,12 +159,12 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/controllers.JSONSuccessResult'
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
             - properties:
                 code:
                   type: integer
                 data:
-                  $ref: '#/definitions/controllers.Product'
+                  $ref: '#/definitions/schemes.Product'
                 message:
                   type: string
               type: object
@@ -129,7 +172,59 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/controllers.JSONBadReqResult'
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: List products
+      tags:
+      - Products
+  /products/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get all products
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                code:
+                  type: integer
+                data:
+                  $ref: '#/definitions/schemes.Product'
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
             - properties:
                 code:
                   type: integer
@@ -143,6 +238,18 @@ paths:
       consumes:
       - application/json
       description: Update existing product in list
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Product to update
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.request'
       produces:
       - application/json
       responses:
@@ -150,12 +257,12 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/controllers.JSONSuccessResult'
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
             - properties:
                 code:
                   type: integer
                 data:
-                  $ref: '#/definitions/controllers.Product'
+                  $ref: '#/definitions/schemes.Product'
                 message:
                   type: string
               type: object
@@ -163,7 +270,7 @@ paths:
           description: Bad Request
           schema:
             allOf:
-            - $ref: '#/definitions/controllers.JSONBadReqResult'
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
             - properties:
                 code:
                   type: integer
@@ -174,7 +281,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/controllers.JSONBadReqResult'
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
             - properties:
                 code:
                   type: integer
@@ -188,6 +295,13 @@ paths:
       consumes:
       - application/json
       description: Add a new product to the list
+      parameters:
+      - description: Product to create
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.request'
       produces:
       - application/json
       responses:
@@ -195,12 +309,12 @@ paths:
           description: Created
           schema:
             allOf:
-            - $ref: '#/definitions/controllers.JSONSuccessResult'
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
             - properties:
                 code:
                   type: integer
                 data:
-                  $ref: '#/definitions/controllers.Product'
+                  $ref: '#/definitions/schemes.Product'
                 message:
                   type: string
               type: object
@@ -208,7 +322,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/controllers.JSONBadReqResult'
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
             - properties:
                 code:
                   type: integer
@@ -219,7 +333,7 @@ paths:
           description: Unprocessable Entity
           schema:
             allOf:
-            - $ref: '#/definitions/controllers.JSONBadReqResult'
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
             - properties:
                 code:
                   type: integer
@@ -227,52 +341,6 @@ paths:
                   type: string
               type: object
       summary: Create product
-      tags:
-      - Products
-  /products/{id}:
-    get:
-      consumes:
-      - application/json
-      description: get all products
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/controllers.JSONSuccessResult'
-            - properties:
-                code:
-                  type: integer
-                data:
-                  $ref: '#/definitions/controllers.Product'
-                message:
-                  type: string
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/controllers.JSONBadReqResult'
-            - properties:
-                code:
-                  type: integer
-                message:
-                  type: string
-              type: object
-        "404":
-          description: Not Found
-          schema:
-            allOf:
-            - $ref: '#/definitions/controllers.JSONBadReqResult'
-            - properties:
-                code:
-                  type: integer
-                message:
-                  type: string
-              type: object
-      summary: List products
       tags:
       - Products
 swagger: "2.0"
