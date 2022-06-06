@@ -27,6 +27,14 @@ func NewEmployee(e employees.Service) *Employee {
 	}
 }
 
+// @Summary List employees
+// @Tags Employees
+// @Description get all employees
+// @Accept json
+// @Produce json
+// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Employee}
+// @Failure 404 {object} schemes.JSONSuccessResult{error=string}
+// @Router /employees [get]
 func (c *Employee) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		e, err := c.service.GetAll()
@@ -38,6 +46,16 @@ func (c *Employee) GetAll() gin.HandlerFunc {
 	}
 }
 
+// @Summary Employee by id
+// @Tags Employees
+// @Description get employee by it's id
+// @Accept json
+// @Produce json
+// @Param id path int true "Employee ID"
+// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Employee}
+// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Router /employees/{id} [get]
 func (c *Employee) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
@@ -55,6 +73,16 @@ func (c *Employee) GetById() gin.HandlerFunc {
 	}
 }
 
+// @Summary Create employees
+// @Tags Employees
+// @Description Add a new employee to the list
+// @Accept json
+// @Produce json
+// @Param employee body request true "Employee to create"
+// @Success 201 {object} schemes.JSONSuccessResult{data=schemes.Employee}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
+// @Router /employees/{id} [post]
 func (c *Employee) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -91,6 +119,17 @@ func (c *Employee) Create() gin.HandlerFunc {
 	}
 }
 
+// @Summary Update employee
+// @Tags Employees
+// @Description Update existing employee in list
+// @Accept json
+// @Produce json
+// @Param id path int true "Employee ID"
+// @Param employee body request true "Employee to update"
+// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Employee}
+// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Router /employees/{id} [patch]
 func (c *Employee) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -132,6 +171,16 @@ func (c *Employee) Update() gin.HandlerFunc {
 	}
 }
 
+// @Summary Delete employee
+// @Tags Employees
+// @Description Delete existing employee in list
+// @Accept json
+// @Produce json
+// @Param id path int true "Employee ID"
+// @Success 204 {object} schemes.JSONSuccessResult{data=schemes.Employee}
+// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Router /employees/{id} [delete]
 func (c *Employee) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
