@@ -76,6 +76,10 @@ func (c *Employee) Create() gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "LastName is required"})
 			return
 		}
+		if req.WarehouseId < 0 {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "WarehouseId cannot be negative"})
+			return
+		}
 
 		e, err := c.service.Create(req.ID, req.CardNumberId, req.FirstName, req.LastName, req.WarehouseId)
 
@@ -137,6 +141,6 @@ func (c *Employee) Delete() gin.HandlerFunc {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusNoContent, gin.H{"data": fmt.Sprintf("The employee %d was deleted", id)})
+		ctx.JSON(http.StatusNoContent, gin.H{"data": fmt.Sprintf("Employee %d was deleted", id)})
 	}
 }
