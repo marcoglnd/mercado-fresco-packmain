@@ -20,11 +20,11 @@ func NewRepository() Repository {
 	return &repository{}
 }
 
-func (r *repository) GetAll() ([]Employee, error) {
+func (repository) GetAll() ([]Employee, error) {
 	return es, nil
 }
 
-func (r *repository) GetEmployee(id int) (Employee, error) {
+func (repository) GetEmployee(id int) (Employee, error) {
 	var e Employee
 	foundEmployee := false
 	for i := range es {
@@ -39,22 +39,18 @@ func (r *repository) GetEmployee(id int) (Employee, error) {
 	return e, nil
 }
 
-func (r *repository) LastID() (int, error) {
-	if len(es) == 0 {
-		return 0, nil
-	}
-	lastID := es[len(es)-1].ID
+func (repository) LastID() (int, error) {
 	return lastID, nil
 }
 
-func (r *repository) Create(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error) {
+func (repository) Create(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error) {
 	e := Employee{id, cardNymberId, firstName, lastName, warehouseId}
 	es = append(es, e)
 	lastID = e.ID
 	return e, nil
 }
 
-func (r *repository) Update(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error) {
+func (repository) Update(id, cardNymberId int, firstName, lastName string, warehouseId int) (Employee, error) {
 	e := Employee{id, cardNymberId, firstName, lastName, warehouseId}
 	updated := false
 	for i := range es {
@@ -70,7 +66,7 @@ func (r *repository) Update(id, cardNymberId int, firstName, lastName string, wa
 	return e, nil
 }
 
-func (r *repository) Delete(id int) error {
+func (repository) Delete(id int) error {
 	deleted := false
 	var index int
 	for i := range es {

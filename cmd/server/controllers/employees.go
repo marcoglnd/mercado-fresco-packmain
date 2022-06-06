@@ -77,13 +77,18 @@ func (c *Employee) Create() gin.HandlerFunc {
 func (c *Employee) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
+		}
+
 		var req request
-		if err := ctx.Bind(&req); err != nil {
+		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		e, err := c.service.Update(req.ID, req.CardNumberId, req.FirstName, req.LastName, req.WarehouseId)
+		e, err := c.service.Update(int(id), req.CardNumberId, req.FirstName, req.LastName, req.WarehouseId)
 
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
@@ -96,7 +101,7 @@ func (c *Employee) Update() gin.HandlerFunc {
 func (c *Employee) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
 			return
