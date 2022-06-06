@@ -85,12 +85,85 @@ info:
   version: "1.0"
 paths:
   /products:
+    get:
+      consumes:
+      - application/json
+      description: get all products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schemes.Product'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: List products
+      tags:
+      - Products
+    post:
+      consumes:
+      - application/json
+      description: Add a new product to the list
+      parameters:
+      - description: Product to create
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.requestProducts'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schemes.Product'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Create product
+      tags:
+      - Products
+  /products/{id}:
     delete:
       consumes:
       - application/json
       description: Delete existing product in list
       parameters:
-      - description: Product ID
+      - description: product ID
         in: path
         name: id
         required: true
@@ -128,35 +201,6 @@ paths:
       summary: Delete product
       tags:
       - Products
-    get:
-      consumes:
-      - application/json
-      description: get all products
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Product'
-              type: object
-        "404":
-          description: Not Found
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
-            - properties:
-                error:
-                  type: string
-              type: object
-      summary: List products
-      tags:
-      - Products
-  /products/{id}:
     get:
       consumes:
       - application/json
@@ -247,50 +291,6 @@ paths:
                   type: string
               type: object
       summary: Update product
-      tags:
-      - Products
-    post:
-      consumes:
-      - application/json
-      description: Add a new product to the list
-      parameters:
-      - description: Product to create
-        in: body
-        name: product
-        required: true
-        schema:
-          $ref: '#/definitions/controllers.requestProducts'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Product'
-              type: object
-        "404":
-          description: Not Found
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
-            - properties:
-                error:
-                  type: string
-              type: object
-        "422":
-          description: Unprocessable Entity
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
-            - properties:
-                error:
-                  type: string
-              type: object
-      summary: Create product
       tags:
       - Products
 swagger: "2.0"

@@ -92,7 +92,7 @@ type requestProducts struct {
 // @Success 201 {object} schemes.JSONSuccessResult{data=schemes.Product}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
-// @Router /products/{id} [post]
+// @Router /products [post]
 func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req requestProducts
@@ -153,11 +153,11 @@ func (c *Controller) Update() gin.HandlerFunc {
 // @Description Delete existing product in list
 // @Accept json
 // @Produce json
-// @Param id path int true "Product ID"
+// @Param id path int true "product ID"
 // @Success 204 {object} schemes.JSONSuccessResult{data=schemes.Product}
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
-// @Router /products [delete]
+// @Router /products/{id} [delete]
 func (c *Controller) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.Atoi(ctx.Param("id"))

@@ -76,8 +76,8 @@ const docTemplate = `{
                     }
                 }
             },
-            "delete": {
-                "description": "Delete existing product in list",
+            "post": {
+                "description": "Add a new product to the list",
                 "consumes": [
                     "application/json"
                 ],
@@ -87,19 +87,21 @@ const docTemplate = `{
                 "tags": [
                     "Products"
                 ],
-                "summary": "Delete product",
+                "summary": "Create product",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Product ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
+                        "description": "Product to create",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.requestProducts"
+                        }
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "No Content",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "allOf": [
                                 {
@@ -116,8 +118,8 @@ const docTemplate = `{
                             ]
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
+                    "404": {
+                        "description": "Not Found",
                         "schema": {
                             "allOf": [
                                 {
@@ -134,8 +136,8 @@ const docTemplate = `{
                             ]
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "422": {
+                        "description": "Unprocessable Entity",
                         "schema": {
                             "allOf": [
                                 {
@@ -234,8 +236,8 @@ const docTemplate = `{
                     }
                 }
             },
-            "post": {
-                "description": "Add a new product to the list",
+            "delete": {
+                "description": "Delete existing product in list",
                 "consumes": [
                     "application/json"
                 ],
@@ -245,21 +247,19 @@ const docTemplate = `{
                 "tags": [
                     "Products"
                 ],
-                "summary": "Create product",
+                "summary": "Delete product",
                 "parameters": [
                     {
-                        "description": "Product to create",
-                        "name": "product",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/controllers.requestProducts"
-                        }
+                        "type": "integer",
+                        "description": "product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "204": {
+                        "description": "No Content",
                         "schema": {
                             "allOf": [
                                 {
@@ -276,8 +276,8 @@ const docTemplate = `{
                             ]
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "allOf": [
                                 {
@@ -294,8 +294,8 @@ const docTemplate = `{
                             ]
                         }
                     },
-                    "422": {
-                        "description": "Unprocessable Entity",
+                    "404": {
+                        "description": "Not Found",
                         "schema": {
                             "allOf": [
                                 {
