@@ -186,7 +186,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: get all products
+      description: get product by it's id
       parameters:
       - description: Product ID
         in: path
@@ -231,7 +231,7 @@ paths:
                 message:
                   type: string
               type: object
-      summary: List products
+      summary: Product by id
       tags:
       - Products
     patch:

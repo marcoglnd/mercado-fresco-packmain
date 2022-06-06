@@ -178,7 +178,7 @@ const docTemplate = `{
         },
         "/products/{id}": {
             "get": {
-                "description": "get all products",
+                "description": "get product by it's id",
                 "consumes": [
                     "application/json"
                 ],
@@ -188,7 +188,7 @@ const docTemplate = `{
                 "tags": [
                     "Products"
                 ],
-                "summary": "List products",
+                "summary": "Product by id",
                 "parameters": [
                     {
                         "type": "integer",

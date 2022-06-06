@@ -42,9 +42,9 @@ func (c *Controller) GetAll() gin.HandlerFunc {
 	}
 }
 
-// @Summary List products
+// @Summary Product by id
 // @Tags Products
-// @Description get all products
+// @Description get product by it's id
 // @Accept json
 // @Produce json
 // @Param id path int true "Product ID"
