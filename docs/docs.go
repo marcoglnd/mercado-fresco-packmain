@@ -286,7 +286,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.request"
+                            "$ref": "#/definitions/controllers.requestProducts"
                         }
                     }
                 ],
@@ -385,7 +385,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.request"
+                            "$ref": "#/definitions/controllers.requestProducts"
                         }
                     }
                 ],
@@ -461,7 +461,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.request": {
+        "controllers.requestProducts": {
             "type": "object",
             "required": [
                 "description",
