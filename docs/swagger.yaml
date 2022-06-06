@@ -38,23 +38,11 @@ definitions:
     type: object
   schemes.JSONBadReqResult:
     properties:
-      code:
-        example: 400
-        type: integer
-      data: {}
-      message:
-        example: Wrong parameter
-        type: string
+      error: {}
     type: object
   schemes.JSONSuccessResult:
     properties:
-      code:
-        example: 200
-        type: integer
       data: {}
-      message:
-        example: Success
-        type: string
     type: object
   schemes.Product:
     properties:
@@ -116,12 +104,8 @@ paths:
             allOf:
             - $ref: '#/definitions/schemes.JSONSuccessResult'
             - properties:
-                code:
-                  type: integer
                 data:
                   $ref: '#/definitions/schemes.Product'
-                message:
-                  type: string
               type: object
         "400":
           description: Bad Request
@@ -129,9 +113,7 @@ paths:
             allOf:
             - $ref: '#/definitions/schemes.JSONBadReqResult'
             - properties:
-                code:
-                  type: integer
-                message:
+                error:
                   type: string
               type: object
         "404":
@@ -140,9 +122,7 @@ paths:
             allOf:
             - $ref: '#/definitions/schemes.JSONBadReqResult'
             - properties:
-                code:
-                  type: integer
-                message:
+                error:
                   type: string
               type: object
       summary: Delete product
@@ -161,12 +141,8 @@ paths:
             allOf:
             - $ref: '#/definitions/schemes.JSONSuccessResult'
             - properties:
-                code:
-                  type: integer
                 data:
                   $ref: '#/definitions/schemes.Product'
-                message:
-                  type: string
               type: object
         "404":
           description: Not Found
@@ -174,9 +150,7 @@ paths:
             allOf:
             - $ref: '#/definitions/schemes.JSONBadReqResult'
             - properties:
-                code:
-                  type: integer
-                message:
+                error:
                   type: string
               type: object
       summary: List products
@@ -202,12 +176,8 @@ paths:
             allOf:
             - $ref: '#/definitions/schemes.JSONSuccessResult'
             - properties:
-                code:
-                  type: integer
                 data:
                   $ref: '#/definitions/schemes.Product'
-                message:
-                  type: string
               type: object
         "400":
           description: Bad Request
@@ -215,9 +185,7 @@ paths:
             allOf:
             - $ref: '#/definitions/schemes.JSONBadReqResult'
             - properties:
-                code:
-                  type: integer
-                message:
+                error:
                   type: string
               type: object
         "404":
@@ -226,9 +194,7 @@ paths:
             allOf:
             - $ref: '#/definitions/schemes.JSONBadReqResult'
             - properties:
-                code:
-                  type: integer
-                message:
+                error:
                   type: string
               type: object
       summary: Product by id
@@ -259,12 +225,8 @@ paths:
             allOf:
             - $ref: '#/definitions/schemes.JSONSuccessResult'
             - properties:
-                code:
-                  type: integer
                 data:
                   $ref: '#/definitions/schemes.Product'
-                message:
-                  type: string
               type: object
         "400":
           description: Bad Request
@@ -272,9 +234,7 @@ paths:
             allOf:
             - $ref: '#/definitions/schemes.JSONBadReqResult'
             - properties:
-                code:
-                  type: integer
-                message:
+                error:
                   type: string
               type: object
         "404":
@@ -283,9 +243,7 @@ paths:
             allOf:
             - $ref: '#/definitions/schemes.JSONBadReqResult'
             - properties:
-                code:
-                  type: integer
-                message:
+                error:
                   type: string
               type: object
       summary: Update product
@@ -311,12 +269,8 @@ paths:
             allOf:
             - $ref: '#/definitions/schemes.JSONSuccessResult'
             - properties:
-                code:
-                  type: integer
                 data:
                   $ref: '#/definitions/schemes.Product'
-                message:
-                  type: string
               type: object
         "404":
           description: Not Found
@@ -324,9 +278,7 @@ paths:
             allOf:
             - $ref: '#/definitions/schemes.JSONBadReqResult'
             - properties:
-                code:
-                  type: integer
-                message:
+                error:
                   type: string
               type: object
         "422":
@@ -335,9 +287,7 @@ paths:
             allOf:
             - $ref: '#/definitions/schemes.JSONBadReqResult'
             - properties:
-                code:
-                  type: integer
-                message:
+                error:
                   type: string
               type: object
       summary: Create product

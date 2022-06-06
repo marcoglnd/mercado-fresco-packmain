@@ -48,14 +48,8 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "code": {
-                                            "type": "integer"
-                                        },
                                         "data": {
                                             "$ref": "#/definitions/schemes.Product"
-                                        },
-                                        "message": {
-                                            "type": "string"
                                         }
                                     }
                                 }
@@ -72,10 +66,7 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "code": {
-                                            "type": "integer"
-                                        },
-                                        "message": {
+                                        "error": {
                                             "type": "string"
                                         }
                                     }
@@ -117,14 +108,8 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "code": {
-                                            "type": "integer"
-                                        },
                                         "data": {
                                             "$ref": "#/definitions/schemes.Product"
-                                        },
-                                        "message": {
-                                            "type": "string"
                                         }
                                     }
                                 }
@@ -141,10 +126,7 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "code": {
-                                            "type": "integer"
-                                        },
-                                        "message": {
+                                        "error": {
                                             "type": "string"
                                         }
                                     }
@@ -162,10 +144,7 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "code": {
-                                            "type": "integer"
-                                        },
-                                        "message": {
+                                        "error": {
                                             "type": "string"
                                         }
                                     }
@@ -209,14 +188,8 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "code": {
-                                            "type": "integer"
-                                        },
                                         "data": {
                                             "$ref": "#/definitions/schemes.Product"
-                                        },
-                                        "message": {
-                                            "type": "string"
                                         }
                                     }
                                 }
@@ -233,10 +206,7 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "code": {
-                                            "type": "integer"
-                                        },
-                                        "message": {
+                                        "error": {
                                             "type": "string"
                                         }
                                     }
@@ -254,10 +224,7 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "code": {
-                                            "type": "integer"
-                                        },
-                                        "message": {
+                                        "error": {
                                             "type": "string"
                                         }
                                     }
@@ -301,14 +268,8 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "code": {
-                                            "type": "integer"
-                                        },
                                         "data": {
                                             "$ref": "#/definitions/schemes.Product"
-                                        },
-                                        "message": {
-                                            "type": "string"
                                         }
                                     }
                                 }
@@ -325,10 +286,7 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "code": {
-                                            "type": "integer"
-                                        },
-                                        "message": {
+                                        "error": {
                                             "type": "string"
                                         }
                                     }
@@ -346,10 +304,7 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "code": {
-                                            "type": "integer"
-                                        },
-                                        "message": {
+                                        "error": {
                                             "type": "string"
                                         }
                                     }
@@ -400,14 +355,8 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "code": {
-                                            "type": "integer"
-                                        },
                                         "data": {
                                             "$ref": "#/definitions/schemes.Product"
-                                        },
-                                        "message": {
-                                            "type": "string"
                                         }
                                     }
                                 }
@@ -424,10 +373,7 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "code": {
-                                            "type": "integer"
-                                        },
-                                        "message": {
+                                        "error": {
                                             "type": "string"
                                         }
                                     }
@@ -445,10 +391,7 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "code": {
-                                            "type": "integer"
-                                        },
-                                        "message": {
+                                        "error": {
                                             "type": "string"
                                         }
                                     }
@@ -515,29 +458,13 @@ const docTemplate = `{
         "schemes.JSONBadReqResult": {
             "type": "object",
             "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 400
-                },
-                "data": {},
-                "message": {
-                    "type": "string",
-                    "example": "Wrong parameter"
-                }
+                "error": {}
             }
         },
         "schemes.JSONSuccessResult": {
             "type": "object",
             "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 200
-                },
-                "data": {},
-                "message": {
-                    "type": "string",
-                    "example": "Success"
-                }
+                "data": {}
             }
         },
         "schemes.Product": {

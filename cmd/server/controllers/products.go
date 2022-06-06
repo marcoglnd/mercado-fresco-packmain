@@ -24,8 +24,8 @@ func NewProduct(p products.Service) *Controller {
 // @Description get all products
 // @Accept json
 // @Produce json
-// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Product,code=int,message=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{code=int,message=string}
+// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Product}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products [get]
 func (c *Controller) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -48,9 +48,9 @@ func (c *Controller) GetAll() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Product ID"
-// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Product,code=int,message=string}
-// @Failure 400 {object} schemes.JSONBadReqResult{code=int,message=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{code=int,message=string}
+// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Product}
+// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products/{id} [get]
 func (c *Controller) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -89,9 +89,9 @@ type requestProducts struct {
 // @Accept json
 // @Produce json
 // @Param product body requestProducts true "Product to create"
-// @Success 201 {object} schemes.JSONSuccessResult{data=schemes.Product,code=int,message=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{code=int,message=string}
-// @Failure 422 {object} schemes.JSONBadReqResult{code=int,message=string}
+// @Success 201 {object} schemes.JSONSuccessResult{data=schemes.Product}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products/{id} [post]
 func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -119,9 +119,9 @@ func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 // @Produce json
 // @Param id path int true "Product ID"
 // @Param product body requestProducts true "Product to update"
-// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Product,code=int,message=string}
-// @Failure 400 {object} schemes.JSONBadReqResult{code=int,message=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{code=int,message=string}
+// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Product}
+// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products/{id} [patch]
 func (c *Controller) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -154,9 +154,9 @@ func (c *Controller) Update() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Product ID"
-// @Success 204 {object} schemes.JSONSuccessResult{data=schemes.Product,code=int,message=string}
-// @Failure 400 {object} schemes.JSONBadReqResult{code=int,message=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{code=int,message=string}
+// @Success 204 {object} schemes.JSONSuccessResult{data=schemes.Product}
+// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products [delete]
 func (c *Controller) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
