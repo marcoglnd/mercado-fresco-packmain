@@ -20,6 +20,14 @@ func NewBuyer(b buyers.Service) *BuyerController {
 	}
 }
 
+// @Summary List buyers
+// @Tags Buyers
+// @Description get all buyers
+// @Accept json
+// @Produce json
+// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Buyer,code=int,message=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{code=int,message=string}
+// @Router /buyers [get]
 func (c *BuyerController) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		b, err := c.service.GetAll()
@@ -35,6 +43,16 @@ func (c *BuyerController) GetAll() gin.HandlerFunc {
 	}
 }
 
+// @Summary Buyer by id
+// @Tags Buyers
+// @Description get buyer by its id
+// @Accept json
+// @Produce json
+// @Param id path int true "Buyer ID"
+// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Buyer,code=int,message=string}
+// @Failure 400 {object} schemes.JSONBadReqResult{code=int,message=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{code=int,message=string}
+// @Router /buyers/{id} [get]
 func (c *BuyerController) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		buyerId, err := strconv.Atoi(ctx.Param("id"))
@@ -53,6 +71,16 @@ func (c *BuyerController) GetById() gin.HandlerFunc {
 	}
 }
 
+// @Summary Create buyer
+// @Tags Buyers
+// @Description Add a new buyer to the list
+// @Accept json
+// @Produce json
+// @Param buyer body request true "Buyer to create"
+// @Success 201 {object} schemes.JSONSuccessResult{data=schemes.Buyer,code=int,message=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{code=int,message=string}
+// @Failure 422 {object} schemes.JSONBadReqResult{code=int,message=string}
+// @Router /buyers/ [post]
 func (c *BuyerController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req request
@@ -83,6 +111,17 @@ func (c *BuyerController) Create() gin.HandlerFunc {
 	}
 }
 
+// @Summary Update buyer
+// @Tags Buyers
+// @Description Update existing buyer in list
+// @Accept json
+// @Produce json
+// @Param id path int true "Buyer ID"
+// @Param buyer body request true "Buyer to update"
+// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Buyer,code=int,message=string}
+// @Failure 400 {object} schemes.JSONBadReqResult{code=int,message=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{code=int,message=string}
+// @Router /buyers/{id} [patch]
 func (c *BuyerController) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
@@ -119,6 +158,16 @@ func (c *BuyerController) Update() gin.HandlerFunc {
 	}
 }
 
+// @Summary Delete buyer
+// @Tags Buyers
+// @Description Delete existing buyer in list
+// @Accept json
+// @Produce json
+// @Param id path int true "Buyer ID"
+// @Success 204 {object} schemes.JSONSuccessResult{data=schemes.Buyer,code=int,message=string}
+// @Failure 400 {object} schemes.JSONBadReqResult{code=int,message=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{code=int,message=string}
+// @Router /buyers/{id} [delete]
 func (c *BuyerController) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
