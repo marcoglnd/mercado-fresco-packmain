@@ -54,6 +54,311 @@
                             ]
                         }
                     },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Add a new product to the list",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Create product",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.JSONSuccessResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "data": {
+                                            "$ref": "#/definitions/controllers.Product"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete existing product in list",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Delete product",
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.JSONSuccessResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "data": {
+                                            "$ref": "#/definitions/controllers.Product"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "Update existing product in list",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Update product",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.JSONSuccessResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "data": {
+                                            "$ref": "#/definitions/controllers.Product"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}": {
+            "get": {
+                "description": "get all products",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "List products",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.JSONSuccessResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "data": {
+                                            "$ref": "#/definitions/controllers.Product"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {

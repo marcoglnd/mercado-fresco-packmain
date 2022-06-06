@@ -52,7 +52,7 @@ func (c *Controller) GetAll() gin.HandlerFunc {
 // @Success 200 {object} controllers.JSONSuccessResult{data=controllers.Product,code=int,message=string}
 // @Failure 400 {object} controllers.JSONBadReqResult{code=int,message=string}
 // @Failure 404 {object} controllers.JSONBadReqResult{code=int,message=string}
-// @Router /products [get]
+// @Router /products/{id} [get]
 func (c *Controller) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
@@ -84,6 +84,15 @@ type request struct {
 	SellerId                       int     `json:"seller_id" binding:"required"`
 }
 
+// @Summary Create product
+// @Tags Products
+// @Description Add a new product to the list
+// @Accept json
+// @Produce json
+// @Success 201 {object} controllers.JSONSuccessResult{data=controllers.Product,code=int,message=string}
+// @Failure 404 {object} controllers.JSONBadReqResult{code=int,message=string}
+// @Failure 422 {object} controllers.JSONBadReqResult{code=int,message=string}
+// @Router /products [post]
 func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req request
@@ -103,6 +112,15 @@ func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 	}
 }
 
+// @Summary Update product
+// @Tags Products
+// @Description Update existing product in list
+// @Accept json
+// @Produce json
+// @Success 200 {object} controllers.JSONSuccessResult{data=controllers.Product,code=int,message=string}
+// @Failure 400 {object} controllers.JSONBadReqResult{code=int,message=string}
+// @Failure 404 {object} controllers.JSONBadReqResult{code=int,message=string}
+// @Router /products [patch]
 func (c *Controller) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req request
@@ -128,6 +146,15 @@ func (c *Controller) Update() gin.HandlerFunc {
 	}
 }
 
+// @Summary Delete product
+// @Tags Products
+// @Description Delete existing product in list
+// @Accept json
+// @Produce json
+// @Success 204 {object} controllers.JSONSuccessResult{data=controllers.Product,code=int,message=string}
+// @Failure 400 {object} controllers.JSONBadReqResult{code=int,message=string}
+// @Failure 404 {object} controllers.JSONBadReqResult{code=int,message=string}
+// @Router /products [delete]
 func (c *Controller) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.Atoi(ctx.Param("id"))

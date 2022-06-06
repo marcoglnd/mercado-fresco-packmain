@@ -60,6 +60,176 @@ info:
   version: "1.0"
 paths:
   /products:
+    delete:
+      consumes:
+      - application/json
+      description: Delete existing product in list
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.JSONSuccessResult'
+            - properties:
+                code:
+                  type: integer
+                data:
+                  $ref: '#/definitions/controllers.Product'
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.JSONBadReqResult'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.JSONBadReqResult'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Delete product
+      tags:
+      - Products
+    get:
+      consumes:
+      - application/json
+      description: get all products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.JSONSuccessResult'
+            - properties:
+                code:
+                  type: integer
+                data:
+                  $ref: '#/definitions/controllers.Product'
+                message:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.JSONBadReqResult'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: List products
+      tags:
+      - Products
+    patch:
+      consumes:
+      - application/json
+      description: Update existing product in list
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.JSONSuccessResult'
+            - properties:
+                code:
+                  type: integer
+                data:
+                  $ref: '#/definitions/controllers.Product'
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.JSONBadReqResult'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.JSONBadReqResult'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Update product
+      tags:
+      - Products
+    post:
+      consumes:
+      - application/json
+      description: Add a new product to the list
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.JSONSuccessResult'
+            - properties:
+                code:
+                  type: integer
+                data:
+                  $ref: '#/definitions/controllers.Product'
+                message:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.JSONBadReqResult'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.JSONBadReqResult'
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+              type: object
+      summary: Create product
+      tags:
+      - Products
+  /products/{id}:
     get:
       consumes:
       - application/json
