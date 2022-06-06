@@ -13,7 +13,7 @@ type Service interface {
 		minimumTemperature int,
 	) (*Warehouse, error)
 	Update(
-		id int,
+		currentWarehouse Warehouse,
 		warehouseCode string,
 		address string,
 		telephone string,
@@ -74,18 +74,13 @@ func (s *service) IsWarehouseCodeAvailable(warehouseCode string) error {
 }
 
 func (s *service) Update(
-	id int,
+	currentW Warehouse,
 	warehouseCode string,
 	address string,
 	telephone string,
 	minimumCapacity int,
 	minimumTemperature int,
 ) (*Warehouse, error) {
-
-	currentW, err := s.FindById(id)
-	if err != nil {
-		return &Warehouse{}, err
-	}
 
 	if warehouseCode != currentW.WarehouseCode &&
 		warehouseCode != "" {
@@ -96,7 +91,7 @@ func (s *service) Update(
 		}
 	}
 
-	updatedWarehouse := currentW
+	updatedWarehouse := &currentW
 
 	if address != currentW.Address &&
 		address != "" {
