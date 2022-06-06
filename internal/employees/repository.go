@@ -5,9 +5,9 @@ import "fmt"
 type Repository interface {
 	GetAll() ([]Employee, error)
 	GetById(id int) (Employee, error)
-	Create(id int, cardNymberId, firstName, lastName string, warehouseId int) (Employee, error)
+	Create(id int, cardNumberId, firstName, lastName string, warehouseId int) (Employee, error)
 	LastID() (int, error)
-	Update(id int, cardNymberId, firstName, lastName string, warehouseId int) (Employee, error)
+	Update(id int, cardNumberId, firstName, lastName string, warehouseId int) (Employee, error)
 	Delete(id int) error
 }
 
@@ -43,15 +43,20 @@ func (repository) LastID() (int, error) {
 	return lastID, nil
 }
 
-func (repository) Create(id int, cardNymberId, firstName, lastName string, warehouseId int) (Employee, error) {
-	e := Employee{id, cardNymberId, firstName, lastName, warehouseId}
+func (repository) Create(id int, cardNumberId, firstName, lastName string, warehouseId int) (Employee, error) {
+	for i := range es {
+		if es[i].CardNumberId == cardNumberId {
+			return Employee{}, fmt.Errorf("CardNumberId %s already exist", cardNumberId)
+		}
+	}
+	e := Employee{id, cardNumberId, firstName, lastName, warehouseId}
 	es = append(es, e)
 	lastID = e.ID
 	return e, nil
 }
 
-func (repository) Update(id int, cardNymberId, firstName, lastName string, warehouseId int) (Employee, error) {
-	e := Employee{id, cardNymberId, firstName, lastName, warehouseId}
+func (repository) Update(id int, cardNumberId, firstName, lastName string, warehouseId int) (Employee, error) {
+	e := Employee{id, cardNumberId, firstName, lastName, warehouseId}
 	updated := false
 	for i := range es {
 		if es[i].ID == id {
