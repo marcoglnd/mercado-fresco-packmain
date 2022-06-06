@@ -69,7 +69,7 @@ func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req request
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid imputs"})
+			ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid inputs"})
 			return
 		}
 		product, err := c.service.CreateNewProduct(
@@ -88,7 +88,7 @@ func (c *Controller) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req request
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid imputs"})
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid inputs"})
 			return
 		}
 		id := ctx.Param("id")
