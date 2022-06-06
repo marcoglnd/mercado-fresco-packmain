@@ -37,11 +37,6 @@ func (repository) LastID() (int, error) {
 }
 
 func (repository) Create(id int, cardNumberId, firstName, lastName string) (Buyer, error) {
-	// for i := range buyersList {
-	// 	if buyersList[i].CardNumberID == cardNumberId {
-	// 		return Buyer{}, fmt.Errorf("CardNumberID %s do Buyer já existe", cardNumberId)
-	// 	}
-	// }
 	buyer := Buyer{id, cardNumberId, firstName, lastName}
 	buyersList = append(buyersList, buyer)
 	lastID = buyer.ID
