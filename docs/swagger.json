@@ -278,7 +278,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.request"
+                            "$ref": "#/definitions/controllers.requestProducts"
                         }
                     }
                 ],
@@ -377,7 +377,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.request"
+                            "$ref": "#/definitions/controllers.requestProducts"
                         }
                     }
                 ],
@@ -453,7 +453,7 @@
         }
     },
     "definitions": {
-        "controllers.request": {
+        "controllers.requestProducts": {
             "type": "object",
             "required": [
                 "description",

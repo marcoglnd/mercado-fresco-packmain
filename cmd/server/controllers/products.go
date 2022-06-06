@@ -69,7 +69,7 @@ func (c *Controller) GetById() gin.HandlerFunc {
 	}
 }
 
-type request struct {
+type requestProducts struct {
 	Description                    string  `json:"description" binding:"required"`
 	ExpirationRate                 int     `json:"expiration_rate" binding:"required"`
 	FreezingRate                   int     `json:"freezing_rate" binding:"required"`
@@ -88,14 +88,14 @@ type request struct {
 // @Description Add a new product to the list
 // @Accept json
 // @Produce json
-// @Param product body request true "Product to create"
+// @Param product body requestProducts true "Product to create"
 // @Success 201 {object} schemes.JSONSuccessResult{data=schemes.Product,code=int,message=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{code=int,message=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{code=int,message=string}
 // @Router /products/{id} [post]
 func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var req request
+		var req requestProducts
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid inputs"})
 			return
@@ -118,14 +118,14 @@ func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Product ID"
-// @Param product body request true "Product to update"
+// @Param product body requestProducts true "Product to update"
 // @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Product,code=int,message=string}
 // @Failure 400 {object} schemes.JSONBadReqResult{code=int,message=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{code=int,message=string}
 // @Router /products/{id} [patch]
 func (c *Controller) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var req request
+		var req requestProducts
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid inputs"})
 			return

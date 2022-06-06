@@ -1,5 +1,5 @@
 definitions:
-  controllers.request:
+  controllers.requestProducts:
     properties:
       description:
         type: string
@@ -249,7 +249,7 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/controllers.request'
+          $ref: '#/definitions/controllers.requestProducts'
       produces:
       - application/json
       responses:
@@ -301,7 +301,7 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/controllers.request'
+          $ref: '#/definitions/controllers.requestProducts'
       produces:
       - application/json
       responses:
