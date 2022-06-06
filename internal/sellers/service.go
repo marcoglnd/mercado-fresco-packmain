@@ -1,5 +1,7 @@
 package sellers
 
+import "fmt"
+
 type Service interface {
 	GetAll() ([]Seller, error)
 	GetById(id int) (Seller, error)
@@ -29,6 +31,16 @@ func (s service) GetById(id int) (Seller, error) {
 }
 
 func (s service) Store(cid int, company_name string, address string, telephone int) (Seller, error) {
+	sellerList, err := s.repository.GetAll()
+	if err != nil {
+		return Seller{}, err
+	}
+	for i := range sellerList {
+		if sellerList[i].Cid == cid {
+			return Seller{}, fmt.Errorf("cid %d do seller já existe", cid)
+		}
+	}
+
 	lastID, err := s.repository.LastID()
 
 	if err != nil {
