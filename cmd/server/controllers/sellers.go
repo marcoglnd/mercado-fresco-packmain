@@ -20,6 +20,15 @@ func NewSeller(s sellers.Service) *SellerController {
 	}
 }
 
+// @Summary List sellers
+// @Tags Sellers
+// @Description get all sellers
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Seller}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Router /sellers [get]
 func (c *SellerController) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
@@ -42,6 +51,17 @@ func (c *SellerController) GetAll() gin.HandlerFunc {
 	}
 }
 
+// @Summary Seller by id
+// @Tags Sellers
+// @Description get Seller by it's id
+// @Accept json
+// @Produce json
+// @Param id path int true "Seller ID"
+// @Param token header string true "token"
+// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Seller}
+// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Router /sellers/{id} [get]
 func (c *SellerController) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
@@ -59,13 +79,24 @@ func (c *SellerController) GetById() gin.HandlerFunc {
 	}
 }
 
-type request struct {
+type requestSellers struct {
 	Cid          int    `json:"cid"`
 	Company_name string `json:"company_name"`
 	Address      string `json:"address"`
 	Telephone    int    `json:"telephone"`
 }
 
+// @Summary Create seller
+// @Tags Sellers
+// @Description Add a new Seller to the list
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param Seller body requestSellers true "seller to create"
+// @Success 201 {object} schemes.JSONSuccessResult{data=schemes.Seller}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
+// @Router /sellers [post]
 func (c *SellerController) CreateNewSeller() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
@@ -74,7 +105,7 @@ func (c *SellerController) CreateNewSeller() gin.HandlerFunc {
 			return
 		}
 
-		var req request
+		var req requestSellers
 		if err := ctx.Bind(&req); err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
@@ -109,6 +140,18 @@ func (c *SellerController) CreateNewSeller() gin.HandlerFunc {
 	}
 }
 
+// @Summary Update seller
+// @Tags Sellers
+// @Description Update existing Seller in list
+// @Accept json
+// @Produce json
+// @Param id path int true "Seller ID"
+// @Param token header string true "token"
+// @Param seller body requestSellers true "Seller to update"
+// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Seller}
+// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Router /sellers/{id} [patch]
 func (c *SellerController) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
@@ -123,7 +166,7 @@ func (c *SellerController) Update() gin.HandlerFunc {
 			return
 		}
 
-		var req request
+		var req requestSellers
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(400, gin.H{"error": err.Error()})
 			return
@@ -155,6 +198,17 @@ func (c *SellerController) Update() gin.HandlerFunc {
 	}
 }
 
+// @Summary Delete seller
+// @Tags Sellers
+// @Description Delete existing seller in list
+// @Accept json
+// @Produce json
+// @Param id path int true "Seller ID"
+// @Param token header string true "token"
+// @Success 204 {object} schemes.JSONSuccessResult{data=schemes.Seller}
+// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Router /sellers/{id} [delete]
 func (c *SellerController) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
