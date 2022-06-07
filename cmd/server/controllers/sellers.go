@@ -107,7 +107,7 @@ func (c *SellerController) CreateNewSeller() gin.HandlerFunc {
 
 		var req requestSellers
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{
 				"error": err.Error(),
 			})
 			return
