@@ -1,0 +1,208 @@
+definitions:
+  controllers.request:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+    type: object
+  schemes.Buyer:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+    type: object
+  schemes.JSONBadReqResult:
+    properties:
+      data: {}
+    type: object
+  schemes.JSONSuccessResult:
+    properties:
+      data: {}
+    type: object
+host: localhost:8080
+info:
+  contact:
+    name: API Support
+    url: https://developers.mercadolibre.com.ar/support
+  description: This API Handle MELI Products.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones
+  title: MERCADO FRESCOS
+  version: "1.0"
+paths:
+  /buyers:
+    get:
+      consumes:
+      - application/json
+      description: get all buyers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schemes.Buyer'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemes.JSONBadReqResult'
+      summary: List buyers
+      tags:
+      - Buyers
+  /buyers/:
+    post:
+      consumes:
+      - application/json
+      description: Add a new buyer to the list
+      parameters:
+      - description: Buyer to create
+        in: body
+        name: buyer
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.request'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schemes.Buyer'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemes.JSONBadReqResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/schemes.JSONBadReqResult'
+      summary: Create buyer
+      tags:
+      - Buyers
+  /buyers/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete existing buyer in list
+      parameters:
+      - description: Buyer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schemes.Buyer'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/schemes.JSONBadReqResult'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemes.JSONBadReqResult'
+      summary: Delete buyer
+      tags:
+      - Buyers
+    get:
+      consumes:
+      - application/json
+      description: get buyer by its id
+      parameters:
+      - description: Buyer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schemes.Buyer'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/schemes.JSONBadReqResult'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemes.JSONBadReqResult'
+      summary: Buyer by id
+      tags:
+      - Buyers
+    patch:
+      consumes:
+      - application/json
+      description: Update existing buyer in list
+      parameters:
+      - description: Buyer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Buyer to update
+        in: body
+        name: buyer
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schemes.Buyer'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/schemes.JSONBadReqResult'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemes.JSONBadReqResult'
+      summary: Update buyer
+      tags:
+      - Buyers
+swagger: "2.0"
