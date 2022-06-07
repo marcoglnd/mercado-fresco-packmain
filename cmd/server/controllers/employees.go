@@ -36,12 +36,12 @@ func NewEmployee(e employees.Service) *Employee {
 // @Router /employees [get]
 func (c *Employee) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		data, err := c.service.GetAll()
+		employees, err := c.service.GetAll()
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{"data": data})
+		ctx.JSON(http.StatusOK, gin.H{"data": employees})
 	}
 }
 
@@ -60,7 +60,7 @@ func (c *Employee) GetById() gin.HandlerFunc {
 		id := ctx.Param("id")
 		intId, err := strconv.Atoi(id)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid id"})
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
 			return
 		}
 		employee, err := c.service.GetById(intId)
@@ -77,7 +77,7 @@ func (c *Employee) GetById() gin.HandlerFunc {
 // @Description Add a new employee to the list
 // @Accept json
 // @Produce json
-// @Param employee body requestEmployees true "Employee to create"
+// @Param employee body requestEmployee true "Employee to create"
 // @Success 201 {object} schemes.JSONSuccessResult{data=schemes.Employee}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
@@ -92,19 +92,19 @@ func (c *Employee) Create() gin.HandlerFunc {
 		}
 
 		if req.CardNumberId == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "CardNumberId is required"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "card_number_id is required"})
 			return
 		}
 		if req.FirstName == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "FirstName is required"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "first_name is required"})
 			return
 		}
 		if req.LastName == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "LastName is required"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "last_name is required"})
 			return
 		}
 		if req.WarehouseId < 0 {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "WarehouseId cannot be negative"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "warehouse_id cannot be negative"})
 			return
 		}
 
@@ -124,7 +124,7 @@ func (c *Employee) Create() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Employee ID"
-// @Param employee body requestEmployees true "Employee to update"
+// @Param employee body requestEmployee true "Employee to update"
 // @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Employee}
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
@@ -144,19 +144,19 @@ func (c *Employee) Update() gin.HandlerFunc {
 		}
 
 		if req.CardNumberId == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "CardNumberId is required"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "card_number_id is required"})
 			return
 		}
 		if req.FirstName == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "FirstName is required"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "first_name is required"})
 			return
 		}
 		if req.LastName == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "LastName is required"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "last_name is required"})
 			return
 		}
 		if req.WarehouseId < 0 {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "WarehouseId cannot be negative"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "warehouse_id cannot be negative"})
 			return
 		}
 

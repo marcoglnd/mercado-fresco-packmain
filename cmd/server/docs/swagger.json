@@ -53,7 +53,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -79,7 +79,7 @@
                 "tags": [
                     "Employees"
                 ],
-                "summary": "Create employees",
+                "summary": "Create employee",
                 "parameters": [
                     {
                         "description": "Employee to create",
@@ -87,7 +87,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.request"
+                            "$ref": "#/definitions/controllers.requestEmployee"
                         }
                     }
                 ],
@@ -151,7 +151,7 @@
         },
         "/employees/{id}": {
             "get": {
-                "description": "get employee by it's id",
+                "description": "get employee by id",
                 "consumes": [
                     "application/json"
                 ],
@@ -332,7 +332,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.request"
+                            "$ref": "#/definitions/controllers.requestEmployee"
                         }
                     }
                 ],
@@ -396,7 +396,7 @@
         }
     },
     "definitions": {
-        "controllers.request": {
+        "controllers.requestEmployee": {
             "type": "object",
             "properties": {
                 "card_number_id": {
@@ -404,9 +404,6 @@
                 },
                 "first_name": {
                     "type": "string"
-                },
-                "id": {
-                    "type": "integer"
                 },
                 "last_name": {
                     "type": "string"

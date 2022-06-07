@@ -1,12 +1,10 @@
 definitions:
-  controllers.request:
+  controllers.requestEmployee:
     properties:
       card_number_id:
         type: string
       first_name:
         type: string
-      id:
-        type: integer
       last_name:
         type: string
       warehouse_id:
@@ -67,7 +65,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -85,7 +83,7 @@ paths:
         name: employee
         required: true
         schema:
-          $ref: '#/definitions/controllers.request'
+          $ref: '#/definitions/controllers.requestEmployee'
       produces:
       - application/json
       responses:
@@ -116,7 +114,7 @@ paths:
                 error:
                   type: string
               type: object
-      summary: Create employees
+      summary: Create employee
       tags:
       - Employees
   /employees/{id}:
@@ -166,7 +164,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: get employee by it's id
+      description: get employee by id
       parameters:
       - description: Employee ID
         in: path
@@ -221,7 +219,7 @@ paths:
         name: employee
         required: true
         schema:
-          $ref: '#/definitions/controllers.request'
+          $ref: '#/definitions/controllers.requestEmployee'
       produces:
       - application/json
       responses:

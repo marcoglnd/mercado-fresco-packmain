@@ -61,7 +61,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -87,7 +87,7 @@ const docTemplate = `{
                 "tags": [
                     "Employees"
                 ],
-                "summary": "Create employees",
+                "summary": "Create employee",
                 "parameters": [
                     {
                         "description": "Employee to create",
@@ -95,7 +95,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.request"
+                            "$ref": "#/definitions/controllers.requestEmployee"
                         }
                     }
                 ],
@@ -159,7 +159,7 @@ const docTemplate = `{
         },
         "/employees/{id}": {
             "get": {
-                "description": "get employee by it's id",
+                "description": "get employee by id",
                 "consumes": [
                     "application/json"
                 ],
@@ -340,7 +340,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.request"
+                            "$ref": "#/definitions/controllers.requestEmployee"
                         }
                     }
                 ],
@@ -404,7 +404,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.request": {
+        "controllers.requestEmployee": {
             "type": "object",
             "properties": {
                 "card_number_id": {
@@ -412,9 +412,6 @@ const docTemplate = `{
                 },
                 "first_name": {
                     "type": "string"
-                },
-                "id": {
-                    "type": "integer"
                 },
                 "last_name": {
                     "type": "string"
