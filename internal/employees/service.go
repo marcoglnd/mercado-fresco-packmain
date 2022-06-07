@@ -5,7 +5,7 @@ import "fmt"
 type Service interface {
 	GetAll() ([]Employee, error)
 	GetById(id int) (Employee, error)
-	Create(id int, cardNumberId, firstName, lastName string, warehouseId int) (Employee, error)
+	Create(cardNumberId, firstName, lastName string, warehouseId int) (Employee, error)
 	Update(id int, cardNumberId, firstName, lastName string, warehouseId int) (Employee, error)
 	Delete(id int) error
 }
@@ -37,7 +37,7 @@ func (s service) GetById(id int) (Employee, error) {
 	return listEmployees, nil
 }
 
-func (s service) Create(id int, cardNumberId, firstName, lastName string, warehouseId int) (Employee, error) {
+func (s service) Create(cardNumberId, firstName, lastName string, warehouseId int) (Employee, error) {
 	lastID, err := s.repository.LastID()
 
 	if err != nil {
