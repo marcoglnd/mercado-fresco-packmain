@@ -125,10 +125,6 @@ func (c *BuyerController) Update() gin.HandlerFunc {
 		}
 
 		var req requestBuyer
-		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-			return
-		}
 
 		if req.CardNumberID == "" {
 			ctx.JSON(400, gin.H{"error": "O CardNumberID do buyer é obrigatório"})
