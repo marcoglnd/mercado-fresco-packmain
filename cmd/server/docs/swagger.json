@@ -55,9 +55,7 @@
                         }
                     }
                 }
-            }
-        },
-        "/buyers/": {
+            },
             "post": {
                 "description": "Add a new buyer to the list",
                 "consumes": [
@@ -77,7 +75,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.request"
+                            "$ref": "#/definitions/controllers.requestBuyer"
                         }
                     }
                 ],
@@ -250,7 +248,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.request"
+                            "$ref": "#/definitions/controllers.requestBuyer"
                         }
                     }
                 ],
@@ -290,7 +288,7 @@
         }
     },
     "definitions": {
-        "controllers.request": {
+        "controllers.requestBuyer": {
             "type": "object",
             "properties": {
                 "card_number_id": {
@@ -324,7 +322,7 @@
         "schemes.JSONBadReqResult": {
             "type": "object",
             "properties": {
-                "data": {}
+                "error": {}
             }
         },
         "schemes.JSONSuccessResult": {

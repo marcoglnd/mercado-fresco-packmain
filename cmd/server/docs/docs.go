@@ -63,9 +63,7 @@ const docTemplate = `{
                         }
                     }
                 }
-            }
-        },
-        "/buyers/": {
+            },
             "post": {
                 "description": "Add a new buyer to the list",
                 "consumes": [
@@ -85,7 +83,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.request"
+                            "$ref": "#/definitions/controllers.requestBuyer"
                         }
                     }
                 ],
@@ -258,7 +256,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.request"
+                            "$ref": "#/definitions/controllers.requestBuyer"
                         }
                     }
                 ],
@@ -298,7 +296,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.request": {
+        "controllers.requestBuyer": {
             "type": "object",
             "properties": {
                 "card_number_id": {
@@ -332,7 +330,7 @@ const docTemplate = `{
         "schemes.JSONBadReqResult": {
             "type": "object",
             "properties": {
-                "data": {}
+                "error": {}
             }
         },
         "schemes.JSONSuccessResult": {

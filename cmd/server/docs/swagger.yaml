@@ -1,5 +1,5 @@
 definitions:
-  controllers.request:
+  controllers.requestBuyer:
     properties:
       card_number_id:
         type: string
@@ -21,7 +21,7 @@ definitions:
     type: object
   schemes.JSONBadReqResult:
     properties:
-      data: {}
+      error: {}
     type: object
   schemes.JSONSuccessResult:
     properties:
@@ -64,7 +64,6 @@ paths:
       summary: List buyers
       tags:
       - Buyers
-  /buyers/:
     post:
       consumes:
       - application/json
@@ -75,7 +74,7 @@ paths:
         name: buyer
         required: true
         schema:
-          $ref: '#/definitions/controllers.request'
+          $ref: '#/definitions/controllers.requestBuyer'
       produces:
       - application/json
       responses:
@@ -181,7 +180,7 @@ paths:
         name: buyer
         required: true
         schema:
-          $ref: '#/definitions/controllers.request'
+          $ref: '#/definitions/controllers.requestBuyer'
       produces:
       - application/json
       responses:

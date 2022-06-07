@@ -76,20 +76,14 @@ func (c *BuyerController) GetById() gin.HandlerFunc {
 // @Description Add a new buyer to the list
 // @Accept json
 // @Produce json
-// @Param buyer body request true "Buyer to create"
+// @Param buyer body requestBuyer true "Buyer to create"
 // @Success 201 {object} schemes.JSONSuccessResult{data=schemes.Buyer}
 // @Failure 404 {object} schemes.JSONBadReqResult{}
 // @Failure 422 {object} schemes.JSONBadReqResult{}
-// @Router /buyers/ [post]
+// @Router /buyers [post]
 func (c *BuyerController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var req request
-		if err := ctx.Bind(&req); err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
+		var req requestBuyer
 		if req.CardNumberID == "" {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O CardNumberID do buyer é obrigatório"})
 			return
@@ -117,7 +111,7 @@ func (c *BuyerController) Create() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Buyer ID"
-// @Param buyer body request true "Buyer to update"
+// @Param buyer body requestBuyer true "Buyer to update"
 // @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Buyer,}
 // @Failure 400 {object} schemes.JSONBadReqResult{}
 // @Failure 404 {object} schemes.JSONBadReqResult{}
@@ -130,7 +124,7 @@ func (c *BuyerController) Update() gin.HandlerFunc {
 			return
 		}
 
-		var req request
+		var req requestBuyer
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
@@ -186,7 +180,7 @@ func (c *BuyerController) Delete() gin.HandlerFunc {
 	}
 }
 
-type request struct {
+type requestBuyer struct {
 	CardNumberID string `json:"card_number_id"`
 	FirstName    string `json:"first_name"`
 	LastName     string `json:"last_name"`
