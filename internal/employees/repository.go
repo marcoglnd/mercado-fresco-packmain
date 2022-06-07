@@ -11,7 +11,7 @@ type Repository interface {
 	Delete(id int) error
 }
 
-var es []Employee = []Employee{}
+var listEmployees []Employee = []Employee{}
 var lastID int
 
 type repository struct{}
@@ -21,22 +21,22 @@ func NewRepository() Repository {
 }
 
 func (repository) GetAll() ([]Employee, error) {
-	return es, nil
+	return listEmployees, nil
 }
 
 func (repository) GetById(id int) (Employee, error) {
-	var e Employee
+	var employee Employee
 	foundEmployee := false
-	for i := range es {
-		if es[i].ID == id {
-			e = es[i]
+	for i := range listEmployees {
+		if listEmployees[i].ID == id {
+			employee = listEmployees[i]
 			foundEmployee = true
 		}
 	}
 	if !foundEmployee {
 		return Employee{}, fmt.Errorf("Employee %d not found", id)
 	}
-	return e, nil
+	return employee, nil
 }
 
 func (repository) LastID() (int, error) {
@@ -44,38 +44,33 @@ func (repository) LastID() (int, error) {
 }
 
 func (repository) Create(id int, cardNumberId, firstName, lastName string, warehouseId int) (Employee, error) {
-	for i := range es {
-		if es[i].CardNumberId == cardNumberId {
-			return Employee{}, fmt.Errorf("CardNumberId %s already exist", cardNumberId)
-		}
-	}
-	e := Employee{id, cardNumberId, firstName, lastName, warehouseId}
-	es = append(es, e)
-	lastID = e.ID
-	return e, nil
+	employee := Employee{id, cardNumberId, firstName, lastName, warehouseId}
+	listEmployees = append(listEmployees, employee)
+	lastID = employee.ID
+	return employee, nil
 }
 
 func (repository) Update(id int, cardNumberId, firstName, lastName string, warehouseId int) (Employee, error) {
-	e := Employee{id, cardNumberId, firstName, lastName, warehouseId}
+	employee := Employee{id, cardNumberId, firstName, lastName, warehouseId}
 	updated := false
-	for i := range es {
-		if es[i].ID == id {
-			e.ID = id
-			es[i] = e
+	for i := range listEmployees {
+		if listEmployees[i].ID == id {
+			employee.ID = id
+			listEmployees[i] = employee
 			updated = true
 		}
 	}
 	if !updated {
 		return Employee{}, fmt.Errorf("Employee %d not found", id)
 	}
-	return e, nil
+	return employee, nil
 }
 
 func (repository) Delete(id int) error {
 	deleted := false
 	var index int
-	for i := range es {
-		if es[i].ID == id {
+	for i := range listEmployees {
+		if listEmployees[i].ID == id {
 			index = i
 			deleted = true
 		}
@@ -83,6 +78,6 @@ func (repository) Delete(id int) error {
 	if !deleted {
 		return fmt.Errorf("Employee %d not found", id)
 	}
-	es = append(es[:index], es[index+1:]...)
+	listEmployees = append(listEmployees[:index], listEmployees[index+1:]...)
 	return nil
 }

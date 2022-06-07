@@ -1,5 +1,7 @@
 package employees
 
+import "fmt"
+
 type Service interface {
 	GetAll() ([]Employee, error)
 	GetById(id int) (Employee, error)
@@ -19,20 +21,20 @@ func NewService(r Repository) Service {
 }
 
 func (s service) GetAll() ([]Employee, error) {
-	es, err := s.repository.GetAll()
+	listEmployees, err := s.repository.GetAll()
 
 	if err != nil {
 		return nil, err
 	}
-	return es, nil
+	return listEmployees, nil
 }
 
 func (s service) GetById(id int) (Employee, error) {
-	es, err := s.repository.GetById(id)
+	listEmployees, err := s.repository.GetById(id)
 	if err != nil {
 		return Employee{}, err
 	}
-	return es, nil
+	return listEmployees, nil
 }
 
 func (s service) Create(id int, cardNumberId, firstName, lastName string, warehouseId int) (Employee, error) {
@@ -40,6 +42,12 @@ func (s service) Create(id int, cardNumberId, firstName, lastName string, wareho
 
 	if err != nil {
 		return Employee{}, err
+	}
+
+	for i := range listEmployees {
+		if listEmployees[i].CardNumberId == cardNumberId {
+			return Employee{}, fmt.Errorf("CardNumberId %s already exist", cardNumberId)
+		}
 	}
 
 	lastID++
