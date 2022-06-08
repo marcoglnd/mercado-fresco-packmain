@@ -1,8 +1,6 @@
 package routes
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/products"
@@ -23,10 +21,4 @@ func productsRouter(superRouter *gin.RouterGroup) {
 		pr.DELETE("/:id", controller.Delete())
 		pr.GET("/debug", Debug)
 	}
-}
-
-func Debug(ctx *gin.Context) {
-	ctx.JSON(http.StatusTeapot, gin.H{
-		"debug": "is running",
-	})
 }
