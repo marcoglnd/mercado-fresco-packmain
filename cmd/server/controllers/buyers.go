@@ -84,7 +84,7 @@ func (c *BuyerController) GetById() gin.HandlerFunc {
 func (c *BuyerController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req requestBuyer
-		if err := ctx.ShouldBind(&req); err != nil {
+		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
 			})
