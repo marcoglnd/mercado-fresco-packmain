@@ -16,15 +16,14 @@ func NewWarehouse(w warehouses.Service) *WarehouseController {
 	return &WarehouseController{service: w}
 }
 
-// CreateWarehouse godoc
-// @Summary Creates a warehouse
+// @Summary Create warehouse
 // @Tags Warehouses
-// @Description You can choose to create a warehouse with custom attributes, a unique and valid warehouse code should be defined
+// @Description Add a new warehouse checking for duplicate warehouses code before
 // @Accept json
 // @Produce json
-// @Param warehouse body request true "Warehouse to create"
-// @Success 201 {object} gin.H
-// @Failure 422 {object} gin.H
+// @Param warehouse body warehouses.CreateWarehouseInput true "Warehouse to create"
+// @Success 201 {object} schemes.JSONSuccessResult{data=warehouses.Warehouse}
+// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
 // @Router /warehouses [post]
 func (wc *WarehouseController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -59,6 +58,14 @@ func (wc *WarehouseController) Create() gin.HandlerFunc {
 	}
 }
 
+// @Summary List warehouses
+// @Tags Warehouses
+// @Description get all warehouses
+// @Accept json
+// @Produce json
+// @Success 200 {object} schemes.JSONSuccessResult{data=warehouses.Warehouse}
+// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
+// @Router /warehouses [get]
 func (wc *WarehouseController) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		ws, err := wc.service.GetAll()
@@ -77,6 +84,16 @@ func (wc *WarehouseController) GetAll() gin.HandlerFunc {
 	}
 }
 
+// @Summary Warehouse by id
+// @Tags Warehouses
+// @Description get warehouse by it's id
+// @Accept json
+// @Produce json
+// @Param id path int true "Warehouse ID"
+// @Success 200 {object} schemes.JSONSuccessResult{data=warehouses.Warehouse}
+// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Router /warehouses/{id} [get]
 func (wc *WarehouseController) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		warehouseId, err := strconv.Atoi(ctx.Param("id"))
@@ -102,6 +119,18 @@ func (wc *WarehouseController) GetById() gin.HandlerFunc {
 	}
 }
 
+// @Summary Update warehouse
+// @Tags Warehouses
+// @Description Update existing warehouse in list checking for duplicate warehouses code
+// @Accept json
+// @Produce json
+// @Param id path int true "Warehouse ID"
+// @Param warehouse body warehouses.UpdateWarehouseInput true "Warehouse to update"
+// @Success 200 {object} schemes.JSONSuccessResult{data=warehouses.Warehouse}
+// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Router /warehouses/{id} [patch]
 func (wc *WarehouseController) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		warehouseId, err := strconv.Atoi(ctx.Param("id"))
@@ -152,6 +181,16 @@ func (wc *WarehouseController) Update() gin.HandlerFunc {
 	}
 }
 
+// @Summary Delete warehouse
+// @Tags Warehouses
+// @Description Delete existing warehouse in list
+// @Accept json
+// @Produce json
+// @Param id path int true "warehouse ID"
+// @Success 204 {object} schemes.JSONSuccessResult{data=string}
+// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Router /warehouses/{id} [delete]
 func (wc *WarehouseController) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		warehouseId, err := strconv.Atoi(ctx.Param("id"))
