@@ -87,7 +87,7 @@ func (c *Employee) Create() gin.HandlerFunc {
 
 		var req requestEmployee
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 			return
 		}
 
