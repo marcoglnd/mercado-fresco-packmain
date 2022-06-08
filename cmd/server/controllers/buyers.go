@@ -84,6 +84,12 @@ func (c *BuyerController) GetById() gin.HandlerFunc {
 func (c *BuyerController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req requestBuyer
+		if err := ctx.ShouldBind(&req); err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
 		if req.CardNumberID == "" {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O CardNumberID do buyer é obrigatório"})
 			return
@@ -125,6 +131,10 @@ func (c *BuyerController) Update() gin.HandlerFunc {
 		}
 
 		var req requestBuyer
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
 
 		if req.CardNumberID == "" {
 			ctx.JSON(400, gin.H{"error": "O CardNumberID do buyer é obrigatório"})
