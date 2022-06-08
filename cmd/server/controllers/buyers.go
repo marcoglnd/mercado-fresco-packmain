@@ -118,7 +118,7 @@ func (c *BuyerController) Create() gin.HandlerFunc {
 // @Produce json
 // @Param id path int true "Buyer ID"
 // @Param buyer body requestBuyer true "Buyer to update"
-// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Buyer,}
+// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Buyer}
 // @Failure 400 {object} schemes.JSONBadReqResult{}
 // @Failure 404 {object} schemes.JSONBadReqResult{}
 // @Router /buyers/{id} [patch]
