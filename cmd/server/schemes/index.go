@@ -5,5 +5,5 @@ type JSONSuccessResult struct {
 }
 
 type JSONBadReqResult struct {
-	Error interface{} `json:“error”`
+	Error interface{} `json:"error"`
 }
