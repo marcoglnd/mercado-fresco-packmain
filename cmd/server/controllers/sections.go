@@ -76,14 +76,14 @@ func (c *SectionsController) GetById() gin.HandlerFunc {
 // @Description Add a new section to the list
 // @Accept json
 // @Produce json
-// @Param section body request true "Section to create"
+// @Param section body requestSection true "Section to create"
 // @Success 201 {object} schemes.JSONSuccessResult{data=schemes.Section}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
-// @Router /sections/ [post]
+// @Router /sections [post]
 func (c *SectionsController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var req request
+		var req requestSection
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{
 				"error": err.Error(),
@@ -108,7 +108,7 @@ func (c *SectionsController) Create() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Section ID"
-// @Param section body request true "Section to update"
+// @Param section body requestSection true "Section to update"
 // @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Section}
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
@@ -121,7 +121,7 @@ func (c *SectionsController) Update() gin.HandlerFunc {
 			return
 		}
 
-		var req request
+		var req requestSection
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
@@ -167,7 +167,7 @@ func (c *SectionsController) Delete() gin.HandlerFunc {
 	}
 }
 
-type request struct {
+type requestSection struct {
 	SectionNumber      int `json:"section_number" binding:"required"`
 	CurrentTemperature int `json:"current_temperature" binding:"required"`
 	MinimumTemperature int `json:"minimum_temperature" binding:"required"`
