@@ -41,8 +41,7 @@ func (s service) GetById(id int) (Product, error) {
 	return pr, nil
 }
 
-
-func (s *service) VerifyProductCode(productCode string) (bool, error){
+func (s *service) VerifyProductCode(productCode string) (bool, error) {
 	list, err := s.repository.GetAll()
 	if err != nil {
 		return false, err
@@ -54,7 +53,6 @@ func (s *service) VerifyProductCode(productCode string) (bool, error){
 	}
 	return true, nil
 }
-
 
 func (s *service) CreateNewProduct(
 	description string, expirationRate, freezingRate int,

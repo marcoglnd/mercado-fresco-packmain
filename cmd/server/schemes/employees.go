@@ -1,4 +1,4 @@
-package employees
+package schemes
 
 type Employee struct {
 	ID           int    `json:"id"`
