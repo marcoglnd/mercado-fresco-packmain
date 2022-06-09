@@ -83,7 +83,7 @@ type requestSellers struct {
 	Cid          int    `json:"cid"`
 	Company_name string `json:"company_name"`
 	Address      string `json:"address"`
-	Telephone    int    `json:"telephone"`
+	Telephone    string `json:"telephone"`
 }
 
 // @Summary Create seller
@@ -125,7 +125,7 @@ func (c *SellerController) CreateNewSeller() gin.HandlerFunc {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O endereço da empresa é obrigatório"})
 			return
 		}
-		if req.Telephone == 0 {
+		if req.Telephone == "" {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O telefone da empresa é obrigatório"})
 			return
 		}
@@ -184,7 +184,7 @@ func (c *SellerController) Update() gin.HandlerFunc {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O endereço da empresa é obrigatório"})
 			return
 		}
-		if req.Telephone == 0 {
+		if req.Telephone == "" {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O telefone da empresa é obrigatório"})
 			return
 		}

@@ -12,9 +12,9 @@ var lastID int
 type Repository interface {
 	GetAll() ([]Seller, error)
 	GetById(id int) (Seller, error)
-	Store(id int, cid int, company_name string, address string, telephone int) (Seller, error)
+	Store(id int, cid int, company_name string, address string, telephone string) (Seller, error)
 	LastID() (int, error)
-	Update(id int, cid int, company_name string, address string, telephone int) (Seller, error)
+	Update(id int, cid int, company_name string, address string, telephone string) (Seller, error)
 	Delete(id int) error
 }
 
@@ -45,14 +45,14 @@ func (repository) LastID() (int, error) {
 	return lastID, nil
 }
 
-func (repository) Store(id int, cid int, company_name string, address string, telephone int) (Seller, error) {
+func (repository) Store(id int, cid int, company_name string, address string, telephone string) (Seller, error) {
 	p := Seller{id, cid, company_name, address, telephone}
 	sr = append(sr, p)
 	lastID = p.ID
 	return p, nil
 }
 
-func (repository) Update(id int, cid int, company_name string, address string, telephone int) (Seller, error) {
+func (repository) Update(id int, cid int, company_name string, address string, telephone string) (Seller, error) {
 	p := Seller{Cid: cid, Company_name: company_name, Address: address, Telephone: telephone}
 	updated := false
 	for i := range sr {
