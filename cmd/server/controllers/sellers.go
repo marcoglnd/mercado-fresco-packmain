@@ -58,7 +58,7 @@ func (c *SellerController) GetAll() gin.HandlerFunc {
 // @Produce json
 // @Param id path int true "Seller ID"
 // @Param token header string true "token"
-// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Seller}
+// @Success 200 {object} schemes.Seller
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /sellers/{id} [get]
@@ -83,7 +83,7 @@ type requestSellers struct {
 	Cid          int    `json:"cid"`
 	Company_name string `json:"company_name"`
 	Address      string `json:"address"`
-	Telephone    int    `json:"telephone"`
+	Telephone    string `json:"telephone"`
 }
 
 // @Summary Create seller
@@ -93,7 +93,7 @@ type requestSellers struct {
 // @Produce json
 // @Param token header string true "token"
 // @Param Seller body requestSellers true "seller to create"
-// @Success 201 {object} schemes.JSONSuccessResult{data=schemes.Seller}
+// @Success 201 {object} schemes.Seller
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
 // @Router /sellers [post]
@@ -125,7 +125,7 @@ func (c *SellerController) CreateNewSeller() gin.HandlerFunc {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O endereço da empresa é obrigatório"})
 			return
 		}
-		if req.Telephone == 0 {
+		if req.Telephone == "" {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O telefone da empresa é obrigatório"})
 			return
 		}
@@ -148,7 +148,7 @@ func (c *SellerController) CreateNewSeller() gin.HandlerFunc {
 // @Param id path int true "Seller ID"
 // @Param token header string true "token"
 // @Param seller body requestSellers true "Seller to update"
-// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Seller}
+// @Success 200 {object} schemes.Seller
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /sellers/{id} [patch]
@@ -184,7 +184,7 @@ func (c *SellerController) Update() gin.HandlerFunc {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O endereço da empresa é obrigatório"})
 			return
 		}
-		if req.Telephone == 0 {
+		if req.Telephone == "" {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O telefone da empresa é obrigatório"})
 			return
 		}
