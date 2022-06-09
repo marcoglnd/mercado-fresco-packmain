@@ -1632,7 +1632,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/warehouses.Warehouse"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/warehouses.Warehouse"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "422": {
@@ -1682,19 +1694,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/warehouses.Warehouse"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/warehouses.Warehouse"
                         }
                     },
                     "422": {
@@ -1808,22 +1808,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "204": {
-                        "description": "No Content",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
+                        "description": ""
                     },
                     "400": {
                         "description": "Bad Request",

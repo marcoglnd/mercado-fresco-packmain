@@ -1204,7 +1204,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/warehouses.Warehouse'
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/warehouses.Warehouse'
+              type: object
         "422":
           description: Unprocessable Entity
           schema:
@@ -1234,12 +1239,7 @@ paths:
         "201":
           description: Created
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/warehouses.Warehouse'
-              type: object
+            $ref: '#/definitions/warehouses.Warehouse'
         "422":
           description: Unprocessable Entity
           schema:
@@ -1267,14 +1267,7 @@ paths:
       - application/json
       responses:
         "204":
-          description: No Content
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  type: string
-              type: object
+          description: ""
         "400":
           description: Bad Request
           schema:
