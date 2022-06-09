@@ -60,12 +60,12 @@ func (c *Controller) GetById() gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 			return
 		}
-		p, err := c.service.GetById(intId)
+		product, err := c.service.GetById(intId)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": "invalid id"})
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{"data": p})
+		ctx.JSON(http.StatusOK, product)
 	}
 }
 
@@ -108,7 +108,7 @@ func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusCreated, gin.H{"data": product})
+		ctx.JSON(http.StatusCreated, product)
 	}
 }
 
@@ -144,7 +144,7 @@ func (c *Controller) Update() gin.HandlerFunc {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{"data": product})
+		ctx.JSON(http.StatusOK, product)
 	}
 }
 
