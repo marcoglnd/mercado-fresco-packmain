@@ -49,7 +49,7 @@ func (c *BuyerController) GetAll() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Buyer ID"
-// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Buyer}
+// @Success 200 {object} schemes.Buyer
 // @Failure 400 {object} schemes.JSONBadReqResult{}
 // @Failure 404 {object} schemes.JSONBadReqResult{}
 // @Router /buyers/{id} [get]
@@ -77,7 +77,7 @@ func (c *BuyerController) GetById() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param buyer body requestBuyer true "Buyer to create"
-// @Success 201 {object} schemes.JSONSuccessResult{data=schemes.Buyer}
+// @Success 201 {object} schemes.Buyer
 // @Failure 404 {object} schemes.JSONBadReqResult{}
 // @Failure 422 {object} schemes.JSONBadReqResult{}
 // @Router /buyers [post]
@@ -118,7 +118,7 @@ func (c *BuyerController) Create() gin.HandlerFunc {
 // @Produce json
 // @Param id path int true "Buyer ID"
 // @Param buyer body requestBuyer true "Buyer to update"
-// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Buyer}
+// @Success 200 {object} schemes.Buyer
 // @Failure 400 {object} schemes.JSONBadReqResult{}
 // @Failure 404 {object} schemes.JSONBadReqResult{}
 // @Router /buyers/{id} [patch]
@@ -164,7 +164,7 @@ func (c *BuyerController) Update() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Buyer ID"
-// @Success 204 {object} schemes.JSONSuccessResult{data=schemes.Buyer,}
+// @Success 204 {object} schemes.Buyer
 // @Failure 400 {object} schemes.JSONBadReqResult{}
 // @Failure 404 {object} schemes.JSONBadReqResult{}
 // @Router /buyers/{id} [delete]
