@@ -223,65 +223,6 @@ definitions:
         type: string
       warehouse_code:
         type: string
-    type: object
-  warehouses.Warehouse:
-    properties:
-      address:
-        type: string
-      id:
-        type: integer
-      minimum_capacity:
-        minimum: 1
-        type: integer
-      minimum_temperature:
-        minimum: 1
-        type: integer
-      telephone:
-        type: string
-      warehouse_code:
-        type: string
-    required:
-    - address
-    - minimum_capacity
-    - minimum_temperature
-    - telephone
-    - warehouse_code
-    type: object
-  warehouses.CreateWarehouseInput:
-    properties:
-      address:
-        type: string
-      minimum_capacity:
-        minimum: 1
-        type: integer
-      minimum_temperature:
-        minimum: 1
-        type: integer
-      telephone:
-        type: string
-      warehouse_code:
-        type: string
-    required:
-    - address
-    - minimum_capacity
-    - minimum_temperature
-    - telephone
-    - warehouse_code
-    type: object
-  warehouses.UpdateWarehouseInput:
-    properties:
-      address:
-        type: string
-      minimum_capacity:
-        minimum: 0
-        type: integer
-      minimum_temperature:
-        minimum: 0
-        type: integer
-      telephone:
-        type: string
-      warehouse_code:
-        type: string
     required:
     - warehouse_code
     type: object
@@ -362,12 +303,7 @@ paths:
         "201":
           description: Created
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Buyer'
-              type: object
+            $ref: '#/definitions/schemes.Buyer'
         "404":
           description: Not Found
           schema:
@@ -396,12 +332,7 @@ paths:
         "204":
           description: No Content
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Buyer'
-              type: object
+            $ref: '#/definitions/schemes.Buyer'
         "400":
           description: Bad Request
           schema:
@@ -429,12 +360,7 @@ paths:
         "200":
           description: OK
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Buyer'
-              type: object
+            $ref: '#/definitions/schemes.Buyer'
         "400":
           description: Bad Request
           schema:
@@ -468,12 +394,7 @@ paths:
         "200":
           description: OK
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Buyer'
-              type: object
+            $ref: '#/definitions/schemes.Buyer'
         "400":
           description: Bad Request
           schema:
@@ -531,12 +452,7 @@ paths:
         "201":
           description: Created
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Employee'
-              type: object
+            $ref: '#/definitions/schemes.Employee'
         "404":
           description: Not Found
           schema:
@@ -575,12 +491,7 @@ paths:
         "204":
           description: No Content
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Employee'
-              type: object
+            $ref: '#/definitions/schemes.Employee'
         "400":
           description: Bad Request
           schema:
@@ -618,12 +529,7 @@ paths:
         "200":
           description: OK
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Employee'
-              type: object
+            $ref: '#/definitions/schemes.Employee'
         "400":
           description: Bad Request
           schema:
@@ -667,12 +573,7 @@ paths:
         "200":
           description: OK
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Employee'
-              type: object
+            $ref: '#/definitions/schemes.Employee'
         "400":
           description: Bad Request
           schema:
@@ -740,12 +641,7 @@ paths:
         "201":
           description: Created
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Product'
-              type: object
+            $ref: '#/definitions/schemes.Product'
         "404":
           description: Not Found
           schema:
@@ -784,12 +680,7 @@ paths:
         "204":
           description: No Content
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Product'
-              type: object
+            $ref: '#/definitions/schemes.Product'
         "400":
           description: Bad Request
           schema:
@@ -827,12 +718,7 @@ paths:
         "200":
           description: OK
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Product'
-              type: object
+            $ref: '#/definitions/schemes.Product'
         "400":
           description: Bad Request
           schema:
@@ -876,12 +762,7 @@ paths:
         "200":
           description: OK
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Product'
-              type: object
+            $ref: '#/definitions/schemes.Product'
         "400":
           description: Bad Request
           schema:
@@ -949,12 +830,7 @@ paths:
         "201":
           description: Created
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Section'
-              type: object
+            $ref: '#/definitions/schemes.Section'
         "404":
           description: Not Found
           schema:
@@ -993,12 +869,7 @@ paths:
         "204":
           description: No Content
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Section'
-              type: object
+            $ref: '#/definitions/schemes.Section'
         "400":
           description: Bad Request
           schema:
@@ -1036,12 +907,7 @@ paths:
         "200":
           description: OK
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Section'
-              type: object
+            $ref: '#/definitions/schemes.Section'
         "400":
           description: Bad Request
           schema:
@@ -1085,12 +951,7 @@ paths:
         "200":
           description: OK
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Section'
-              type: object
+            $ref: '#/definitions/schemes.Section'
         "400":
           description: Bad Request
           schema:
@@ -1343,120 +1204,7 @@ paths:
         "200":
           description: OK
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/warehouses.Warehouse'
-              type: object
-        "422":
-          description: Unprocessable Entity
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
-            - properties:
-                error:
-                  type: string
-              type: object
-      summary: List warehouses
-      tags:
-      - Warehouses
-    post:
-      consumes:
-      - application/json
-      description: Add a new warehouse checking for duplicate warehouses code before
-      parameters:
-      - description: Warehouse to create
-        in: body
-        name: warehouse
-        required: true
-        schema:
-          $ref: '#/definitions/warehouses.CreateWarehouseInput'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/warehouses.Warehouse'
-              type: object
-        "422":
-          description: Unprocessable Entity
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
-            - properties:
-                error:
-                  type: string
-              type: object
-      summary: Create warehouse
-      tags:
-      - Warehouses
-  /warehouses/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Delete existing warehouse in list
-      parameters:
-      - description: warehouse ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: No Content
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
-            - properties:
-                error:
-                  type: string
-              type: object
-        "404":
-          description: Not Found
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
-            - properties:
-                error:
-                  type: string
-              type: object
-      summary: Delete warehouse
-      tags:
-      - Sellers
-  /warehouses:
-    get:
-      consumes:
-      - application/json
-      description: get all warehouses
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/warehouses.Warehouse'
-              type: object
+            $ref: '#/definitions/warehouses.Warehouse'
         "422":
           description: Unprocessable Entity
           schema:
@@ -1564,12 +1312,7 @@ paths:
         "200":
           description: OK
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/warehouses.Warehouse'
-              type: object
+            $ref: '#/definitions/warehouses.Warehouse'
         "400":
           description: Bad Request
           schema:
@@ -1614,12 +1357,7 @@ paths:
         "200":
           description: OK
           schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/warehouses.Warehouse'
-              type: object
+            $ref: '#/definitions/warehouses.Warehouse'
         "400":
           description: Bad Request
           schema:
