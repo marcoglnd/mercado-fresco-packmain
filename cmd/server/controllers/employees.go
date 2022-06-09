@@ -176,7 +176,7 @@ func (c *Employee) Update() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Employee ID"
-// @Success 204 {object} schemes.Employee
+// @Success 204 {object} schemes.JSONSuccessResult{data=string}
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /employees/{id} [delete]
