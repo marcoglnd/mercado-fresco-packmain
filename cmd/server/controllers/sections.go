@@ -49,7 +49,7 @@ func (c *SectionsController) GetAll() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Section ID"
-// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Section}
+// @Success 200 {object} schemes.Section
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /sections/{id} [get]
@@ -77,7 +77,7 @@ func (c *SectionsController) GetById() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param section body requestSection true "Section to create"
-// @Success 201 {object} schemes.JSONSuccessResult{data=schemes.Section}
+// @Success 201 {object} schemes.Section
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
 // @Router /sections [post]
@@ -109,7 +109,7 @@ func (c *SectionsController) Create() gin.HandlerFunc {
 // @Produce json
 // @Param id path int true "Section ID"
 // @Param section body requestSection true "Section to update"
-// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Section}
+// @Success 200 {object} schemes.Section
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /sections/{id} [patch]
@@ -145,7 +145,7 @@ func (c *SectionsController) Update() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Section ID"
-// @Success 204 {object} schemes.JSONSuccessResult{data=schemes.Section}
+// @Success 204 {object} schemes.Section
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /sections/{id} [delete]
