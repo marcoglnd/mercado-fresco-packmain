@@ -205,7 +205,7 @@ func (c *SellerController) Update() gin.HandlerFunc {
 // @Produce json
 // @Param id path int true "Seller ID"
 // @Param token header string true "token"
-// @Success 204 {object} schemes.JSONSuccessResult{data=schemes.Seller}
+// @Success 204 {object} schemes.JSONSuccessResult{data=string}
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /sellers/{id} [delete]

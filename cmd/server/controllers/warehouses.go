@@ -22,7 +22,7 @@ func NewWarehouse(w warehouses.Service) *WarehouseController {
 // @Accept json
 // @Produce json
 // @Param warehouse body warehouses.CreateWarehouseInput true "Warehouse to create"
-// @Success 201 {object} schemes.JSONSuccessResult{data=warehouses.Warehouse}
+// @Success 201 {object} warehouses.Warehouse
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
 // @Router /warehouses [post]
 func (wc *WarehouseController) Create() gin.HandlerFunc {
@@ -92,7 +92,7 @@ func (wc *WarehouseController) GetAll() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Warehouse ID"
-// @Success 200 {object} schemes.JSONSuccessResult{data=warehouses.Warehouse}
+// @Success 200 {object} warehouses.Warehouse
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /warehouses/{id} [get]
@@ -128,7 +128,7 @@ func (wc *WarehouseController) GetById() gin.HandlerFunc {
 // @Produce json
 // @Param id path int true "Warehouse ID"
 // @Param warehouse body warehouses.UpdateWarehouseInput true "Warehouse to update"
-// @Success 200 {object} schemes.JSONSuccessResult{data=warehouses.Warehouse}
+// @Success 200 {object} warehouses.Warehouse
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
