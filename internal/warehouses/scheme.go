@@ -1,7 +1,14 @@
 package warehouses
 
-type Warehouse struct {
-	ID                 int    `json:"id"`
+type UpdateWarehouseInput struct {
+	WarehouseCode      string `json:"warehouse_code" binding:"len=3|len=0"`
+	Address            string `json:"address"`
+	Telephone          string `json:"telephone"`
+	MinimumCapacity    int    `json:"minimum_capacity" binding:"gte=0"`
+	MinimumTemperature int    `json:"minimum_temperature" binding:"gte=0"`
+}
+
+type CreateWarehouseInput struct {
 	WarehouseCode      string `json:"warehouse_code" binding:"required,len=3"`
 	Address            string `json:"address" binding:"required"`
 	Telephone          string `json:"telephone" binding:"required"`
