@@ -1523,19 +1523,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/schemes.Seller"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/schemes.Seller"
                         }
                     },
                     "404": {
@@ -1610,19 +1598,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/schemes.Seller"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/schemes.Seller"
                         }
                     },
                     "400": {
@@ -1789,19 +1765,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/schemes.Seller"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/schemes.Seller"
                         }
                     },
                     "400": {
@@ -2499,7 +2463,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "telephone": {
-                    "type": "integer"
+                    "type": "string"
                 }
             }
         },

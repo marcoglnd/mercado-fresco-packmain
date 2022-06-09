@@ -1515,19 +1515,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/schemes.Seller"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/schemes.Seller"
                         }
                     },
                     "404": {
@@ -1602,19 +1590,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/schemes.Seller"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/schemes.Seller"
                         }
                     },
                     "400": {
@@ -1781,19 +1757,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/schemes.Seller"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/schemes.Seller"
                         }
                     },
                     "400": {
@@ -2491,7 +2455,7 @@
                     "type": "integer"
                 },
                 "telephone": {
-                    "type": "integer"
+                    "type": "string"
                 }
             }
         },
