@@ -154,7 +154,7 @@ func (c *Controller) Update() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "product ID"
-// @Success 204 {object} schemes.Product
+// @Success 204 {object} schemes.JSONSuccessResult{data=string}
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products/{id} [delete]
