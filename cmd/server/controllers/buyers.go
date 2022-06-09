@@ -164,9 +164,9 @@ func (c *BuyerController) Update() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Buyer ID"
-// @Success 204 {object} schemes.Buyer
-// @Failure 400 {object} schemes.JSONBadReqResult{}
-// @Failure 404 {object} schemes.JSONBadReqResult{}
+// @Success 204 {object} schemes.JSONSuccessResult{data=string}
+// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /buyers/{id} [delete]
 func (c *BuyerController) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
