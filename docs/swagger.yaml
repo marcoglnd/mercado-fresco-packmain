@@ -1,0 +1,1384 @@
+definitions:
+  controllers.requestBuyer:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+    type: object
+  controllers.requestEmployee:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      warehouse_id:
+        type: integer
+    type: object
+  controllers.requestProducts:
+    properties:
+      description:
+        type: string
+      expiration_rate:
+        type: integer
+      freezing_rate:
+        type: integer
+      height:
+        type: number
+      length:
+        type: number
+      netweight:
+        type: number
+      product_code:
+        type: string
+      product_type_id:
+        type: integer
+      recommended_freezing_temperature:
+        type: number
+      seller_id:
+        type: integer
+      width:
+        type: number
+    required:
+    - description
+    - expiration_rate
+    - freezing_rate
+    - height
+    - length
+    - netweight
+    - product_code
+    - product_type_id
+    - recommended_freezing_temperature
+    - seller_id
+    - width
+    type: object
+  controllers.requestSection:
+    properties:
+      current_capacity:
+        type: integer
+      current_temperature:
+        type: integer
+      maximum_capacity:
+        type: integer
+      minimum_capacity:
+        type: integer
+      minimum_temperature:
+        type: integer
+      product_type_id:
+        type: integer
+      section_number:
+        type: integer
+      warehouse_id:
+        type: integer
+    required:
+    - current_capacity
+    - current_temperature
+    - maximum_capacity
+    - minimum_capacity
+    - minimum_temperature
+    - product_type_id
+    - section_number
+    - warehouse_id
+    type: object
+  controllers.requestSellers:
+    properties:
+      address:
+        type: string
+      cid:
+        type: integer
+      company_name:
+        type: string
+      telephone:
+        type: string
+    type: object
+  schemes.Buyer:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+    type: object
+  schemes.Employee:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+      warehouse_id:
+        type: integer
+    type: object
+  schemes.JSONBadReqResult:
+    properties:
+      error: {}
+    type: object
+  schemes.JSONSuccessResult:
+    properties:
+      data: {}
+    type: object
+  schemes.Product:
+    properties:
+      description:
+        type: string
+      expiration_rate:
+        type: integer
+      freezing_rate:
+        type: integer
+      height:
+        type: number
+      id:
+        type: integer
+      length:
+        type: number
+      netweight:
+        type: number
+      product_code:
+        type: string
+      product_type_id:
+        type: integer
+      recommended_freezing_temperature:
+        type: number
+      seller_id:
+        type: integer
+      width:
+        type: number
+    type: object
+  schemes.Section:
+    properties:
+      current_capacity:
+        type: integer
+      current_temperature:
+        type: integer
+      id:
+        type: integer
+      maximum_capacity:
+        type: integer
+      minimum_capacity:
+        type: integer
+      minimum_temperature:
+        type: integer
+      product_type_id:
+        type: integer
+      section_number:
+        type: integer
+      warehouse_id:
+        type: integer
+    type: object
+  schemes.Seller:
+    properties:
+      adress:
+        type: string
+      cid:
+        type: integer
+      company_name:
+        type: string
+      id:
+        type: integer
+      telephone:
+        type: string
+    type: object
+  warehouses.CreateWarehouseInput:
+    properties:
+      address:
+        type: string
+      minimum_capacity:
+        minimum: 1
+        type: integer
+      minimum_temperature:
+        minimum: 1
+        type: integer
+      telephone:
+        type: string
+      warehouse_code:
+        type: string
+    required:
+    - address
+    - minimum_capacity
+    - minimum_temperature
+    - telephone
+    - warehouse_code
+    type: object
+  warehouses.UpdateWarehouseInput:
+    properties:
+      address:
+        type: string
+      minimum_capacity:
+        minimum: 0
+        type: integer
+      minimum_temperature:
+        minimum: 0
+        type: integer
+      telephone:
+        type: string
+      warehouse_code:
+        type: string
+    required:
+    - warehouse_code
+    type: object
+  warehouses.Warehouse:
+    properties:
+      address:
+        type: string
+      id:
+        type: integer
+      minimum_capacity:
+        minimum: 1
+        type: integer
+      minimum_temperature:
+        minimum: 1
+        type: integer
+      telephone:
+        type: string
+      warehouse_code:
+        type: string
+    required:
+    - address
+    - minimum_capacity
+    - minimum_temperature
+    - telephone
+    - warehouse_code
+    type: object
+host: localhost:8080
+info:
+  contact:
+    name: API Support
+    url: https://developers.mercadolibre.com.ar/support
+  description: This API Handle MELI Products.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones
+  title: MERCADO FRESCOS
+  version: "1.0"
+paths:
+  /buyers:
+    get:
+      consumes:
+      - application/json
+      description: get all buyers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schemes.Buyer'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemes.JSONBadReqResult'
+      summary: List buyers
+      tags:
+      - Buyers
+    post:
+      consumes:
+      - application/json
+      description: Add a new buyer to the list
+      parameters:
+      - description: Buyer to create
+        in: body
+        name: buyer
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.requestBuyer'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/schemes.Buyer'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemes.JSONBadReqResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/schemes.JSONBadReqResult'
+      summary: Create buyer
+      tags:
+      - Buyers
+  /buyers/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete existing buyer in list
+      parameters:
+      - description: Buyer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/schemes.Buyer'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/schemes.JSONBadReqResult'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemes.JSONBadReqResult'
+      summary: Delete buyer
+      tags:
+      - Buyers
+    get:
+      consumes:
+      - application/json
+      description: get buyer by its id
+      parameters:
+      - description: Buyer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemes.Buyer'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/schemes.JSONBadReqResult'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemes.JSONBadReqResult'
+      summary: Buyer by id
+      tags:
+      - Buyers
+    patch:
+      consumes:
+      - application/json
+      description: Update existing buyer in list
+      parameters:
+      - description: Buyer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Buyer to update
+        in: body
+        name: buyer
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.requestBuyer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemes.Buyer'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/schemes.JSONBadReqResult'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemes.JSONBadReqResult'
+      summary: Update buyer
+      tags:
+      - Buyers
+  /employees:
+    get:
+      consumes:
+      - application/json
+      description: get all employees
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schemes.Employee'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: List employees
+      tags:
+      - Employees
+    post:
+      consumes:
+      - application/json
+      description: Add a new employee to the list
+      parameters:
+      - description: Employee to create
+        in: body
+        name: employee
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.requestEmployee'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/schemes.Employee'
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Create employee
+      tags:
+      - Employees
+  /employees/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete existing employee in list
+      parameters:
+      - description: Employee ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/schemes.Employee'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Delete employee
+      tags:
+      - Employees
+    get:
+      consumes:
+      - application/json
+      description: get employee by id
+      parameters:
+      - description: Employee ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemes.Employee'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Employee by id
+      tags:
+      - Employees
+    patch:
+      consumes:
+      - application/json
+      description: Update existing employee in list
+      parameters:
+      - description: Employee ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Employee to update
+        in: body
+        name: employee
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.requestEmployee'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemes.Employee'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Update employee
+      tags:
+      - Employees
+  /products:
+    get:
+      consumes:
+      - application/json
+      description: get all products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schemes.Product'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: List products
+      tags:
+      - Products
+    post:
+      consumes:
+      - application/json
+      description: Add a new product to the list
+      parameters:
+      - description: Product to create
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.requestProducts'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/schemes.Product'
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Create product
+      tags:
+      - Products
+  /products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete existing product in list
+      parameters:
+      - description: product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/schemes.Product'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Delete product
+      tags:
+      - Products
+    get:
+      consumes:
+      - application/json
+      description: get product by it's id
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemes.Product'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Product by id
+      tags:
+      - Products
+    patch:
+      consumes:
+      - application/json
+      description: Update existing product in list
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Product to update
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.requestProducts'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemes.Product'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Update product
+      tags:
+      - Products
+  /sections:
+    get:
+      consumes:
+      - application/json
+      description: get all sections
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schemes.Section'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: List sections
+      tags:
+      - Sections
+    post:
+      consumes:
+      - application/json
+      description: Add a new section to the list
+      parameters:
+      - description: Section to create
+        in: body
+        name: section
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.requestSection'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/schemes.Section'
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Create section
+      tags:
+      - Sections
+  /sections/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete existing sections in list
+      parameters:
+      - description: Section ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/schemes.Section'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Delete section
+      tags:
+      - Sections
+    get:
+      consumes:
+      - application/json
+      description: get section by its id
+      parameters:
+      - description: Section ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemes.Section'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Section by id
+      tags:
+      - Sections
+    patch:
+      consumes:
+      - application/json
+      description: Update existing section in list
+      parameters:
+      - description: Section ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Section to update
+        in: body
+        name: section
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.requestSection'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemes.Section'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Update section
+      tags:
+      - Sections
+  /sellers:
+    get:
+      consumes:
+      - application/json
+      description: get all sellers
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schemes.Seller'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: List sellers
+      tags:
+      - Sellers
+    post:
+      consumes:
+      - application/json
+      description: Add a new Seller to the list
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: seller to create
+        in: body
+        name: Seller
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.requestSellers'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/schemes.Seller'
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Create seller
+      tags:
+      - Sellers
+  /sellers/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete existing seller in list
+      parameters:
+      - description: Seller ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schemes.Seller'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Delete seller
+      tags:
+      - Sellers
+    get:
+      consumes:
+      - application/json
+      description: get Seller by it's id
+      parameters:
+      - description: Seller ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemes.Seller'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Seller by id
+      tags:
+      - Sellers
+    patch:
+      consumes:
+      - application/json
+      description: Update existing Seller in list
+      parameters:
+      - description: Seller ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Seller to update
+        in: body
+        name: seller
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.requestSellers'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemes.Seller'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Update seller
+      tags:
+      - Sellers
+  /warehouses:
+    get:
+      consumes:
+      - application/json
+      description: get all warehouses
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/warehouses.Warehouse'
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: List warehouses
+      tags:
+      - Warehouses
+    post:
+      consumes:
+      - application/json
+      description: Add a new warehouse checking for duplicate warehouses code before
+      parameters:
+      - description: Warehouse to create
+        in: body
+        name: warehouse
+        required: true
+        schema:
+          $ref: '#/definitions/warehouses.CreateWarehouseInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/warehouses.Warehouse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Create warehouse
+      tags:
+      - Warehouses
+  /warehouses/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete existing warehouse in list
+      parameters:
+      - description: warehouse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Delete warehouse
+      tags:
+      - Warehouses
+    get:
+      consumes:
+      - application/json
+      description: get warehouse by it's id
+      parameters:
+      - description: Warehouse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/warehouses.Warehouse'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Warehouse by id
+      tags:
+      - Warehouses
+    patch:
+      consumes:
+      - application/json
+      description: Update existing warehouse in list checking for duplicate warehouses
+        code
+      parameters:
+      - description: Warehouse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Warehouse to update
+        in: body
+        name: warehouse
+        required: true
+        schema:
+          $ref: '#/definitions/warehouses.UpdateWarehouseInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/warehouses.Warehouse'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Update warehouse
+      tags:
+      - Warehouses
+swagger: "2.0"
