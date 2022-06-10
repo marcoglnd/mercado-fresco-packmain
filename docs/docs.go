@@ -2534,6 +2534,12 @@ const docTemplate = `{
         },
         "warehouses.UpdateWarehouseInput": {
             "type": "object",
+<<<<<<< HEAD
+=======
+            "required": [
+                "warehouse_code"
+            ],
+>>>>>>> 61d18264e53dada3fc57ca35aa9a76241acee6f2
             "properties": {
                 "address": {
                     "type": "string"

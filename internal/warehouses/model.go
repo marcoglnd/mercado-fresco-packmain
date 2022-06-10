@@ -2,7 +2,7 @@ package warehouses
 
 type Warehouse struct {
 	ID                 int    `json:"id"`
-	WarehouseCode      string `json:"warehouse_code" binding:"required,len=3"`
+	WarehouseCode      string `json:"warehouse_code" binding:"required"`
 	Address            string `json:"address" binding:"required"`
 	Telephone          string `json:"telephone" binding:"required"`
 	MinimumCapacity    int    `json:"minimum_capacity" binding:"required,gte=1"`

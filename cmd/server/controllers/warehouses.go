@@ -79,7 +79,9 @@ func (wc *WarehouseController) GetAll() gin.HandlerFunc {
 		}
 
 		ctx.JSON(
-			http.StatusOK, ws,
+			http.StatusOK, gin.H{
+				"data": ws,
+			},
 		)
 	}
 }
