@@ -27,6 +27,7 @@ func createServer() *gin.Engine {
 	pr := router.Group("/buyers")
 	{
 		pr.GET("/", buyerController.GetAll())
+		pr.GET("/:id", buyerController.GetById())
 		pr.POST("/", buyerController.Create())
 	}
 
@@ -45,42 +46,53 @@ func createRequestTest(
 }
 
 func Test_CreateBuyer_OK(t *testing.T) {
-	// crie o Servidor e defina as Rotas
 	r := createServer()
-	// crie Request do tipo POST e Response para obter o resultado
+
 	req, rr := createRequestTest(http.MethodPost, "/buyers/", `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
 	}`)
 
-	// diga ao servidor que ele pode atender a solicitação
 	r.ServeHTTP(rr, req)
 
 	assert.Equal(t, http.StatusCreated, rr.Code)
 }
 
 func Test_CreateBuyer_fail(t *testing.T) {
-	// crie o Servidor e defina as Rotas
 	r := createServer()
-	// crie Request do tipo POST e Response para obter o resultado
+
 	req, rr := createRequestTest(http.MethodPost, "/buyers/", `{
 		"first_name": "Jhon", "last_name": "Doe"
 	}`)
 
-	// diga ao servidor que ele pode atender a solicitação
 	r.ServeHTTP(rr, req)
 
 	assert.Equal(t, http.StatusUnprocessableEntity, rr.Code)
 }
 
-func Test_GetBuyers_OK(t *testing.T) {
-	// criar um servidor e define suas rotas
+func Test_CreateBuyer_conflict(t *testing.T) {
 	r := createServer()
-	// criar uma Request do tipo GET e Response para obter o resultado
+
+	req, rr := createRequestTest(http.MethodPost, "/buyers/", `{
+		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
+	}`)
+
+	second_req, second_rr := createRequestTest(http.MethodPost, "/buyers/", `{
+		"card_number_id": "402323", "first_name": "Maria", "last_name": "Silva"
+	}`)
+
+	r.ServeHTTP(rr, req)
+	r.ServeHTTP(second_rr, second_req)
+
+	assert.Equal(t, http.StatusConflict, second_rr.Code)
+}
+
+func Test_GetBuyers_OK(t *testing.T) {
+	r := createServer()
+
 	req, rr := createRequestTest(http.MethodGet, "/buyers/", "")
 
 	defer req.Body.Close()
 
-	// diz ao servidor que ele pode atender a solicitação
 	r.ServeHTTP(rr, req)
 
 	assert.Equal(t, http.StatusOK, rr.Code)
@@ -94,4 +106,50 @@ func Test_GetBuyers_OK(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.True(t, len(objRes.Data) > 0)
+}
+
+func Test_GetBuyerById_OK(t *testing.T) {
+	r := createServer()
+
+	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
+		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
+	}`)
+
+	get_req, get_rr := createRequestTest(http.MethodGet, "/buyers/1", "")
+
+	defer post_req.Body.Close()
+	defer get_req.Body.Close()
+
+	r.ServeHTTP(post_rr, post_req)
+	r.ServeHTTP(get_rr, get_req)
+
+	assert.Equal(t, http.StatusOK, get_rr.Code)
+
+	var objRes buyers.Buyer
+
+	err := json.Unmarshal(get_rr.Body.Bytes(), &objRes)
+
+	assert.Nil(t, err)
+	assert.True(t, objRes.ID == 1)
+	assert.True(t, objRes.CardNumberID == "402323")
+	assert.True(t, objRes.FirstName == "Jhon")
+	assert.True(t, objRes.LastName == "Doe")
+}
+
+func Test_GetBuyerById_fail(t *testing.T) {
+	r := createServer()
+
+	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
+		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
+	}`)
+
+	get_req, get_rr := createRequestTest(http.MethodGet, "/buyers/10", "")
+
+	defer post_req.Body.Close()
+	defer get_req.Body.Close()
+
+	r.ServeHTTP(post_rr, post_req)
+	r.ServeHTTP(get_rr, get_req)
+
+	assert.Equal(t, http.StatusNotFound, get_rr.Code)
 }
