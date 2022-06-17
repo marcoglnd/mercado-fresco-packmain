@@ -5,8 +5,8 @@ import "fmt"
 type Service interface {
 	GetAll() ([]Seller, error)
 	GetById(id int) (Seller, error)
-	Store(cid int, company_name string, address string, telephone int) (Seller, error)
-	Update(id int, cid int, company_name string, address string, telephone int) (Seller, error)
+	Store(cid int, company_name string, address string, telephone string) (Seller, error)
+	Update(id int, cid int, company_name string, address string, telephone string) (Seller, error)
 	Delete(id int) error
 }
 
@@ -30,7 +30,7 @@ func (s service) GetById(id int) (Seller, error) {
 	return sr, nil
 }
 
-func (s service) Store(cid int, company_name string, address string, telephone int) (Seller, error) {
+func (s service) Store(cid int, company_name string, address string, telephone string) (Seller, error) {
 	sellerList, err := s.repository.GetAll()
 	if err != nil {
 		return Seller{}, err
@@ -59,7 +59,7 @@ func (s service) Store(cid int, company_name string, address string, telephone i
 
 }
 
-func (s service) Update(id int, cid int, company_name string, address string, telephone int) (Seller, error) {
+func (s service) Update(id int, cid int, company_name string, address string, telephone string) (Seller, error) {
 	seller, err := s.repository.Update(id, cid, company_name, address, telephone)
 	if err != nil {
 		return Seller{}, err
