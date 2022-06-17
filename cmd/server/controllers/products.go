@@ -24,7 +24,7 @@ func NewProduct(p products.Service) *Controller {
 // @Description get all products
 // @Accept json
 // @Produce json
-// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Product}
+// @Success 200 {object} schemes.JSONSuccessResult{data=products.Product}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products [get]
 func (c *Controller) GetAll() gin.HandlerFunc {
@@ -48,7 +48,7 @@ func (c *Controller) GetAll() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Product ID"
-// @Success 200 {object} schemes.Product
+// @Success 200 {object} products.Product
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products/{id} [get]
@@ -89,7 +89,7 @@ type requestProducts struct {
 // @Accept json
 // @Produce json
 // @Param product body requestProducts true "Product to create"
-// @Success 201 {object} schemes.Product
+// @Success 201 {object} products.Product
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products [post]
@@ -119,7 +119,7 @@ func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 // @Produce json
 // @Param id path int true "Product ID"
 // @Param product body requestProducts true "Product to update"
-// @Success 200 {object} schemes.Product
+// @Success 200 {object} products.Product
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products/{id} [patch]
