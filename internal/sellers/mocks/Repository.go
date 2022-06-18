@@ -12,6 +12,27 @@ type Repository struct {
 	mock.Mock
 }
 
+// Create provides a mock function with given fields: cid, company_name, address, telephone
+func (_m *Repository) Create(cid int, company_name string, address string, telephone string) (sellers.Seller, error) {
+	ret := _m.Called(cid, company_name, address, telephone)
+
+	var r0 sellers.Seller
+	if rf, ok := ret.Get(0).(func(int, string, string, string) sellers.Seller); ok {
+		r0 = rf(cid, company_name, address, telephone)
+	} else {
+		r0 = ret.Get(0).(sellers.Seller)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(int, string, string, string) error); ok {
+		r1 = rf(cid, company_name, address, telephone)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Delete provides a mock function with given fields: id
 func (_m *Repository) Delete(id int) error {
 	ret := _m.Called(id)
@@ -84,27 +105,6 @@ func (_m *Repository) LastID() (int, error) {
 	var r1 error
 	if rf, ok := ret.Get(1).(func() error); ok {
 		r1 = rf()
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// Store provides a mock function with given fields: id, cid, company_name, address, telephone
-func (_m *Repository) Store(id int, cid int, company_name string, address string, telephone string) (sellers.Seller, error) {
-	ret := _m.Called(id, cid, company_name, address, telephone)
-
-	var r0 sellers.Seller
-	if rf, ok := ret.Get(0).(func(int, int, string, string, string) sellers.Seller); ok {
-		r0 = rf(id, cid, company_name, address, telephone)
-	} else {
-		r0 = ret.Get(0).(sellers.Seller)
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func(int, int, string, string, string) error); ok {
-		r1 = rf(id, cid, company_name, address, telephone)
 	} else {
 		r1 = ret.Error(1)
 	}

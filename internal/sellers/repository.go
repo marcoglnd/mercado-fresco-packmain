@@ -12,7 +12,7 @@ var lastID int
 type Repository interface {
 	GetAll() ([]Seller, error)
 	GetById(id int) (Seller, error)
-	Store(id int, cid int, company_name string, address string, telephone string) (Seller, error)
+	Create(cid int, company_name string, address string, telephone string) (Seller, error)
 	LastID() (int, error)
 	Update(id int, cid int, company_name string, address string, telephone string) (Seller, error)
 	Delete(id int) error
@@ -45,10 +45,26 @@ func (repository) LastID() (int, error) {
 	return lastID, nil
 }
 
-func (repository) Store(id int, cid int, company_name string, address string, telephone string) (Seller, error) {
-	p := Seller{id, cid, company_name, address, telephone}
+func (r *repository) Create(cid int, company_name string, address string, telephone string) (Seller, error) {
+	sellerList, err := r.GetAll()
+	if err != nil {
+		return Seller{}, err
+	}
+	for i := range sellerList {
+		if sellerList[i].Cid == cid {
+			return Seller{}, fmt.Errorf("cid %d do seller já existe", cid)
+		}
+	}
+
+	lastID, err := r.LastID()
+
+	if err != nil {
+		return Seller{}, err
+	}
+
+	lastID++
+	p := Seller{lastID, cid, company_name, address, telephone}
 	sr = append(sr, p)
-	lastID = p.ID
 	return p, nil
 }
 

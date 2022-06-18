@@ -12,6 +12,27 @@ type Service struct {
 	mock.Mock
 }
 
+// Create provides a mock function with given fields: cid, company_name, address, telephone
+func (_m *Service) Create(cid int, company_name string, address string, telephone string) (sellers.Seller, error) {
+	ret := _m.Called(cid, company_name, address, telephone)
+
+	var r0 sellers.Seller
+	if rf, ok := ret.Get(0).(func(int, string, string, string) sellers.Seller); ok {
+		r0 = rf(cid, company_name, address, telephone)
+	} else {
+		r0 = ret.Get(0).(sellers.Seller)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(int, string, string, string) error); ok {
+		r1 = rf(cid, company_name, address, telephone)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Delete provides a mock function with given fields: id
 func (_m *Service) Delete(id int) error {
 	ret := _m.Called(id)
@@ -63,27 +84,6 @@ func (_m *Service) GetById(id int) (sellers.Seller, error) {
 	var r1 error
 	if rf, ok := ret.Get(1).(func(int) error); ok {
 		r1 = rf(id)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// Store provides a mock function with given fields: cid, company_name, address, telephone
-func (_m *Service) Store(cid int, company_name string, address string, telephone string) (sellers.Seller, error) {
-	ret := _m.Called(cid, company_name, address, telephone)
-
-	var r0 sellers.Seller
-	if rf, ok := ret.Get(0).(func(int, string, string, string) sellers.Seller); ok {
-		r0 = rf(cid, company_name, address, telephone)
-	} else {
-		r0 = ret.Get(0).(sellers.Seller)
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func(int, string, string, string) error); ok {
-		r1 = rf(cid, company_name, address, telephone)
 	} else {
 		r1 = ret.Error(1)
 	}
