@@ -29,6 +29,8 @@ func createServer() *gin.Engine {
 		pr.GET("/", buyerController.GetAll())
 		pr.GET("/:id", buyerController.GetById())
 		pr.POST("/", buyerController.Create())
+		pr.PATCH("/:id", buyerController.Update())
+		pr.DELETE("/:id", buyerController.Delete())
 	}
 
 	return router
@@ -152,4 +154,121 @@ func Test_GetBuyerById_fail(t *testing.T) {
 	r.ServeHTTP(get_rr, get_req)
 
 	assert.Equal(t, http.StatusNotFound, get_rr.Code)
+}
+
+func Test_UpdateBuyer_OK(t *testing.T) {
+	r := createServer()
+
+	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
+		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
+	}`)
+
+	patch_req, patch_rr := createRequestTest(http.MethodPatch, "/buyers/1", `{
+		"card_number_id": "400000", "first_name": "Maria", "last_name": "Silva"
+	}`)
+
+	defer post_req.Body.Close()
+	defer patch_req.Body.Close()
+
+	r.ServeHTTP(post_rr, post_req)
+	r.ServeHTTP(patch_rr, patch_req)
+
+	assert.Equal(t, http.StatusOK, patch_rr.Code)
+
+	var objRes buyers.Buyer
+
+	err := json.Unmarshal(patch_rr.Body.Bytes(), &objRes)
+
+	assert.Nil(t, err)
+	assert.True(t, objRes.ID == 1)
+	assert.True(t, objRes.CardNumberID == "400000")
+	assert.True(t, objRes.FirstName == "Maria")
+	assert.True(t, objRes.LastName == "Silva")
+}
+
+func Test_UpdateBuyer_fail(t *testing.T) {
+	r := createServer()
+
+	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
+		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
+	}`)
+
+	patch_req, patch_rr := createRequestTest(http.MethodPatch, "/buyers/10", `{
+		"card_number_id": "400000", "first_name": "Maria", "last_name": "Silva"
+	}`)
+
+	defer post_req.Body.Close()
+	defer patch_req.Body.Close()
+
+	r.ServeHTTP(post_rr, post_req)
+	r.ServeHTTP(patch_rr, patch_req)
+
+	assert.Equal(t, http.StatusNotFound, patch_rr.Code)
+}
+
+func Test_DeleteBuyer_OK(t *testing.T) {
+	r := createServer()
+
+	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
+		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
+	}`)
+
+	get_req, get_rr := createRequestTest(http.MethodGet, "/buyers/", "")
+
+	r.ServeHTTP(post_rr, post_req)
+	r.ServeHTTP(get_rr, get_req)
+
+	objRes := struct {
+		Code int
+		Data []buyers.Buyer
+	}{}
+
+	err := json.Unmarshal(get_rr.Body.Bytes(), &objRes)
+
+	buyersLen := len(objRes.Data)
+
+	assert.Nil(t, err)
+	assert.True(t, buyersLen > 0)
+
+	delete_req, delete_rr := createRequestTest(http.MethodDelete, "/buyers/1", "")
+
+	defer post_req.Body.Close()
+	defer delete_req.Body.Close()
+
+	r.ServeHTTP(delete_rr, delete_req)
+
+	secondGet_req, secondGet_rr := createRequestTest(http.MethodGet, "/buyers/", "")
+
+	r.ServeHTTP(secondGet_rr, secondGet_req)
+
+	secondObjRes := struct {
+		Code int
+		Data []buyers.Buyer
+	}{}
+
+	json.Unmarshal(secondGet_rr.Body.Bytes(), &secondObjRes)
+
+	secondBuyersLen := len(secondObjRes.Data)
+
+	assert.Equal(t, http.StatusNoContent, delete_rr.Code)
+	assert.True(t, buyersLen-1 == secondBuyersLen)
+}
+
+func Test_DeleteBuyer_fail(t *testing.T) {
+	r := createServer()
+
+	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
+		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
+	}`)
+
+	r.ServeHTTP(post_rr, post_req)
+
+	delete_req, delete_rr := createRequestTest(http.MethodDelete, "/buyers/10", "")
+
+	defer post_req.Body.Close()
+	defer delete_req.Body.Close()
+
+	r.ServeHTTP(delete_rr, delete_req)
+
+	assert.Equal(t, http.StatusNotFound, delete_rr.Code)
 }
