@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+//go:generate mockgen -source=./service.go -destination=./mocks/service_mock.go
 type Service interface {
 	Create(
 		warehouseCode string,
@@ -13,7 +14,7 @@ type Service interface {
 		minimumTemperature int,
 	) (*Warehouse, error)
 	Update(
-		currentWarehouse Warehouse,
+		warehouseId int,
 		warehouseCode string,
 		address string,
 		telephone string,
@@ -44,7 +45,7 @@ func (s *service) Create(
 ) (*Warehouse, error) {
 
 	if err := s.IsWarehouseCodeAvailable(warehouseCode); err != nil {
-		return &Warehouse{}, err
+		return nil, err
 	}
 
 	warehouse, err := s.repository.Create(
@@ -56,7 +57,7 @@ func (s *service) Create(
 	)
 
 	if err != nil {
-		return &Warehouse{}, err
+		return nil, err
 	}
 
 	return warehouse, nil
@@ -74,7 +75,7 @@ func (s *service) IsWarehouseCodeAvailable(warehouseCode string) error {
 }
 
 func (s *service) Update(
-	currentW Warehouse,
+	warehouseId int,
 	warehouseCode string,
 	address string,
 	telephone string,
@@ -82,16 +83,21 @@ func (s *service) Update(
 	minimumTemperature int,
 ) (*Warehouse, error) {
 
+	currentW, err := s.FindById(warehouseId)
+	if err != nil {
+		return nil, err
+	}
+
+	updatedWarehouse := currentW
+
 	if warehouseCode != currentW.WarehouseCode &&
 		warehouseCode != "" {
 		if err := s.IsWarehouseCodeAvailable(warehouseCode); err != nil {
-			return &Warehouse{}, err
+			return nil, err
 		} else {
-			currentW.WarehouseCode = warehouseCode
+			updatedWarehouse.WarehouseCode = warehouseCode
 		}
 	}
-
-	updatedWarehouse := &currentW
 
 	if address != currentW.Address &&
 		address != "" {
@@ -114,7 +120,7 @@ func (s *service) Update(
 	}
 
 	if err := s.repository.Update(updatedWarehouse); err != nil {
-		return &Warehouse{}, err
+		return nil, err
 	}
 
 	return updatedWarehouse, nil
@@ -124,11 +130,11 @@ func (s *service) FindById(id int) (*Warehouse, error) {
 	foundWarehouse, err := s.repository.FindById(id)
 
 	if err != nil {
-		return &Warehouse{}, err
+		return nil, err
 	}
 
 	if foundWarehouse == nil {
-		return &Warehouse{}, fmt.Errorf("could not find warehouse by id")
+		return nil, fmt.Errorf("could not find warehouse by id")
 	}
 
 	return foundWarehouse, nil
@@ -138,7 +144,7 @@ func (s *service) FindByWarehouseCode(warehouseCode string) (*Warehouse, error) 
 	foundWarehouse, err := s.repository.FindByWarehouseCode(warehouseCode)
 
 	if err != nil {
-		return &Warehouse{}, err
+		return nil, err
 	}
 
 	return foundWarehouse, nil
