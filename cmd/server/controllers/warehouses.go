@@ -36,6 +36,14 @@ func (wc *WarehouseController) Create() gin.HandlerFunc {
 			return
 		}
 
+		if err := wc.service.IsWarehouseCodeAvailable(warehouseInput.WarehouseCode); err != nil {
+			ctx.AbortWithStatusJSON(
+				http.StatusConflict,
+				gin.H{"error": err.Error()},
+			)
+			return
+		}
+
 		w, err := wc.service.Create(
 			warehouseInput.WarehouseCode,
 			warehouseInput.Address,
@@ -153,16 +161,13 @@ func (wc *WarehouseController) Update() gin.HandlerFunc {
 			return
 		}
 
-		/*
-			currentWarehouse, err := wc.service.FindById(warehouseId)
-			if err != nil {
-				ctx.AbortWithStatusJSON(
-					http.StatusNotFound,
-					gin.H{"error": "could not find warehouse"},
-				)
-				return
-			}
-		*/
+		if _, err := wc.service.FindById(warehouseId); err != nil {
+			ctx.AbortWithStatusJSON(
+				http.StatusNotFound,
+				gin.H{"error": "could not find warehouse"},
+			)
+			return
+		}
 
 		updatedWarehouse, err := wc.service.Update(
 			warehouseId,
