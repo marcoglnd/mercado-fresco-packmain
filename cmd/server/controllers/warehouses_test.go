@@ -135,6 +135,16 @@ func TestFindByIdNonExistent(t *testing.T) {
 func TestFindByIdExistent(t *testing.T) {
 	routes := createServer()
 
+	reqValidateCheck, resValidateCheck := createRequestTest(
+		http.MethodGet,
+		getPathUrl("/warehouses/notint"),
+		"",
+	)
+
+	defer reqValidateCheck.Body.Close()
+	routes.ServeHTTP(resValidateCheck, reqValidateCheck)
+	assert.Equal(t, http.StatusBadRequest, resValidateCheck.Code)
+
 	existentId := 1
 	req, res := createRequestTest(
 		http.MethodGet,
@@ -192,8 +202,42 @@ func TestUpdateOk(t *testing.T) {
 	assert.NotEqual(t, oldObjRes.Address, newObjRes.Address)
 }
 
+func TestUpdateInvalidSchema(t *testing.T) {
+	routes := createServer()
+
+	req, res := createRequestTest(
+		http.MethodPatch,
+		getPathUrl(fmt.Sprintf("/warehouses/%d", 1)),
+		`
+		{
+			"warehouse": "BRO",
+			"address": "Rua Sao Paulo 21",
+			"telephone": "1130304040",
+			"minimum_capacity": 10,
+			"minimum_temperature": 20
+		}
+		`,
+	)
+
+	defer req.Body.Close()
+	routes.ServeHTTP(res, req)
+
+	assert.Equal(t, http.StatusUnprocessableEntity, res.Code)
+}
+
 func TestUpdateNonExistent(t *testing.T) {
 	routes := createServer()
+
+	reqValidateCheck, resValidateCheck := createRequestTest(
+		http.MethodGet,
+		getPathUrl("/warehouses/notint"),
+		"",
+	)
+
+	defer reqValidateCheck.Body.Close()
+	routes.ServeHTTP(resValidateCheck, reqValidateCheck)
+	assert.Equal(t, http.StatusBadRequest, resValidateCheck.Code)
+
 	inexistentId := 10
 	req, res := createRequestTest(
 		http.MethodPatch,
@@ -239,4 +283,17 @@ func TestDeleteOk(t *testing.T) {
 	routes.ServeHTTP(res, req)
 
 	assert.Equal(t, http.StatusNoContent, res.Code)
+}
+
+func TestDeleteInvalidParam(t *testing.T) {
+	routes := createServer()
+	reqValidateCheck, resValidateCheck := createRequestTest(
+		http.MethodGet,
+		getPathUrl("/warehouses/notint"),
+		"",
+	)
+
+	defer reqValidateCheck.Body.Close()
+	routes.ServeHTTP(resValidateCheck, reqValidateCheck)
+	assert.Equal(t, http.StatusBadRequest, resValidateCheck.Code)
 }
