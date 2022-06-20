@@ -251,3 +251,14 @@ func TestGetProductByIdNotFound(t *testing.T) {
 	assert.Equal(t, http.StatusNotFound, get_rr.Code)
 }
 
+func TestGetProductByIdBadRequest(t *testing.T) {
+	r := createServer()
+
+	get_req, get_rr := createRequestTest(http.MethodGet, "/products/abc", "")
+
+	defer get_req.Body.Close()
+
+	r.ServeHTTP(get_rr, get_req)
+
+	assert.Equal(t, http.StatusBadRequest, get_rr.Code)
+}
