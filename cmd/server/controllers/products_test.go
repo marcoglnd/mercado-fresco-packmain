@@ -116,3 +116,40 @@ func TestCreateProductUnprocessable(t *testing.T) {
 	assert.Equal(t, http.StatusUnprocessableEntity, second_rr.Code)
 	assert.Equal(t, http.StatusUnprocessableEntity, third_rr.Code)
 }
+
+func TestCreateProductConflict(t *testing.T) {
+	r := createServer()
+
+	req, rr := createRequestTest(http.MethodPost, "/products/", `{
+		"description": "Yogurt",
+		"expiration_rate": 1,
+		"freezing_rate": 2,
+		"height": 6.4,
+		"length": 4.5,
+		"netweight": 3.4,
+		"product_code": "PROD01",
+		"recommended_freezing_temperature": 1.3,
+		"width": 1.2,
+		"product_type_id": 2,
+		"seller_id": 2
+		}`)
+
+	second_req, second_rr := createRequestTest(http.MethodPost, "/products/", `{
+		"description": "Queijo",
+		"expiration_rate": 2,
+		"freezing_rate": 3,
+		"height": 8.6,
+		"length": 2.4,
+		"netweight": 5.7,
+		"product_code": "PROD01",
+		"recommended_freezing_temperature": 4.5,
+		"width": 2.5,
+		"product_type_id": 54,
+		"seller_id": 1
+		}`)
+
+	r.ServeHTTP(rr, req)
+	r.ServeHTTP(second_rr, second_req)
+
+	assert.Equal(t, http.StatusConflict, second_rr.Code)
+}
