@@ -21,12 +21,12 @@ func createRandomEmployee() (employee Employee) {
 	return
 }
 
-func createRandomListEmployee() (listOfEmployee []Employee) {
+func createRandomListEmployee() (listOfEmployees []Employee) {
 
 	for i := 1; i <= 5; i++ {
 		employee := createRandomEmployee()
 		employee.ID = i
-		listOfEmployee = append(listOfEmployee, employee)
+		listOfEmployees = append(listOfEmployees, employee)
 	}
 	return
 }
@@ -37,7 +37,7 @@ func TestGetAll(t *testing.T) {
 	employeesArg := createRandomListEmployee()
 
 	t.Run("GetAll in case of success", func(t *testing.T) {
-		mock.On("GetAll").Return(employeesArg, nil)
+		mock.On("GetAll").Return(employeesArg, nil).Once()
 
 		service := NewService(mock)
 
@@ -57,7 +57,7 @@ func TestGetAll(t *testing.T) {
 	})
 
 	t.Run("GetAll in case of error", func(t *testing.T) {
-		mock.On("GetAll").Return(nil, errors.New("failed to retrieve employees"))
+		mock.On("GetAll").Return(nil, errors.New("failed to retrieve employees")).Once()
 
 		service := NewService(mock)
 
@@ -77,7 +77,7 @@ func TestGetById(t *testing.T) {
 	employeeArg := createRandomEmployee()
 
 	t.Run("GetById in case of success", func(t *testing.T) {
-		mock.On("GetById", employeeArg.ID).Return(employeeArg, nil)
+		mock.On("GetById", employeeArg.ID).Return(employeeArg, nil).Once()
 
 		service := NewService(mock)
 
@@ -97,7 +97,7 @@ func TestGetById(t *testing.T) {
 	})
 
 	t.Run("GetById in case of error", func(t *testing.T) {
-		mock.On("GetById", 42).Return(Employee{}, errors.New("failed to retrieve employee"))
+		mock.On("GetById", 42).Return(Employee{}, errors.New("failed to retrieve employee")).Once()
 
 		service := NewService(mock)
 
@@ -118,7 +118,7 @@ func TestCreate(t *testing.T) {
 		employeesArg := createRandomListEmployee()
 
 		for _, employee := range employeesArg {
-			mock.On("Create", employee.CardNumberId, employee.FirstName, employee.LastName, employee.WarehouseId).Return(employee, nil)
+			mock.On("Create", employee.CardNumberId, employee.FirstName, employee.LastName, employee.WarehouseId).Return(employee, nil).Once()
 		}
 
 		service := NewService(mock)
@@ -153,8 +153,8 @@ func TestCreate(t *testing.T) {
 
 		expectedError := errors.New("CardNumberId already used")
 
-		mock.On("Create", employee1.CardNumberId, employee1.FirstName, employee1.LastName, employee1.WarehouseId).Return(employee1, nil)
-		mock.On("Create", employee2.CardNumberId, employee2.FirstName, employee2.LastName, employee2.WarehouseId).Return(Employee{}, expectedError)
+		mock.On("Create", employee1.CardNumberId, employee1.FirstName, employee1.LastName, employee1.WarehouseId).Return(employee1, nil).Once()
+		mock.On("Create", employee2.CardNumberId, employee2.FirstName, employee2.LastName, employee2.WarehouseId).Return(Employee{}, expectedError).Once()
 
 		service := NewService(mock)
 
@@ -185,10 +185,10 @@ func TestUpdate(t *testing.T) {
 		employee2.ID = employee1.ID
 
 		mock.On("Create", employee1.CardNumberId, employee1.FirstName, employee1.LastName,
-			employee1.WarehouseId).Return(employee1, nil)
+			employee1.WarehouseId).Return(employee1, nil).Once()
 
 		mock.On("Update", employee1.ID, employee2.CardNumberId, employee2.FirstName, employee2.LastName,
-			employee2.WarehouseId).Return(employee2, nil)
+			employee2.WarehouseId).Return(employee2, nil).Once()
 
 		service := NewService(mock)
 
@@ -212,11 +212,11 @@ func TestUpdate(t *testing.T) {
 
 	})
 
-	t.Run("Update throw an error in case of an nanoexistent ID", func(t *testing.T) {
+	t.Run("Update throw an error in case of an nonexistent ID", func(t *testing.T) {
 		employee := createRandomEmployee()
 
 		mock.On("Update", employee.ID, employee.CardNumberId, employee.FirstName, employee.LastName,
-			employee.WarehouseId).Return(Employee{}, errors.New("failed to retrieve employee"))
+			employee.WarehouseId).Return(Employee{}, errors.New("failed to retrieve employee")).Once()
 
 		service := NewService(mock)
 
@@ -236,17 +236,18 @@ func TestDelete(t *testing.T) {
 
 	t.Run("Delete in case of success", func(t *testing.T) {
 		mock.On("Create", employeeArg.CardNumberId, employeeArg.FirstName, employeeArg.LastName,
-			employeeArg.WarehouseId).Return(employeeArg, nil)
+			employeeArg.WarehouseId).Return(employeeArg, nil).Once()
 
-		mock.On("GetAll").Return([]Employee{employeeArg}, nil)
+		mock.On("GetAll").Return([]Employee{employeeArg}, nil).Once()
 
-		mock.On("Delete", employeeArg.ID).Return(nil)
+		mock.On("Delete", employeeArg.ID).Return(nil).Once()
 
-		mock.On("GetAll").Return([]Employee{}, nil)
+		mock.On("GetAll").Return([]Employee{}, nil).Once()
 
 		service := NewService(mock)
 
 		newEmployee, err := service.Create(employeeArg.CardNumberId, employeeArg.FirstName, employeeArg.LastName, employeeArg.WarehouseId)
+
 		assert.NoError(t, err)
 
 		list1, err := service.GetAll()
@@ -267,7 +268,7 @@ func TestDelete(t *testing.T) {
 	})
 
 	t.Run("Delete in case of error", func(t *testing.T) {
-		mock.On("Delete", 42).Return(errors.New("employee's ID not founded"))
+		mock.On("Delete", 42).Return(errors.New("employee's ID not founded")).Once()
 
 		service := NewService(mock)
 
