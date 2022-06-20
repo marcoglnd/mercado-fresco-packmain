@@ -228,3 +228,53 @@ func TestUpdate(t *testing.T) {
 		mock.AssertExpectations(t)
 	})
 }
+
+func TestDelete(t *testing.T) {
+	mock := new(mocks.Repository)
+
+	employeeArg := createRandomEmployee()
+
+	t.Run("Delete in case of success", func(t *testing.T) {
+		mock.On("Create", employeeArg.CardNumberId, employeeArg.FirstName, employeeArg.LastName,
+			employeeArg.WarehouseId).Return(employeeArg, nil)
+
+		mock.On("GetAll").Return([]Employee{employeeArg}, nil)
+
+		mock.On("Delete", employeeArg.ID).Return(nil)
+
+		mock.On("GetAll").Return([]Employee{}, nil)
+
+		service := NewService(mock)
+
+		newEmployee, err := service.Create(employeeArg.CardNumberId, employeeArg.FirstName, employeeArg.LastName, employeeArg.WarehouseId)
+		assert.NoError(t, err)
+
+		list1, err := service.GetAll()
+		assert.NoError(t, err)
+
+		err = service.Delete(newEmployee.ID)
+		assert.NoError(t, err)
+
+		list2, err := service.GetAll()
+		assert.NoError(t, err)
+
+		assert.NotEmpty(t, list1)
+		assert.NotEqual(t, list1, list2)
+		assert.Empty(t, list2)
+
+		mock.AssertExpectations(t)
+
+	})
+
+	t.Run("Delete in case of error", func(t *testing.T) {
+		mock.On("Delete", 42).Return(errors.New("employee's ID not founded"))
+
+		service := NewService(mock)
+
+		err := service.Delete(42)
+
+		assert.Error(t, err)
+
+		mock.AssertExpectations(t)
+	})
+}
