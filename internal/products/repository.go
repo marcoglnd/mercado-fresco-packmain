@@ -7,7 +7,7 @@ type Repository interface {
 	GetById(id int) (Product, error)
 	LastId() (int, error)
 	CreateNewProduct(
-		id int, description string, expirationRate, freezingRate int,
+		description string, expirationRate, freezingRate int,
 		height, length, netWeight float64, productCode string,
 		recommendedFreezingTemperature, width float64, productTypeId, sellerId int) (Product, error)
 	Update(
@@ -48,10 +48,30 @@ func (repository) LastId() (int, error) {
 	return lastId, nil
 }
 
-func (repository) CreateNewProduct(
-	id int, description string, expirationRate, freezingRate int,
+func (r *repository) VerifyProductCode(productCode string) (bool, error) {
+	list, err := r.GetAll()
+	if err != nil {
+		return false, err
+	}
+	for _, prod := range list {
+		if prod.ProductCode == productCode {
+			return false, fmt.Errorf("product_code already used")
+		}
+	}
+	return true, nil
+}
+
+func (r *repository) CreateNewProduct(
+	description string, expirationRate, freezingRate int,
 	height, length, netWeight float64, productCode string,
 	recommendedFreezingTemperature, width float64, productTypeId, sellerId int) (Product, error) {
+	id, err := r.LastId()
+	if err != nil {
+		return Product{}, err
+	}
+	if verification, err := r.VerifyProductCode(productCode); !verification {
+		return Product{}, err
+	}
 	prod := Product{
 		Id:                             id,
 		Description:                    description,
