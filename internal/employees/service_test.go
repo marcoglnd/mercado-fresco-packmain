@@ -174,3 +174,57 @@ func TestCreate(t *testing.T) {
 
 	})
 }
+
+func TestUpdate(t *testing.T) {
+	mock := new(mocks.Repository)
+
+	t.Run("Update data in case of success", func(t *testing.T) {
+		employee1 := createRandomEmployee()
+		employee2 := createRandomEmployee()
+
+		employee2.ID = employee1.ID
+
+		mock.On("Create", employee1.CardNumberId, employee1.FirstName, employee1.LastName,
+			employee1.WarehouseId).Return(employee1, nil)
+
+		mock.On("Update", employee1.ID, employee2.CardNumberId, employee2.FirstName, employee2.LastName,
+			employee2.WarehouseId).Return(employee2, nil)
+
+		service := NewService(mock)
+
+		newEmployee1, err := service.Create(employee1.CardNumberId, employee1.FirstName, employee1.LastName, employee1.WarehouseId)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, newEmployee1)
+
+		assert.Equal(t, employee1, newEmployee1)
+
+		newEmployee2, err := service.Update(employee1.ID, employee2.CardNumberId, employee2.FirstName, employee2.LastName, employee2.WarehouseId)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, newEmployee2)
+
+		assert.Equal(t, employee1.ID, newEmployee2.ID)
+		assert.NotEqual(t, employee1.CardNumberId, newEmployee2.CardNumberId)
+		assert.NotEqual(t, employee1.FirstName, newEmployee2.FirstName)
+		assert.NotEqual(t, employee1.LastName, newEmployee2.LastName)
+		assert.NotEqual(t, employee1.WarehouseId, newEmployee2.WarehouseId)
+
+		mock.AssertExpectations(t)
+
+	})
+
+	t.Run("Update throw an error in case of an nanoexistent ID", func(t *testing.T) {
+		employee := createRandomEmployee()
+
+		mock.On("Update", employee.ID, employee.CardNumberId, employee.FirstName, employee.LastName,
+			employee.WarehouseId).Return(Employee{}, errors.New("failed to retrieve employee"))
+
+		service := NewService(mock)
+
+		employee, err := service.Update(employee.ID, employee.CardNumberId, employee.FirstName, employee.LastName, employee.WarehouseId)
+
+		assert.Error(t, err)
+		assert.Empty(t, employee)
+
+		mock.AssertExpectations(t)
+	})
+}

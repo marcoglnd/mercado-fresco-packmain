@@ -12,20 +12,20 @@ type Repository struct {
 	mock.Mock
 }
 
-// Create provides a mock function with given fields: id, cardNumberId, firstName, lastName, warehouseId
-func (_m *Repository) Create(id int, cardNumberId string, firstName string, lastName string, warehouseId int) (employees.Employee, error) {
-	ret := _m.Called(id, cardNumberId, firstName, lastName, warehouseId)
+// Create provides a mock function with given fields: cardNumberId, firstName, lastName, warehouseId
+func (_m *Repository) Create(cardNumberId string, firstName string, lastName string, warehouseId int) (employees.Employee, error) {
+	ret := _m.Called(cardNumberId, firstName, lastName, warehouseId)
 
 	var r0 employees.Employee
-	if rf, ok := ret.Get(0).(func(int, string, string, string, int) employees.Employee); ok {
-		r0 = rf(id, cardNumberId, firstName, lastName, warehouseId)
+	if rf, ok := ret.Get(0).(func(string, string, string, int) employees.Employee); ok {
+		r0 = rf(cardNumberId, firstName, lastName, warehouseId)
 	} else {
 		r0 = ret.Get(0).(employees.Employee)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(int, string, string, string, int) error); ok {
-		r1 = rf(id, cardNumberId, firstName, lastName, warehouseId)
+	if rf, ok := ret.Get(1).(func(string, string, string, int) error); ok {
+		r1 = rf(cardNumberId, firstName, lastName, warehouseId)
 	} else {
 		r1 = ret.Error(1)
 	}
