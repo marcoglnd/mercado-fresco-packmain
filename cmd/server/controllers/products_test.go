@@ -222,3 +222,32 @@ func TestGetProductByIdOK(t *testing.T) {
 	assert.True(t, objRes.ProductTypeId == 2)
 	assert.True(t, objRes.SellerId == 2)
 }
+
+func TestGetProductByIdNotFound(t *testing.T) {
+	r := createServer()
+
+	post_req, post_rr := createRequestTest(http.MethodPost, "/products/", `{
+		"description": "Yogurt",
+		"expiration_rate": 1,
+		"freezing_rate": 2,
+		"height": 6.4,
+		"length": 4.5,
+		"netweight": 3.4,
+		"product_code": "PROD01",
+		"recommended_freezing_temperature": 1.3,
+		"width": 1.2,
+		"product_type_id": 2,
+		"seller_id": 2
+		}`)
+
+	get_req, get_rr := createRequestTest(http.MethodGet, "/products/10", "")
+
+	defer post_req.Body.Close()
+	defer get_req.Body.Close()
+
+	r.ServeHTTP(post_rr, post_req)
+	r.ServeHTTP(get_rr, get_req)
+
+	assert.Equal(t, http.StatusNotFound, get_rr.Code)
+}
+
