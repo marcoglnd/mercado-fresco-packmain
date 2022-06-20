@@ -1,6 +1,8 @@
 package employees
 
-import "github.com/stretchr/testify/mock"
+import (
+	"github.com/stretchr/testify/mock"
+)
 
 type EmployeeService struct {
 	mock.Mock
