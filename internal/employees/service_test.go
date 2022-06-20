@@ -70,3 +70,42 @@ func TestGetAll(t *testing.T) {
 	})
 
 }
+
+func TestGetById(t *testing.T) {
+	mock := new(mocks.Repository)
+
+	employeeArg := createRandomEmployee()
+
+	t.Run("GetById in case of success", func(t *testing.T) {
+		mock.On("GetById", employeeArg.ID).Return(employeeArg, nil)
+
+		service := NewService(mock)
+
+		employee, err := service.GetById(employeeArg.ID)
+
+		assert.NoError(t, err)
+		assert.NotEmpty(t, employee)
+
+		assert.Equal(t, employeeArg.ID, employee.ID)
+		assert.Equal(t, employeeArg.CardNumberId, employee.CardNumberId)
+		assert.Equal(t, employeeArg.FirstName, employee.FirstName)
+		assert.Equal(t, employeeArg.LastName, employee.LastName)
+		assert.Equal(t, employeeArg.WarehouseId, employee.WarehouseId)
+
+		mock.AssertExpectations(t)
+
+	})
+
+	t.Run("GetById in case of error", func(t *testing.T) {
+		mock.On("GetById", 42).Return(Employee{}, errors.New("failed to retrieve employee"))
+
+		service := NewService(mock)
+
+		employee, err := service.GetById(42)
+
+		assert.Error(t, err)
+		assert.Empty(t, employee)
+
+		mock.AssertExpectations(t)
+	})
+}
