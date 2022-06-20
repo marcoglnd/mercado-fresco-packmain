@@ -2,6 +2,7 @@ package controllers_test
 
 import (
 	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -152,4 +153,26 @@ func TestCreateProductConflict(t *testing.T) {
 	r.ServeHTTP(second_rr, second_req)
 
 	assert.Equal(t, http.StatusConflict, second_rr.Code)
+}
+
+func TestGetAllOK(t *testing.T) {
+	r := createServer()
+
+	req, rr := createRequestTest(http.MethodGet, "/products/", "")
+
+	defer req.Body.Close()
+
+	r.ServeHTTP(rr, req)
+
+	assert.Equal(t, http.StatusOK, rr.Code)
+
+	objRes := struct {
+		Code int
+		Data []products.Product
+	}{}
+
+	err := json.Unmarshal(rr.Body.Bytes(), &objRes)
+
+	assert.Nil(t, err)
+	assert.True(t, len(objRes.Data) > 0)
 }
