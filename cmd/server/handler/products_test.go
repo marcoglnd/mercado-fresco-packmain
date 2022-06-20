@@ -1,4 +1,4 @@
-package routes
+package controllers_test
 
 import (
 	"github.com/gin-gonic/gin"
@@ -6,12 +6,16 @@ import (
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/products"
 )
 
-func productsRouter(superRouter *gin.RouterGroup) {
+func createServer() *gin.Engine {
+	gin.SetMode(gin.TestMode)
+
 	repo := products.NewRepository()
 	service := products.NewService(repo)
 	controller := controllers.NewProduct(service)
 
-	pr := superRouter.Group("/products")
+	router := gin.Default()
+
+	pr := router.Group("/products")
 	{
 		pr.GET("/", controller.GetAll())
 		pr.GET("/:id", controller.GetById())
@@ -19,4 +23,6 @@ func productsRouter(superRouter *gin.RouterGroup) {
 		pr.PATCH("/:id", controller.Update())
 		pr.DELETE("/:id", controller.Delete())
 	}
+
+	return router
 }
