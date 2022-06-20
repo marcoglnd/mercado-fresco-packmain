@@ -171,97 +171,96 @@ func TestCreate(t *testing.T) {
 	})
 }
 
-// func TestUpdate(t *testing.T) {
-// 	mock := new(mocks.Repository)
+func TestUpdate(t *testing.T) {
+	mock := new(mocks.Repository)
 
-// 	t.Run("Update data in case of success", func(t *testing.T) {
-// 		seller1 := createRandomSeller()
-// 		seller2 := createRandomSeller()
+	t.Run("Update data in case of success", func(t *testing.T) {
+		buyer1 := createRandomBuyer()
+		buyer2 := createRandomBuyer()
 
-// 		seller2.ID = seller1.ID
+		buyer2.ID = buyer1.ID
 
-// 		mock.On("Create",
-// 			seller1.Cid, seller1.Company_name, seller1.Address, seller1.Telephone,
-// 		).Return(seller1, nil).Once()
-// 		mock.On("Update",
-// 			seller1.ID, seller2.Cid, seller2.Company_name, seller2.Address, seller2.Telephone,
-// 		).Return(seller2, nil).Once()
+		mock.On("Create",
+			buyer1.CardNumberID, buyer1.FirstName, buyer1.LastName,
+		).Return(buyer1, nil).Once()
+		mock.On("Update",
+			buyer1.ID, buyer2.CardNumberID, buyer2.FirstName, buyer2.LastName,
+		).Return(buyer2, nil).Once()
 
-// 		s := NewService(mock)
-// 		newSeller1, err := s.Create(seller1.Cid, seller1.Company_name, seller1.Address, seller1.Telephone)
-// 		assert.NoError(t, err)
-// 		assert.NotEmpty(t, newSeller1)
+		s := NewService(mock)
+		newBuyer1, err := s.Create(buyer1.CardNumberID, buyer1.FirstName, buyer1.LastName)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, newBuyer1)
 
-// 		assert.Equal(t, seller1, newSeller1)
+		assert.Equal(t, buyer1, newBuyer1)
 
-// 		newSeller2, err := s.Update(seller1.ID, seller2.Cid, seller2.Company_name, seller2.Address, seller2.Telephone)
-// 		assert.NoError(t, err)
-// 		assert.NotEmpty(t, newSeller2)
+		newBuyer2, err := s.Update(buyer1.ID, buyer2.CardNumberID, buyer2.FirstName, buyer2.LastName)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, newBuyer2)
 
-// 		assert.Equal(t, seller1.ID, newSeller2.ID)
-// 		assert.NotEqual(t, seller1.Cid, newSeller2.Cid)
-// 		assert.NotEqual(t, seller1.Company_name, newSeller2.Company_name)
-// 		assert.NotEqual(t, seller1.Address, newSeller2.Address)
-// 		assert.NotEqual(t, seller1.Telephone, newSeller2.Telephone)
+		assert.Equal(t, buyer1.ID, newBuyer2.ID)
+		assert.NotEqual(t, buyer1.CardNumberID, newBuyer2.CardNumberID)
+		assert.NotEqual(t, buyer1.FirstName, newBuyer2.FirstName)
+		assert.NotEqual(t, buyer1.LastName, newBuyer2.LastName)
 
-// 		mock.AssertExpectations(t)
-// 	})
+		mock.AssertExpectations(t)
+	})
 
-// 	t.Run("Update throw an error in case of an nonexistent ID", func(t *testing.T) {
-// 		seller := createRandomSeller()
+	t.Run("Update throw an error in case of an nonexistent ID", func(t *testing.T) {
+		buyer := createRandomBuyer()
 
-// 		mock.On("Update", seller.ID, seller.Cid, seller.Company_name, seller.Address, seller.Telephone).Return(Seller{}, errors.New("failed to retrieve seller")).Once()
+		mock.On("Update", buyer.ID, buyer.CardNumberID, buyer.FirstName, buyer.LastName).Return(Buyer{}, errors.New("failed to retrieve buyer")).Once()
 
-// 		service := NewService(mock)
+		service := NewService(mock)
 
-// 		seller, err := service.Update(seller.ID, seller.Cid, seller.Company_name, seller.Address, seller.Telephone)
+		buyer, err := service.Update(buyer.ID, buyer.CardNumberID, buyer.FirstName, buyer.LastName)
 
-// 		assert.Error(t, err)
-// 		assert.Empty(t, seller)
+		assert.Error(t, err)
+		assert.Empty(t, buyer)
 
-// 		mock.AssertExpectations(t)
-// 	})
-// }
+		mock.AssertExpectations(t)
+	})
+}
 
-// func TestDelete(t *testing.T) {
-// 	mock := new(mocks.Repository)
+func TestDelete(t *testing.T) {
+	mock := new(mocks.Repository)
 
-// 	sellerArg := createRandomSeller()
+	buyerArg := createRandomBuyer()
 
-// 	t.Run("Delete in case of success", func(t *testing.T) {
-// 		mock.On("Create", sellerArg.Cid, sellerArg.Company_name, sellerArg.Address, sellerArg.Telephone).Return(sellerArg, nil).Once()
-// 		mock.On("GetAll").Return([]Seller{sellerArg}, nil).Once()
-// 		mock.On("Delete", sellerArg.ID).Return(nil).Once()
-// 		mock.On("GetAll").Return([]Seller{}, nil).Once()
+	t.Run("Delete in case of success", func(t *testing.T) {
+		mock.On("Create", buyerArg.CardNumberID, buyerArg.FirstName, buyerArg.LastName).Return(buyerArg, nil).Once()
+		mock.On("GetAll").Return([]Buyer{buyerArg}, nil).Once()
+		mock.On("Delete", buyerArg.ID).Return(nil).Once()
+		mock.On("GetAll").Return([]Buyer{}, nil).Once()
 
-// 		service := NewService(mock)
+		service := NewService(mock)
 
-// 		newSeller, err := service.Create(sellerArg.Cid, sellerArg.Company_name, sellerArg.Address, sellerArg.Telephone)
-// 		assert.NoError(t, err)
-// 		list1, err := service.GetAll()
-// 		assert.NoError(t, err)
-// 		err = service.Delete(newSeller.ID)
-// 		assert.NoError(t, err)
-// 		list2, err := service.GetAll()
-// 		assert.NoError(t, err)
+		newSeller, err := service.Create(buyerArg.CardNumberID, buyerArg.FirstName, buyerArg.LastName)
+		assert.NoError(t, err)
+		list1, err := service.GetAll()
+		assert.NoError(t, err)
+		err = service.Delete(newSeller.ID)
+		assert.NoError(t, err)
+		list2, err := service.GetAll()
+		assert.NoError(t, err)
 
-// 		assert.NotEmpty(t, list1)
-// 		assert.NotEqual(t, list1, list2)
-// 		assert.Empty(t, list2)
+		assert.NotEmpty(t, list1)
+		assert.NotEqual(t, list1, list2)
+		assert.Empty(t, list2)
 
-// 		mock.AssertExpectations(t)
+		mock.AssertExpectations(t)
 
-// 	})
+	})
 
-// 	t.Run("Delete in case of error", func(t *testing.T) {
-// 		mock.On("Delete", 185).Return(errors.New("seller's ID not founded")).Once()
+	t.Run("Delete in case of error", func(t *testing.T) {
+		mock.On("Delete", 185).Return(errors.New("buyer's ID not found")).Once()
 
-// 		service := NewService(mock)
+		service := NewService(mock)
 
-// 		err := service.Delete(185)
+		err := service.Delete(185)
 
-// 		assert.Error(t, err)
+		assert.Error(t, err)
 
-// 		mock.AssertExpectations(t)
-// 	})
-// }
+		mock.AssertExpectations(t)
+	})
+}
