@@ -109,3 +109,68 @@ func TestGetById(t *testing.T) {
 		mock.AssertExpectations(t)
 	})
 }
+
+func TestCreate(t *testing.T) {
+	mock := new(mocks.Repository)
+
+	t.Run("Verify employee`s ID increases when a new employee is created", func(t *testing.T) {
+
+		employeesArg := createRandomListEmployee()
+
+		for _, employee := range employeesArg {
+			mock.On("Create", employee.CardNumberId, employee.FirstName, employee.LastName, employee.WarehouseId).Return(employee, nil)
+		}
+
+		service := NewService(mock)
+
+		var list []Employee
+
+		for _, employee := range employeesArg {
+			newEmployee, err := service.Create(employee.CardNumberId, employee.FirstName, employee.LastName, employee.WarehouseId)
+
+			assert.NoError(t, err)
+			assert.NotEmpty(t, newEmployee)
+
+			assert.Equal(t, employee.ID, newEmployee.ID)
+			assert.Equal(t, employee.CardNumberId, newEmployee.CardNumberId)
+			assert.Equal(t, employee.FirstName, newEmployee.FirstName)
+			assert.Equal(t, employee.LastName, newEmployee.LastName)
+			assert.Equal(t, employee.WarehouseId, newEmployee.WarehouseId)
+
+			list = append(list, newEmployee)
+
+		}
+		assert.True(t, list[0].ID == list[1].ID-1)
+
+		mock.AssertExpectations(t)
+	})
+
+	t.Run("Verify when CardNumberId`s employee already exists thrown an error", func(t *testing.T) {
+		employee1 := createRandomEmployee()
+		employee2 := createRandomEmployee()
+
+		employee2.CardNumberId = employee1.CardNumberId
+
+		expectedError := errors.New("CardNumberId already used")
+
+		mock.On("Create", employee1.CardNumberId, employee1.FirstName, employee1.LastName, employee1.WarehouseId).Return(employee1, nil)
+		mock.On("Create", employee2.CardNumberId, employee2.FirstName, employee2.LastName, employee2.WarehouseId).Return(Employee{}, expectedError)
+
+		service := NewService(mock)
+
+		newEmployee1, err := service.Create(employee1.CardNumberId, employee1.FirstName, employee1.LastName, employee1.WarehouseId)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, newEmployee1)
+
+		assert.Equal(t, employee1, newEmployee1)
+
+		newEmployee2, err := service.Create(employee2.CardNumberId, employee2.FirstName, employee2.LastName, employee2.WarehouseId)
+		assert.Error(t, err)
+		assert.Empty(t, newEmployee2)
+
+		assert.NotEqual(t, employee2, newEmployee2)
+
+		mock.AssertExpectations(t)
+
+	})
+}
