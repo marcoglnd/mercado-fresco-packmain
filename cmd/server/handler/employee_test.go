@@ -54,3 +54,21 @@ func TestCreateOk(t *testing.T) {
 
 	assert.Equal(t, http.StatusCreated, res.Code)
 }
+
+func TestCreateFail(t *testing.T) {
+	routes := createServer()
+	req, res := createRequestTest(http.MethodPost, getPathUrl("/employees/"),
+		` 
+		{
+			"card_number_id": "1234",
+			"first_name": "Paloma",
+			"last_name": "Ribeiro",
+			"warehouse_id": 2
+		}
+		`,
+	)
+	defer req.Body.Close()
+	routes.ServeHTTP(res, req)
+
+	assert.Equal(t, http.StatusUnprocessableEntity, res.Code)
+}
