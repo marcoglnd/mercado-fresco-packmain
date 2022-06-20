@@ -12,20 +12,20 @@ type Repository struct {
 	mock.Mock
 }
 
-// Create provides a mock function with given fields: id, cardNumberId, firstName, lastName
-func (_m *Repository) Create(id int, cardNumberId string, firstName string, lastName string) (buyers.Buyer, error) {
-	ret := _m.Called(id, cardNumberId, firstName, lastName)
+// Create provides a mock function with given fields: cardNumberId, firstName, lastName
+func (_m *Repository) Create(cardNumberId string, firstName string, lastName string) (buyers.Buyer, error) {
+	ret := _m.Called(cardNumberId, firstName, lastName)
 
 	var r0 buyers.Buyer
-	if rf, ok := ret.Get(0).(func(int, string, string, string) buyers.Buyer); ok {
-		r0 = rf(id, cardNumberId, firstName, lastName)
+	if rf, ok := ret.Get(0).(func(string, string, string) buyers.Buyer); ok {
+		r0 = rf(cardNumberId, firstName, lastName)
 	} else {
 		r0 = ret.Get(0).(buyers.Buyer)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(int, string, string, string) error); ok {
-		r1 = rf(id, cardNumberId, firstName, lastName)
+	if rf, ok := ret.Get(1).(func(string, string, string) error); ok {
+		r1 = rf(cardNumberId, firstName, lastName)
 	} else {
 		r1 = ret.Error(1)
 	}
