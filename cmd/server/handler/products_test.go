@@ -1,6 +1,10 @@
 package controllers_test
 
 import (
+	"bytes"
+	"net/http"
+	"net/http/httptest"
+
 	"github.com/gin-gonic/gin"
 	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/products"
@@ -25,4 +29,15 @@ func createServer() *gin.Engine {
 	}
 
 	return router
+}
+
+func createRequestTest(
+	method string,
+	url string,
+	body string,
+) (*http.Request, *httptest.ResponseRecorder) {
+	req := httptest.NewRequest(method, url, bytes.NewBuffer([]byte(body)))
+	req.Header.Add("Content-Type", "application/json")
+
+	return req, httptest.NewRecorder()
 }
