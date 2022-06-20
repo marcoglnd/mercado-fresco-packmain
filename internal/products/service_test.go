@@ -192,7 +192,7 @@ func TestCreate(t *testing.T) {
 		mock.AssertExpectations(t)
 	})
 
-	t.Run("Verify when a CID`s product already exists thrown an error", func(t *testing.T) {
+	t.Run("Verify when a ProductCode`s product already exists thrown an error", func(t *testing.T) {
 		product1 := createRandomProduct()
 		product2 := createRandomProduct()
 
