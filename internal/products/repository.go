@@ -42,7 +42,7 @@ func (repository) GetById(id int) (Product, error) {
 
 func (repository) LastId() (int, error) {
 	if len(listOfProducts) == 0 {
-		return 0, nil
+		return 1, nil
 	}
 	lastId := listOfProducts[len(listOfProducts)-1].Id + 1
 	return lastId, nil

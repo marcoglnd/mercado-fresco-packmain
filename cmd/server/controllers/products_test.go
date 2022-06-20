@@ -176,3 +176,49 @@ func TestGetAllOK(t *testing.T) {
 	assert.Nil(t, err)
 	assert.True(t, len(objRes.Data) > 0)
 }
+
+func TestGetProductByIdOK(t *testing.T) {
+	r := createServer()
+
+	post_req, post_rr := createRequestTest(http.MethodPost, "/products/", `{
+		"description": "Yogurt",
+		"expiration_rate": 1,
+		"freezing_rate": 2,
+		"height": 6.4,
+		"length": 4.5,
+		"netweight": 3.4,
+		"product_code": "PROD01",
+		"recommended_freezing_temperature": 1.3,
+		"width": 1.2,
+		"product_type_id": 2,
+		"seller_id": 2
+		}`)
+
+	get_req, get_rr := createRequestTest(http.MethodGet, "/products/1", "")
+
+	defer post_req.Body.Close()
+	defer get_req.Body.Close()
+
+	r.ServeHTTP(post_rr, post_req)
+	r.ServeHTTP(get_rr, get_req)
+
+	assert.Equal(t, http.StatusOK, get_rr.Code)
+
+	var objRes products.Product
+
+	err := json.Unmarshal(get_rr.Body.Bytes(), &objRes)
+
+	assert.Nil(t, err)
+	assert.True(t, objRes.Id == 1)
+	assert.True(t, objRes.Description == "Yogurt")
+	assert.True(t, objRes.ExpirationRate == 1)
+	assert.True(t, objRes.FreezingRate == 2)
+	assert.True(t, objRes.Height == 6.4)
+	assert.True(t, objRes.Length == 4.5)
+	assert.True(t, objRes.NetWeight == 3.4)
+	assert.True(t, objRes.ProductCode == "PROD01")
+	assert.True(t, objRes.RecommendedFreezingTemperature == 1.3)
+	assert.True(t, objRes.Width == 1.2)
+	assert.True(t, objRes.ProductTypeId == 2)
+	assert.True(t, objRes.SellerId == 2)
+}
