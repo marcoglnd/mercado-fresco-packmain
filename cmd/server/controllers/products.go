@@ -101,11 +101,19 @@ func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 			return
 		}
 		product, err := c.service.CreateNewProduct(
-			req.Description, req.ExpirationRate, req.FreezingRate,
-			req.Height, req.Length, req.NetWeight, req.ProductCode,
-			req.RecommendedFreezingTemperature, req.Width, req.ProductTypeId, req.SellerId)
+			req.Description,
+			req.ExpirationRate,
+			req.FreezingRate,
+			req.Height,
+			req.Length,
+			req.NetWeight,
+			req.ProductCode,
+			req.RecommendedFreezingTemperature,
+			req.Width,
+			req.ProductTypeId,
+			req.SellerId)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 			return
 		}
 		ctx.JSON(http.StatusCreated, product)
