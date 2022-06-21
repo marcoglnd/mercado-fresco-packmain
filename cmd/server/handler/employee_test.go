@@ -107,7 +107,19 @@ func TestFindAll(t *testing.T) {
 	err := json.Unmarshal(res.Body.Bytes(), &objRes)
 
 	assert.Nil(t, err)
-	assert.True(t, len(objRes.Data) > 0)
+	assert.True(t, len(objRes.Data) >= 0)
 	assert.Equal(t, http.StatusOK, res.Code)
+
+}
+
+func TestFindByIdNonExistent(t *testing.T) {
+	routes := createServer()
+	inexistentId := 10
+	req, res := createRequestTest(http.MethodGet, getPathUrl(fmt.Sprintf("/employees/%d", inexistentId)), "")
+
+	defer req.Body.Close()
+	routes.ServeHTTP(res, req)
+
+	assert.Equal(t, http.StatusNotFound, res.Code)
 
 }
