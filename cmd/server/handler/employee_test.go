@@ -147,3 +147,44 @@ func TestFindByIdExistent(t *testing.T) {
 	assert.Equal(t, http.StatusOK, res.Code)
 
 }
+
+func TestUpdateOk(t *testing.T) {
+	routes := createServer()
+	reqFake, resFake := createRequestTest(http.MethodGet, getPathUrl("/employees/1"), "")
+
+	defer reqFake.Body.Close()
+	routes.ServeHTTP(resFake, reqFake)
+
+	assert.Equal(t, http.StatusOK, resFake.Code)
+
+	type createdEmployee struct {
+		ID int `json:"id"`
+		employees.Employee
+	}
+
+	var oldObjRes createdEmployee
+
+	errFake := json.Unmarshal(resFake.Body.Bytes(), &oldObjRes)
+	assert.Nil(t, errFake)
+
+	req, res := createRequestTest(http.MethodPatch, getPathUrl(fmt.Sprintf("/employees/%d", oldObjRes.ID)),
+		`
+		{
+			"card_number_id": "1234",
+			"first_name": "Paloma",
+			"last_name": "Ribeiro",
+			"warehouse_id": 2
+		}`,
+	)
+
+	defer req.Body.Close()
+	routes.ServeHTTP(res, req)
+
+	var newObjRes createdEmployee
+
+	err := json.Unmarshal(res.Body.Bytes(), &newObjRes)
+
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusOK, res.Code)
+	assert.NotEqual(t, oldObjRes.CardNumberId, newObjRes.CardNumberId)
+}
