@@ -216,3 +216,16 @@ func TestUpdateNonExistent(t *testing.T) {
 	assert.Equal(t, http.StatusNotFound, res.Code)
 
 }
+
+func TestDeleteNonExistent(t *testing.T) {
+	routes := createServer()
+	inexistentId := 10
+	req, res := createRequestTest(http.MethodDelete, getPathUrl(fmt.Sprintf("/employees/%d", inexistentId)), "")
+
+	defer req.Body.Close()
+
+	routes.ServeHTTP(res, req)
+
+	assert.Equal(t, http.StatusNotFound, res.Code)
+
+}
