@@ -34,13 +34,17 @@ func (c *SellerController) GetAll() gin.HandlerFunc {
 
 		s, err := c.service.GetAll()
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{
-				"error": err.Error(),
-			})
+			ctx.AbortWithStatusJSON(
+				http.StatusUnprocessableEntity,
+				gin.H{"error": err.Error()})
 			return
 		}
 
-		ctx.JSON(http.StatusOK, s)
+		ctx.JSON(
+			http.StatusOK, gin.H{
+				"data": s,
+			},
+		)
 	}
 }
 
