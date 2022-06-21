@@ -2,6 +2,7 @@ package controllers_test
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -9,6 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/routes"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/employees"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -88,5 +90,24 @@ func TestCreateConflict(t *testing.T) {
 	routes.ServeHTTP(res, req)
 
 	assert.Equal(t, http.StatusConflict, res.Code)
+
+}
+
+func TestFindAll(t *testing.T) {
+	routes := createServer()
+	req, res := createRequestTest(http.MethodGet, getPathUrl("/employees/"), "")
+
+	defer req.Body.Close()
+	routes.ServeHTTP(res, req)
+
+	objRes := struct {
+		Data []employees.Employee
+	}{}
+
+	err := json.Unmarshal(res.Body.Bytes(), &objRes)
+
+	assert.Nil(t, err)
+	assert.True(t, len(objRes.Data) > 0)
+	assert.Equal(t, http.StatusOK, res.Code)
 
 }
