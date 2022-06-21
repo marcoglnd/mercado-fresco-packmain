@@ -539,3 +539,15 @@ func TestDeleteProductsFail(t *testing.T) {
 
 	assert.Equal(t, http.StatusNotFound, delete_rr.Code)
 }
+
+func TestDeleteProductsBadRequest(t *testing.T) {
+	r := createServer()
+
+	delete_req, delete_rr := createRequestTest(http.MethodDelete, "/products/abc", "")
+
+	defer delete_req.Body.Close()
+
+	r.ServeHTTP(delete_rr, delete_req)
+
+	assert.Equal(t, http.StatusBadRequest, delete_rr.Code)
+}
