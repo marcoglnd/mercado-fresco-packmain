@@ -188,3 +188,31 @@ func TestUpdateOk(t *testing.T) {
 	assert.Equal(t, http.StatusOK, res.Code)
 	assert.NotEqual(t, oldObjRes.CardNumberId, newObjRes.CardNumberId)
 }
+
+func TestUpdateNonExistent(t *testing.T) {
+	routes := createServer()
+
+	reqValidateCheck, resValidateCheck := createRequestTest(http.MethodGet, getPathUrl("/employees/notint"), "")
+
+	defer reqValidateCheck.Body.Close()
+	routes.ServeHTTP(resValidateCheck, reqValidateCheck)
+	assert.Equal(t, http.StatusBadRequest, resValidateCheck.Code)
+
+	inexistentId := 10
+	req, res := createRequestTest(http.MethodPatch, getPathUrl(fmt.Sprintf("/employees/%d", inexistentId)),
+
+		`{
+			"card_number_id": "1234",
+			"first_name": "Paloma",
+			"last_name": "Ribeiro",
+			"warehouse_id": 2
+		}
+		`,
+	)
+
+	defer req.Body.Close()
+	routes.ServeHTTP(res, req)
+
+	assert.Equal(t, http.StatusNotFound, res.Code)
+
+}
