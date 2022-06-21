@@ -90,7 +90,7 @@ type requestProducts struct {
 // @Produce json
 // @Param product body requestProducts true "Product to create"
 // @Success 201 {object} products.Product
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 409 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products [post]
 func (c *Controller) CreateNewProduct() gin.HandlerFunc {
@@ -130,6 +130,7 @@ func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 // @Success 200 {object} products.Product
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products/{id} [patch]
 func (c *Controller) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
