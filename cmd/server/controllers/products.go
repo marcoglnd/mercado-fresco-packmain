@@ -135,7 +135,7 @@ func (c *Controller) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req requestProducts
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid inputs"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid inputs"})
 			return
 		}
 		id := ctx.Param("id")

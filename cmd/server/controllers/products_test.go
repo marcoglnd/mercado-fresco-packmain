@@ -384,3 +384,71 @@ func TestUpdateProductBadRequest(t *testing.T) {
 
 	assert.Equal(t, http.StatusBadRequest, patch_rr.Code)
 }
+
+func TestUpdateProductUnprocessable(t *testing.T) {
+	r := createServer()
+
+	post_req, post_rr := createRequestTest(http.MethodPost, "/products/", `{
+		"description": "Yogurt",
+		"expiration_rate": 1,
+		"freezing_rate": 2,
+		"height": 6.4,
+		"length": 4.5,
+		"netweight": 3.4,
+		"product_code": "PROD01",
+		"recommended_freezing_temperature": 1.3,
+		"width": 1.2,
+		"product_type_id": 2,
+		"seller_id": 2
+		}`)
+
+	patch_req, patch_rr := createRequestTest(http.MethodPatch, "/products/1", `{
+		"expiration_rate": 2,
+		"freezing_rate": 3,
+		"height": 8.6,
+		"length": 2.4,
+		"netweight": 5.7,
+		"product_code": "PROD02",
+		"recommended_freezing_temperature": 4.5,
+		"width": 2.5,
+		"product_type_id": 54,
+		"seller_id": 1
+		}`)
+
+	secondPatch_req, secondPatch_rr := createRequestTest(http.MethodPatch, "/products/1", `{
+		"freezing_rate": 3,
+		"height": 8.6,
+		"length": 2.4,
+		"netweight": 5.7,
+		"product_code": "PROD02",
+		"recommended_freezing_temperature": 4.5,
+		"width": 2.5,
+		"product_type_id": 54,
+		"seller_id": 1
+		}`)
+
+	thirdPatch_req, thirdPatch_rr := createRequestTest(http.MethodPatch, "/products/1", `{
+		"description": "Queijo",
+		"expiration_rate": 2,
+		"freezing_rate": 3,
+		"product_code": "PROD02",
+		"recommended_freezing_temperature": 4.5,
+		"width": 2.5,
+		"product_type_id": 54,
+		"seller_id": 1
+		}`)
+
+	defer post_req.Body.Close()
+	defer patch_req.Body.Close()
+	defer secondPatch_req.Body.Close()
+	defer thirdPatch_req.Body.Close()
+
+	r.ServeHTTP(post_rr, post_req)
+	r.ServeHTTP(patch_rr, patch_req)
+	r.ServeHTTP(secondPatch_rr, secondPatch_req)
+	r.ServeHTTP(thirdPatch_rr, thirdPatch_req)
+
+	assert.Equal(t, http.StatusUnprocessableEntity, patch_rr.Code)
+	assert.Equal(t, http.StatusUnprocessableEntity, secondPatch_rr.Code)
+	assert.Equal(t, http.StatusUnprocessableEntity, thirdPatch_rr.Code)
+}
