@@ -452,3 +452,61 @@ func TestUpdateProductUnprocessable(t *testing.T) {
 	assert.Equal(t, http.StatusUnprocessableEntity, secondPatch_rr.Code)
 	assert.Equal(t, http.StatusUnprocessableEntity, thirdPatch_rr.Code)
 }
+
+func TestDeleteProductOK(t *testing.T) {
+	r := createServer()
+
+	post_req, post_rr := createRequestTest(http.MethodPost, "/products/", `{
+		"description": "Yogurt",
+		"expiration_rate": 1,
+		"freezing_rate": 2,
+		"height": 6.4,
+		"length": 4.5,
+		"netweight": 3.4,
+		"product_code": "PROD01",
+		"recommended_freezing_temperature": 1.3,
+		"width": 1.2,
+		"product_type_id": 2,
+		"seller_id": 2
+		}`)
+
+	get_req, get_rr := createRequestTest(http.MethodGet, "/products/", "")
+
+	r.ServeHTTP(post_rr, post_req)
+	r.ServeHTTP(get_rr, get_req)
+
+	objRes := struct {
+		Code int
+		Data []products.Product
+	}{}
+
+	err := json.Unmarshal(get_rr.Body.Bytes(), &objRes)
+
+	productsLen := len(objRes.Data)
+
+	assert.Nil(t, err)
+	assert.True(t, productsLen > 0)
+
+	delete_req, delete_rr := createRequestTest(http.MethodDelete, "/products/1", "")
+
+	defer post_req.Body.Close()
+	defer delete_req.Body.Close()
+
+	r.ServeHTTP(delete_rr, delete_req)
+
+	secondGet_req, secondGet_rr := createRequestTest(http.MethodGet, "/products/", "")
+
+	r.ServeHTTP(secondGet_rr, secondGet_req)
+
+	secondObjRes := struct {
+		Code int
+		Data []products.Product
+	}{}
+
+	json.Unmarshal(secondGet_rr.Body.Bytes(), &secondObjRes)
+
+	secondProductsLen := len(secondObjRes.Data)
+
+	assert.Equal(t, http.StatusNoContent, delete_rr.Code)
+	assert.True(t, productsLen-1 == secondProductsLen)
+}
