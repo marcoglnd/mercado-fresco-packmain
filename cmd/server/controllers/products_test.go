@@ -360,3 +360,27 @@ func TestUpdateProductNotFound(t *testing.T) {
 
 	assert.Equal(t, http.StatusNotFound, patch_rr.Code)
 }
+
+func TestUpdateProductBadRequest(t *testing.T) {
+	r := createServer()
+
+	patch_req, patch_rr := createRequestTest(http.MethodPatch, "/products/abc", `{
+		"description": "Queijo",
+		"expiration_rate": 2,
+		"freezing_rate": 3,
+		"height": 8.6,
+		"length": 2.4,
+		"netweight": 5.7,
+		"product_code": "PROD02",
+		"recommended_freezing_temperature": 4.5,
+		"width": 2.5,
+		"product_type_id": 54,
+		"seller_id": 1
+		}`)
+
+	defer patch_req.Body.Close()
+
+	r.ServeHTTP(patch_rr, patch_req)
+
+	assert.Equal(t, http.StatusBadRequest, patch_rr.Code)
+}
