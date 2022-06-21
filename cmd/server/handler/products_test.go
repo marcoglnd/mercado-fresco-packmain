@@ -174,7 +174,7 @@ func TestGetAllOK(t *testing.T) {
 	err := json.Unmarshal(rr.Body.Bytes(), &objRes)
 
 	assert.Nil(t, err)
-	assert.True(t, len(objRes.Data) > 0)
+	assert.True(t, len(objRes.Data) >= 0)
 }
 
 func TestGetProductByIdOK(t *testing.T) {
