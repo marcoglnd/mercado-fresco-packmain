@@ -11,7 +11,7 @@ var lastID int
 type Repository interface {
 	GetAll() ([]Buyer, error)
 	GetById(id int) (Buyer, error)
-	Create(id int, cardNumberId, firstName, lastName string) (Buyer, error)
+	Create(cardNumberId, firstName, lastName string) (Buyer, error)
 	LastID() (int, error)
 	Update(id int, cardNumberId, firstName, lastName string) (Buyer, error)
 	Delete(id int) error
@@ -36,8 +36,28 @@ func (repository) LastID() (int, error) {
 	return lastID, nil
 }
 
-func (repository) Create(id int, cardNumberId, firstName, lastName string) (Buyer, error) {
-	buyer := Buyer{id, cardNumberId, firstName, lastName}
+func (r *repository) Create(cardNumberId, firstName, lastName string) (Buyer, error) {
+	buyers, err := r.GetAll()
+	if err != nil {
+		return Buyer{}, err
+	}
+
+	for i := range buyers {
+		if buyers[i].CardNumberID == cardNumberId {
+			fmt.Println("olaaaaa")
+			return Buyer{}, fmt.Errorf("CardNumberID %s do Buyer já existe", cardNumberId)
+		}
+	}
+
+	buyerID, err := r.LastID()
+
+	if err != nil {
+		return Buyer{}, err
+	}
+
+	buyerID++
+
+	buyer := Buyer{buyerID, cardNumberId, firstName, lastName}
 	buyersList = append(buyersList, buyer)
 	lastID = buyer.ID
 	return buyer, nil

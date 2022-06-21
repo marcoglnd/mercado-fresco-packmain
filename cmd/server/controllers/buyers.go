@@ -137,15 +137,15 @@ func (c *BuyerController) Update() gin.HandlerFunc {
 		}
 
 		if req.CardNumberID == "" {
-			ctx.JSON(400, gin.H{"error": "O CardNumberID do buyer é obrigatório"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O CardNumberID do buyer é obrigatório"})
 			return
 		}
 		if req.FirstName == "" {
-			ctx.JSON(400, gin.H{"error": "O FirstName do buyer é obrigatório"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O FirstName do buyer é obrigatório"})
 			return
 		}
 		if req.LastName == "" {
-			ctx.JSON(400, gin.H{"error": "O LastName do buyer é obrigatório"})
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O LastName do buyer é obrigatório"})
 			return
 		}
 
