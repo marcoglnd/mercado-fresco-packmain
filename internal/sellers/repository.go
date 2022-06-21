@@ -6,7 +6,7 @@ import "fmt"
 
 var sr []Seller = []Seller{}
 
-var lastID int
+// var lastID int
 
 // Este repositório é uma interface, portanto tem alguns métodos
 type Repository interface {
@@ -41,8 +41,16 @@ func (repository) GetById(id int) (Seller, error) {
 	return s, nil
 }
 
+// func (repository) LastID() (int, error) {
+// 	return lastID, nil
+// }
+
 func (repository) LastID() (int, error) {
-	return lastID, nil
+	if len(sr) == 0 {
+		return 1, nil
+	}
+	lastId := sr[len(sr)-1].ID + 1
+	return lastId, nil
 }
 
 func (r *repository) Create(cid int, company_name string, address string, telephone string) (Seller, error) {
@@ -62,7 +70,7 @@ func (r *repository) Create(cid int, company_name string, address string, teleph
 		return Seller{}, err
 	}
 
-	lastID++
+	// lastID += 1
 	p := Seller{lastID, cid, company_name, address, telephone}
 	sr = append(sr, p)
 	return p, nil
