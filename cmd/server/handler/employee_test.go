@@ -123,3 +123,27 @@ func TestFindByIdNonExistent(t *testing.T) {
 	assert.Equal(t, http.StatusNotFound, res.Code)
 
 }
+
+func TestFindByIdExistent(t *testing.T) {
+	routes := createServer()
+
+	reqValidateCheck, resValidateCheck := createRequestTest(http.MethodGet, getPathUrl("/employees/notint"), "")
+
+	defer reqValidateCheck.Body.Close()
+	routes.ServeHTTP(resValidateCheck, reqValidateCheck)
+	assert.Equal(t, http.StatusBadRequest, resValidateCheck.Code)
+
+	existentId := 1
+	req, res := createRequestTest(http.MethodGet, getPathUrl(fmt.Sprintf("/employees/%d", existentId)), "")
+
+	defer req.Body.Close()
+	routes.ServeHTTP(res, req)
+
+	var objRes employees.Employee
+
+	err := json.Unmarshal(res.Body.Bytes(), &objRes)
+
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusOK, res.Code)
+
+}
