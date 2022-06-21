@@ -35,7 +35,8 @@ func RandomCategory() string {
 	return RandomString(6)
 }
 
-// RandomMoney generates a random amount of number
+// RandomCode generates a random amount of number
+
 func RandomCode() int {
 	return int(RandomInt(0, 1000))
 }
