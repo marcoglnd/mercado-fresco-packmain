@@ -130,8 +130,7 @@ func TestCreate(t *testing.T) {
 		sectionsArg := createRandomListSection()
 
 		for _, section := range sectionsArg {
-			mock.On(
-				"Create",
+			mock.On("Create",
 				section.SectionNumber,
 				section.CurrentTemperature,
 				section.MinimumTemperature,
@@ -139,8 +138,7 @@ func TestCreate(t *testing.T) {
 				section.MinimumCapacity,
 				section.MaximumCapacity,
 				section.WarehouseId,
-				section.ProductTypeId,
-			).Return(section, nil).Once()
+				section.ProductTypeId).Return(section, nil).Once()
 		}
 
 		service := NewService(mock)
@@ -413,3 +411,4 @@ func TestDelete(t *testing.T) {
 		mock.AssertExpectations(t)
 	})
 }
+
