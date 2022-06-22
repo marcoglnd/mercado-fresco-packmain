@@ -1,11 +1,8 @@
 package controllers_test
 
 import (
-	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
-	"net/http/httptest"
 	"testing"
 
 	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
@@ -15,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func createServer() *gin.Engine {
+func createServerForSeller() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 
 	repo := sellers.NewRepository()
@@ -37,19 +34,8 @@ func createServer() *gin.Engine {
 	return router
 }
 
-func createRequestTest(
-	method string,
-	url string,
-	body string,
-) (*http.Request, *httptest.ResponseRecorder) {
-	req := httptest.NewRequest(method, url, bytes.NewBuffer([]byte(body)))
-	req.Header.Add("Content-Type", "application/json")
-
-	return req, httptest.NewRecorder()
-}
-
 func Test_CreateSeller_OK(t *testing.T) {
-	r := createServer()
+	r := createServerForSeller()
 
 	req, rr := createRequestTest(http.MethodPost, "/sellers/", `{
 		"cid": 123, "company_name": "John", "address": "Rua Meli", "telephone": "1234"
@@ -61,7 +47,7 @@ func Test_CreateSeller_OK(t *testing.T) {
 }
 
 func Test_CreateSeller_bad_request(t *testing.T) {
-	r := createServer()
+	r := createServerForSeller()
 
 	req, rr := createRequestTest(http.MethodPost, "/sellers/", `{
 		"cid": "123", "company_name": "Jhon", "address": "Doe", "telephone": "123456"
@@ -73,7 +59,7 @@ func Test_CreateSeller_bad_request(t *testing.T) {
 }
 
 func Test_CreateSeller_fail(t *testing.T) {
-	r := createServer()
+	r := createServerForSeller()
 
 	req, rr := createRequestTest(http.MethodPost, "/sellers/", `{
 		"company_name": "Jhon", "address": "Doe"
@@ -85,7 +71,7 @@ func Test_CreateSeller_fail(t *testing.T) {
 }
 
 func Test_CreateSeller_conflict(t *testing.T) {
-	r := createServer()
+	r := createServerForSeller()
 
 	req, rr := createRequestTest(http.MethodPost, "/sellers/", `{
 		"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
@@ -102,7 +88,7 @@ func Test_CreateSeller_conflict(t *testing.T) {
 }
 
 func Test_GetAllSellers_OK(t *testing.T) {
-	r := createServer()
+	r := createServerForSeller()
 
 	req, rr := createRequestTest(http.MethodGet, "/sellers/", "")
 
@@ -119,13 +105,12 @@ func Test_GetAllSellers_OK(t *testing.T) {
 
 	err := json.Unmarshal(rr.Body.Bytes(), &objRes)
 
-	fmt.Println(objRes.Data)
 	assert.Nil(t, err)
 	assert.True(t, len(objRes.Data) >= 0)
 }
 
 func Test_GetSellerById_existent(t *testing.T) {
-	r := createServer()
+	r := createServerForSeller()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/sellers/", `{
 		"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
@@ -154,7 +139,7 @@ func Test_GetSellerById_existent(t *testing.T) {
 }
 
 func Test_GetSellerById_non_existent(t *testing.T) {
-	r := createServer()
+	r := createServerForSeller()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/sellers/", `{
 		"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
@@ -172,7 +157,7 @@ func Test_GetSellerById_non_existent(t *testing.T) {
 }
 
 func Test_UpdateSeller_OK(t *testing.T) {
-	r := createServer()
+	r := createServerForSeller()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/sellers/", `{
 		"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
@@ -203,7 +188,7 @@ func Test_UpdateSeller_OK(t *testing.T) {
 }
 
 func Test_UpdateSeller_non_existent(t *testing.T) {
-	r := createServer()
+	r := createServerForSeller()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/sellers/", `{
 		"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
@@ -223,7 +208,7 @@ func Test_UpdateSeller_non_existent(t *testing.T) {
 }
 
 func Test_DeleteSeller_OK(t *testing.T) {
-	r := createServer()
+	r := createServerForSeller()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/sellers/", `{
 		"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
@@ -271,7 +256,7 @@ func Test_DeleteSeller_OK(t *testing.T) {
 }
 
 func Test_DeleteSeller_non_existent(t *testing.T) {
-	r := createServer()
+	r := createServerForSeller()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/sellers/", `{
 		"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"

@@ -1,19 +1,18 @@
 package controllers_test
 
 import (
-	"bytes"
 	"encoding/json"
 	"net/http"
-	"net/http/httptest"
 	"testing"
 
-	"github.com/gin-gonic/gin"
 	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/products"
+
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
-func createServer() *gin.Engine {
+func createServerForProducts() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 
 	repo := products.NewRepository()
@@ -34,19 +33,8 @@ func createServer() *gin.Engine {
 	return router
 }
 
-func createRequestTest(
-	method string,
-	url string,
-	body string,
-) (*http.Request, *httptest.ResponseRecorder) {
-	req := httptest.NewRequest(method, url, bytes.NewBuffer([]byte(body)))
-	req.Header.Add("Content-Type", "application/json")
-
-	return req, httptest.NewRecorder()
-}
-
 func TestCreateProductOK(t *testing.T) {
-	r := createServer()
+	r := createServerForProducts()
 
 	req, rr := createRequestTest(http.MethodPost, "/products/", `{
 		"description": "Yogurt",
@@ -68,7 +56,7 @@ func TestCreateProductOK(t *testing.T) {
 }
 
 func TestCreateProductUnprocessable(t *testing.T) {
-	r := createServer()
+	r := createServerForProducts()
 
 	req, rr := createRequestTest(http.MethodPost, "/products/", `{
 		"description": "Yogurt",
@@ -119,7 +107,7 @@ func TestCreateProductUnprocessable(t *testing.T) {
 }
 
 func TestCreateProductConflict(t *testing.T) {
-	r := createServer()
+	r := createServerForProducts()
 
 	req, rr := createRequestTest(http.MethodPost, "/products/", `{
 		"description": "Yogurt",
@@ -156,7 +144,7 @@ func TestCreateProductConflict(t *testing.T) {
 }
 
 func TestGetAllOK(t *testing.T) {
-	r := createServer()
+	r := createServerForProducts()
 
 	req, rr := createRequestTest(http.MethodGet, "/products/", "")
 
@@ -178,7 +166,7 @@ func TestGetAllOK(t *testing.T) {
 }
 
 func TestGetProductByIdOK(t *testing.T) {
-	r := createServer()
+	r := createServerForProducts()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/products/", `{
 		"description": "Yogurt",
@@ -224,7 +212,7 @@ func TestGetProductByIdOK(t *testing.T) {
 }
 
 func TestGetProductByIdNotFound(t *testing.T) {
-	r := createServer()
+	r := createServerForProducts()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/products/", `{
 		"description": "Yogurt",
@@ -252,7 +240,7 @@ func TestGetProductByIdNotFound(t *testing.T) {
 }
 
 func TestGetProductByIdBadRequest(t *testing.T) {
-	r := createServer()
+	r := createServerForProducts()
 
 	get_req, get_rr := createRequestTest(http.MethodGet, "/products/abc", "")
 
@@ -264,7 +252,7 @@ func TestGetProductByIdBadRequest(t *testing.T) {
 }
 
 func TestUpdateProductOK(t *testing.T) {
-	r := createServer()
+	r := createServerForProducts()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/products/", `{
 		"description": "Yogurt",
@@ -322,7 +310,7 @@ func TestUpdateProductOK(t *testing.T) {
 }
 
 func TestUpdateProductNotFound(t *testing.T) {
-	r := createServer()
+	r := createServerForProducts()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/products/", `{
 		"description": "Yogurt",
@@ -362,7 +350,7 @@ func TestUpdateProductNotFound(t *testing.T) {
 }
 
 func TestUpdateProductBadRequest(t *testing.T) {
-	r := createServer()
+	r := createServerForProducts()
 
 	patch_req, patch_rr := createRequestTest(http.MethodPatch, "/products/abc", `{
 		"description": "Queijo",
@@ -386,7 +374,7 @@ func TestUpdateProductBadRequest(t *testing.T) {
 }
 
 func TestUpdateProductUnprocessable(t *testing.T) {
-	r := createServer()
+	r := createServerForProducts()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/products/", `{
 		"description": "Yogurt",
@@ -454,7 +442,7 @@ func TestUpdateProductUnprocessable(t *testing.T) {
 }
 
 func TestDeleteProductOK(t *testing.T) {
-	r := createServer()
+	r := createServerForProducts()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/products/", `{
 		"description": "Yogurt",
@@ -512,7 +500,7 @@ func TestDeleteProductOK(t *testing.T) {
 }
 
 func TestDeleteProductsFail(t *testing.T) {
-	r := createServer()
+	r := createServerForProducts()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/products/", `{
 		"description": "Yogurt",
@@ -541,7 +529,7 @@ func TestDeleteProductsFail(t *testing.T) {
 }
 
 func TestDeleteProductsBadRequest(t *testing.T) {
-	r := createServer()
+	r := createServerForProducts()
 
 	delete_req, delete_rr := createRequestTest(http.MethodDelete, "/products/abc", "")
 

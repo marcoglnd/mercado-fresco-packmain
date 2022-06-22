@@ -1,10 +1,8 @@
 package controllers_test
 
 import (
-	"bytes"
 	"encoding/json"
 	"net/http"
-	"net/http/httptest"
 	"testing"
 
 	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
@@ -14,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func createServer() *gin.Engine {
+func createServerForBuyer() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 
 	repo := buyers.NewRepository()
@@ -36,19 +34,8 @@ func createServer() *gin.Engine {
 	return router
 }
 
-func createRequestTest(
-	method string,
-	url string,
-	body string,
-) (*http.Request, *httptest.ResponseRecorder) {
-	req := httptest.NewRequest(method, url, bytes.NewBuffer([]byte(body)))
-	req.Header.Add("Content-Type", "application/json")
-
-	return req, httptest.NewRecorder()
-}
-
 func Test_CreateBuyer_OK(t *testing.T) {
-	r := createServer()
+	r := createServerForBuyer()
 
 	req, rr := createRequestTest(http.MethodPost, "/buyers/", `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
@@ -60,7 +47,7 @@ func Test_CreateBuyer_OK(t *testing.T) {
 }
 
 func Test_CreateBuyer_conflict(t *testing.T) {
-	r := createServer()
+	r := createServerForBuyer()
 
 	req, rr := createRequestTest(http.MethodPost, "/buyers/", `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
@@ -77,7 +64,7 @@ func Test_CreateBuyer_conflict(t *testing.T) {
 }
 
 func Test_CreateBuyer_unprocessable(t *testing.T) {
-	r := createServer()
+	r := createServerForBuyer()
 
 	req, rr := createRequestTest(http.MethodPost, "/buyers/", `{
 		"first_name": "Jhon", "last_name": "Doe"
@@ -101,7 +88,7 @@ func Test_CreateBuyer_unprocessable(t *testing.T) {
 }
 
 func Test_GetBuyers_OK(t *testing.T) {
-	r := createServer()
+	r := createServerForBuyer()
 
 	req, rr := createRequestTest(http.MethodGet, "/buyers/", "")
 
@@ -123,7 +110,7 @@ func Test_GetBuyers_OK(t *testing.T) {
 }
 
 func Test_GetBuyerById_OK(t *testing.T) {
-	r := createServer()
+	r := createServerForBuyer()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
@@ -151,7 +138,7 @@ func Test_GetBuyerById_OK(t *testing.T) {
 }
 
 func Test_GetBuyerById_notFound(t *testing.T) {
-	r := createServer()
+	r := createServerForBuyer()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
@@ -169,7 +156,7 @@ func Test_GetBuyerById_notFound(t *testing.T) {
 }
 
 func Test_GetBuyerById_badRequest(t *testing.T) {
-	r := createServer()
+	r := createServerForBuyer()
 
 	get_req, get_rr := createRequestTest(http.MethodGet, "/buyers/abc", "")
 
@@ -181,7 +168,7 @@ func Test_GetBuyerById_badRequest(t *testing.T) {
 }
 
 func Test_UpdateBuyer_OK(t *testing.T) {
-	r := createServer()
+	r := createServerForBuyer()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
@@ -211,7 +198,7 @@ func Test_UpdateBuyer_OK(t *testing.T) {
 }
 
 func Test_UpdateBuyer_notFound(t *testing.T) {
-	r := createServer()
+	r := createServerForBuyer()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
@@ -231,7 +218,7 @@ func Test_UpdateBuyer_notFound(t *testing.T) {
 }
 
 func Test_UpdateBuyer_badRequest(t *testing.T) {
-	r := createServer()
+	r := createServerForBuyer()
 
 	patch_req, patch_rr := createRequestTest(http.MethodPatch, "/buyers/abc", `{
 		"card_number_id": "400000", "first_name": "Maria", "last_name": "Silva"
@@ -245,7 +232,7 @@ func Test_UpdateBuyer_badRequest(t *testing.T) {
 }
 
 func Test_UpdateBuyer_unprocessable(t *testing.T) {
-	r := createServer()
+	r := createServerForBuyer()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
@@ -279,7 +266,7 @@ func Test_UpdateBuyer_unprocessable(t *testing.T) {
 }
 
 func Test_DeleteBuyer_OK(t *testing.T) {
-	r := createServer()
+	r := createServerForBuyer()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
@@ -327,7 +314,7 @@ func Test_DeleteBuyer_OK(t *testing.T) {
 }
 
 func Test_DeleteBuyer_fail(t *testing.T) {
-	r := createServer()
+	r := createServerForBuyer()
 
 	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
