@@ -1,54 +1,18 @@
 package controllers_test
 
 import (
-	"bytes"
 	"encoding/json"
 	"net/http"
-	"net/http/httptest"
 	"testing"
 
-	"github.com/gin-gonic/gin"
-	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/employees"
 	"github.com/stretchr/testify/assert"
 )
 
-func createServer() *gin.Engine {
-	gin.SetMode(gin.TestMode)
-
-	repo := employees.NewRepository()
-	service := employees.NewService(repo)
-	controller := controllers.NewEmployee(service)
-
-	router := gin.Default()
-
-	pr := router.Group("/employees")
-	{
-		pr.GET("/", controller.GetAll())
-		pr.GET("/:id", controller.GetById())
-		pr.POST("/", controller.Create())
-		pr.PATCH("/:id", controller.Update())
-		pr.DELETE("/:id", controller.Delete())
-	}
-
-	return router
-}
-
-func createRequestTest(
-	method string,
-	url string,
-	body string,
-) (*http.Request, *httptest.ResponseRecorder) {
-	req := httptest.NewRequest(method, url, bytes.NewBuffer([]byte(body)))
-	req.Header.Add("Content-Type", "application/json")
-
-	return req, httptest.NewRecorder()
-}
-
 func TestCreatEmployeeOk(t *testing.T) {
 	routes := createServer()
 
-	req, res := createRequestTest(http.MethodPost, "/employees/", `{
+	req, res := createRequestTest(http.MethodPost, getPathUrl("/employees/"), `{
 		"card_number_id": "1234",
 		"first_name": "Julia",
 		"last_name": "Rosas",
@@ -63,14 +27,14 @@ func TestCreatEmployeeOk(t *testing.T) {
 func TestCreateEmployeeConflict(t *testing.T) {
 	routes := createServer()
 
-	req, res := createRequestTest(http.MethodPost, "/employees/", `{
+	req, res := createRequestTest(http.MethodPost, getPathUrl("/employees/"), `{
 		"card_number_id": "1234",
 		"first_name": "Julia",
 		"last_name": "Rosas",
 		"warehouse_id": 3
 	}`)
 
-	second_req, second_res := createRequestTest(http.MethodPost, "/employees/", `{
+	second_req, second_res := createRequestTest(http.MethodPost, getPathUrl("/employees/"), `{
 		"card_number_id": "1234",
 		"first_name": "Maria",
 		"last_name": "Joana",
@@ -87,19 +51,19 @@ func TestCreateEmployeeConflict(t *testing.T) {
 func TestCreateEmployeeUnprocessable(t *testing.T) {
 	routes := createServer()
 
-	req, res := createRequestTest(http.MethodPost, "/employees/", `{
+	req, res := createRequestTest(http.MethodPost, getPathUrl("/employees/"), `{
 		"first_name": "Julia",
 		"last_name": "Rosas",
 		"warehouse_id": 3
 	}`)
 
-	second_req, second_res := createRequestTest(http.MethodPost, "/employees/", `{
+	second_req, second_res := createRequestTest(http.MethodPost, getPathUrl("/employees/"), `{
 		"card_number_id": "1234",
 		"last_name": "Joana",
 		"warehouse_id": 10
 	}`)
 
-	third_req, third_res := createRequestTest(http.MethodPost, "/employees/", `{
+	third_req, third_res := createRequestTest(http.MethodPost, getPathUrl("/employees/"), `{
 		"card_number_id": "1234",
 		"first_name": "Maria",
 		"last_name": "Joana",
@@ -118,7 +82,7 @@ func TestCreateEmployeeUnprocessable(t *testing.T) {
 func TestGetAllOk(t *testing.T) {
 	routes := createServer()
 
-	req, res := createRequestTest(http.MethodGet, "/employees/", "")
+	req, res := createRequestTest(http.MethodGet, getPathUrl("/employees/"), "")
 
 	defer req.Body.Close()
 
@@ -140,14 +104,14 @@ func TestGetAllOk(t *testing.T) {
 func TestGetEmployeeByIdOk(t *testing.T) {
 	routes := createServer()
 
-	post_req, post_res := createRequestTest(http.MethodPost, "/employees/", `{
+	post_req, post_res := createRequestTest(http.MethodPost, getPathUrl("/employees/"), `{
 		"card_number_id": "1234",
 		"first_name": "Julia",
 		"last_name": "Rosas",
 		"warehouse_id": 3
 	}`)
 
-	get_req, get_res := createRequestTest(http.MethodGet, "/employees/1", "")
+	get_req, get_res := createRequestTest(http.MethodGet, getPathUrl("/employees/1"), "")
 
 	defer post_req.Body.Close()
 	defer get_req.Body.Close()
@@ -173,14 +137,14 @@ func TestGetEmployeeByIdOk(t *testing.T) {
 func TestGetEmployeeByIdNotFound(t *testing.T) {
 	routes := createServer()
 
-	post_req, post_res := createRequestTest(http.MethodPost, "/employees/", `{
+	post_req, post_res := createRequestTest(http.MethodPost, getPathUrl("/employees/"), `{
 		"card_number_id": "1234",
 		"first_name": "Julia",
 		"last_name": "Rosas",
 		"warehouse_id": 3
 	}`)
 
-	get_req, get_res := createRequestTest(http.MethodGet, "/employees/42", "")
+	get_req, get_res := createRequestTest(http.MethodGet, getPathUrl("/employees/42"), "")
 
 	defer post_req.Body.Close()
 	defer get_req.Body.Close()
@@ -194,7 +158,7 @@ func TestGetEmployeeByIdNotFound(t *testing.T) {
 func TestGetEmployeeByIdBadRequest(t *testing.T) {
 	routes := createServer()
 
-	get_req, get_res := createRequestTest(http.MethodGet, "/employees/abc", "")
+	get_req, get_res := createRequestTest(http.MethodGet, getPathUrl("/employees/abc"), "")
 
 	defer get_req.Body.Close()
 
@@ -206,14 +170,14 @@ func TestGetEmployeeByIdBadRequest(t *testing.T) {
 func TestUpdateEmployeeOK(t *testing.T) {
 	routes := createServer()
 
-	post_req, post_res := createRequestTest(http.MethodPost, "/employees/", `{
+	post_req, post_res := createRequestTest(http.MethodPost, getPathUrl("/employees/"), `{
 		"card_number_id": "1234",
 		"first_name": "Julia",
 		"last_name": "Rosas",
 		"warehouse_id": 3
 		}`)
 
-	patch_req, patch_res := createRequestTest(http.MethodPatch, "/employees/1", `{
+	patch_req, patch_res := createRequestTest(http.MethodPatch, getPathUrl("/employees/1"), `{
 		"card_number_id": "1234",
 		"first_name": "Maria",
 		"last_name": "Silva",
@@ -243,14 +207,14 @@ func TestUpdateEmployeeOK(t *testing.T) {
 func TestUpdateEmployeeNotFound(t *testing.T) {
 	routes := createServer()
 
-	post_req, post_res := createRequestTest(http.MethodPost, "/employees/", `{
+	post_req, post_res := createRequestTest(http.MethodPost, getPathUrl("/employees/"), `{
 		"card_number_id": "1234",
 		"first_name": "Julia",
 		"last_name": "Rosas",
 		"warehouse_id": 3
 		}`)
 
-	patch_req, patch_res := createRequestTest(http.MethodPatch, "/employees/10", `{
+	patch_req, patch_res := createRequestTest(http.MethodPatch, getPathUrl("/employees/10"), `{
 		"card_number_id": "1234",
 		"first_name": "Julia",
 		"last_name": "Rosas",
@@ -269,7 +233,7 @@ func TestUpdateEmployeeNotFound(t *testing.T) {
 func TestUpdateEmployeeBadRequest(t *testing.T) {
 	routes := createServer()
 
-	patch_req, patch_res := createRequestTest(http.MethodPatch, "/employees/abc", `{
+	patch_req, patch_res := createRequestTest(http.MethodPatch, getPathUrl("/employees/abc"), `{
 		"card_number_id": "1234",
 		"first_name": "Julia",
 		"last_name": "Rosas",
@@ -287,26 +251,26 @@ func TestUpdateEmployeeBadRequest(t *testing.T) {
 func TestUpdateEmployeeUnprocessable(t *testing.T) {
 	routes := createServer()
 
-	post_req, post_res := createRequestTest(http.MethodPost, "/employees/", `{
+	post_req, post_res := createRequestTest(http.MethodPost, getPathUrl("/employees/"), `{
 		"card_number_id": "1234",
 		"first_name": "Julia",
 		"last_name": "Rosas",
 		"warehouse_id": 3
 		}`)
 
-	patch_req, patch_res := createRequestTest(http.MethodPatch, "/employees/1", `{
+	patch_req, patch_res := createRequestTest(http.MethodPatch, getPathUrl("/employees/1"), `{
 		"card_number_id": "1234",
 		"last_name": "Rosas",
 		"warehouse_id": 4
 		}`)
 
-	secondPatch_req, secondPatch_res := createRequestTest(http.MethodPatch, "/employees/1", `{
+	secondPatch_req, secondPatch_res := createRequestTest(http.MethodPatch, getPathUrl("/employees/1"), `{
 		"card_number_id": "1234",
 		"first_name": "Julia",
 		"warehouse_id": 3
 		}`)
 
-	thirdPatch_req, thirdPatch_res := createRequestTest(http.MethodPatch, "/employees/1", `{
+	thirdPatch_req, thirdPatch_res := createRequestTest(http.MethodPatch, getPathUrl("/employees/1"), `{
 		"first_name": "Julia",
 		"last_name": "Rosas",
 		"warehouse_id": 3
@@ -330,14 +294,14 @@ func TestUpdateEmployeeUnprocessable(t *testing.T) {
 func TestDeleteEmployeeOK(t *testing.T) {
 	routes := createServer()
 
-	post_req, post_res := createRequestTest(http.MethodPost, "/employees/", `{
+	post_req, post_res := createRequestTest(http.MethodPost, getPathUrl("/employees/"), `{
 		"card_number_id": "1234",
 		"first_name": "Julia",
 		"last_name": "Rosas",
 		"warehouse_id": 3
 		}`)
 
-	get_req, get_res := createRequestTest(http.MethodGet, "/employees/", "")
+	get_req, get_res := createRequestTest(http.MethodGet, getPathUrl("/employees/"), "")
 
 	routes.ServeHTTP(post_res, post_req)
 	routes.ServeHTTP(get_res, get_req)
@@ -354,14 +318,14 @@ func TestDeleteEmployeeOK(t *testing.T) {
 	assert.Nil(t, err)
 	assert.True(t, employeesLen > 0)
 
-	delete_req, delete_res := createRequestTest(http.MethodDelete, "/employees/1", "")
+	delete_req, delete_res := createRequestTest(http.MethodDelete, getPathUrl("/employees/1"), "")
 
 	defer post_req.Body.Close()
 	defer delete_req.Body.Close()
 
 	routes.ServeHTTP(delete_res, delete_req)
 
-	secondGet_req, secondGet_res := createRequestTest(http.MethodGet, "/employees/", "")
+	secondGet_req, secondGet_res := createRequestTest(http.MethodGet, getPathUrl("/employees/"), "")
 
 	routes.ServeHTTP(secondGet_res, secondGet_req)
 
@@ -381,7 +345,7 @@ func TestDeleteEmployeeOK(t *testing.T) {
 func TestDeleteEmployeesFail(t *testing.T) {
 	routes := createServer()
 
-	post_req, post_res := createRequestTest(http.MethodPost, "/employees/", `{
+	post_req, post_res := createRequestTest(http.MethodPost, getPathUrl("/employees/"), `{
 		"card_number_id": "1234",
 		"first_name": "Julia",
 		"last_name": "Rosas",
@@ -390,7 +354,7 @@ func TestDeleteEmployeesFail(t *testing.T) {
 
 	routes.ServeHTTP(post_res, post_req)
 
-	delete_req, delete_res := createRequestTest(http.MethodDelete, "/employees/10", "")
+	delete_req, delete_res := createRequestTest(http.MethodDelete, getPathUrl("/employees/10"), "")
 
 	defer post_req.Body.Close()
 	defer delete_req.Body.Close()
@@ -403,7 +367,7 @@ func TestDeleteEmployeesFail(t *testing.T) {
 func TestDeleteEmployeesBadRequest(t *testing.T) {
 	routes := createServer()
 
-	delete_req, delete_res := createRequestTest(http.MethodDelete, "/employees/abc", "")
+	delete_req, delete_res := createRequestTest(http.MethodDelete, getPathUrl("/employees/abc"), "")
 
 	defer delete_req.Body.Close()
 
