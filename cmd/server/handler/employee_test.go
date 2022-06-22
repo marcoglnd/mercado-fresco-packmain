@@ -3,27 +3,33 @@ package controllers_test
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/routes"
+	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/employees"
 	"github.com/stretchr/testify/assert"
 )
 
-func getPathUrl(url string) string {
-	PATH := "/api/v1"
-	return fmt.Sprintf("%s%s", PATH, url)
-}
-
 func createServer() *gin.Engine {
 	gin.SetMode(gin.TestMode)
+
+	repo := employees.NewRepository()
+	service := employees.NewService(repo)
+	controller := controllers.NewEmployee(service)
+
 	router := gin.Default()
-	routerGroup := router.Group(getPathUrl(""))
-	routes.AddRoutes(routerGroup)
+
+	pr := router.Group("/employees")
+	{
+		pr.GET("/", controller.GetAll())
+		pr.GET("/:id", controller.GetById())
+		pr.POST("/", controller.Create())
+		pr.PATCH("/:id", controller.Update())
+		pr.DELETE("/:id", controller.Delete())
+	}
 
 	return router
 }
@@ -39,68 +45,89 @@ func createRequestTest(
 	return req, httptest.NewRecorder()
 }
 
-func TestCreateOk(t *testing.T) {
+func TestCreatEmployeeOk(t *testing.T) {
 	routes := createServer()
-	req, res := createRequestTest(http.MethodPost, getPathUrl("/employees/"),
-		` 
-		{
-			"card_number_id": "1234",
-			"first_name": "Paloma",
-			"last_name": "Ribeiro",
-			"warehouse_id": 2
-		}
-		`,
-	)
-	defer req.Body.Close()
+
+	req, res := createRequestTest(http.MethodPost, "/employees/", `{
+		"card_number_id": "1234",
+		"first_name": "Julia",
+		"last_name": "Rosas",
+		"warehouse_id": 3
+		}`)
+
 	routes.ServeHTTP(res, req)
 
 	assert.Equal(t, http.StatusCreated, res.Code)
 }
 
-func TestCreateFail(t *testing.T) {
+func TestCreateEmployeeConflict(t *testing.T) {
 	routes := createServer()
-	req, res := createRequestTest(http.MethodPost, getPathUrl("/employees/"),
-		` 
-		{
-			"card_number_id": "1234",
-			"first_name": "Paloma",
-			"last_name": "Ribeiro",
-		}
-		`,
-	)
-	defer req.Body.Close()
+
+	req, res := createRequestTest(http.MethodPost, "/employees/", `{
+		"card_number_id": "1234",
+		"first_name": "Julia",
+		"last_name": "Rosas",
+		"warehouse_id": 3
+	}`)
+
+	second_req, second_res := createRequestTest(http.MethodPost, "/employees/", `{
+		"card_number_id": "1234",
+		"first_name": "Maria",
+		"last_name": "Joana",
+		"warehouse_id": 10
+	}`)
+
 	routes.ServeHTTP(res, req)
+	routes.ServeHTTP(second_res, second_req)
+
+	assert.Equal(t, http.StatusConflict, second_res.Code)
+
+}
+
+func TestCreateEmployeeUnprocessable(t *testing.T) {
+	routes := createServer()
+
+	req, res := createRequestTest(http.MethodPost, "/employees/", `{
+		"first_name": "Julia",
+		"last_name": "Rosas",
+		"warehouse_id": 3
+	}`)
+
+	second_req, second_res := createRequestTest(http.MethodPost, "/employees/", `{
+		"card_number_id": "1234",
+		"last_name": "Joana",
+		"warehouse_id": 10
+	}`)
+
+	third_req, third_res := createRequestTest(http.MethodPost, "/employees/", `{
+		"card_number_id": "1234",
+		"first_name": "Maria",
+		"last_name": "Joana",
+	}`)
+
+	routes.ServeHTTP(res, req)
+	routes.ServeHTTP(second_res, second_req)
+	routes.ServeHTTP(third_res, third_req)
 
 	assert.Equal(t, http.StatusUnprocessableEntity, res.Code)
-}
-
-func TestCreateConflict(t *testing.T) {
-	routes := createServer()
-	req, res := createRequestTest(http.MethodPost, getPathUrl("/employees/"),
-		` 
-		{
-			"card_number_id": "1234",
-			"first_name": "Paloma",
-			"last_name": "Ribeiro",
-			"warehouse_id": 2
-		}
-		`)
-
-	defer req.Body.Close()
-	routes.ServeHTTP(res, req)
-
-	assert.Equal(t, http.StatusConflict, res.Code)
+	assert.Equal(t, http.StatusUnprocessableEntity, second_res.Code)
+	assert.Equal(t, http.StatusUnprocessableEntity, third_res.Code)
 
 }
 
-func TestFindAll(t *testing.T) {
+func TestGetAllOk(t *testing.T) {
 	routes := createServer()
-	req, res := createRequestTest(http.MethodGet, getPathUrl("/employees/"), "")
+
+	req, res := createRequestTest(http.MethodGet, "/employees/", "")
 
 	defer req.Body.Close()
+
 	routes.ServeHTTP(res, req)
+
+	assert.Equal(t, http.StatusOK, res.Code)
 
 	objRes := struct {
+		Code int
 		Data []employees.Employee
 	}{}
 
@@ -108,135 +135,279 @@ func TestFindAll(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.True(t, len(objRes.Data) >= 0)
-	assert.Equal(t, http.StatusOK, res.Code)
-
 }
 
-func TestFindByIdNonExistent(t *testing.T) {
-	routes := createServer()
-	inexistentId := 10
-	req, res := createRequestTest(http.MethodGet, getPathUrl(fmt.Sprintf("/employees/%d", inexistentId)), "")
-
-	defer req.Body.Close()
-	routes.ServeHTTP(res, req)
-
-	assert.Equal(t, http.StatusNotFound, res.Code)
-
-}
-
-func TestFindByIdExistent(t *testing.T) {
+func TestGetEmployeeByIdOk(t *testing.T) {
 	routes := createServer()
 
-	reqValidateCheck, resValidateCheck := createRequestTest(http.MethodGet, getPathUrl("/employees/notint"), "")
+	post_req, post_res := createRequestTest(http.MethodPost, "/employees/", `{
+		"card_number_id": "1234",
+		"first_name": "Julia",
+		"last_name": "Rosas",
+		"warehouse_id": 3
+	}`)
 
-	defer reqValidateCheck.Body.Close()
-	routes.ServeHTTP(resValidateCheck, reqValidateCheck)
-	assert.Equal(t, http.StatusBadRequest, resValidateCheck.Code)
+	get_req, get_res := createRequestTest(http.MethodGet, "/employees/1", "")
 
-	existentId := 1
-	req, res := createRequestTest(http.MethodGet, getPathUrl(fmt.Sprintf("/employees/%d", existentId)), "")
+	defer post_req.Body.Close()
+	defer get_req.Body.Close()
 
-	defer req.Body.Close()
-	routes.ServeHTTP(res, req)
+	routes.ServeHTTP(post_res, post_req)
+	routes.ServeHTTP(get_res, get_req)
+
+	assert.Equal(t, http.StatusOK, get_res.Code)
 
 	var objRes employees.Employee
 
-	err := json.Unmarshal(res.Body.Bytes(), &objRes)
+	err := json.Unmarshal(get_res.Body.Bytes(), &objRes)
 
 	assert.Nil(t, err)
-	assert.Equal(t, http.StatusOK, res.Code)
+	assert.True(t, objRes.ID == 1)
+	assert.True(t, objRes.CardNumberId == "1234")
+	assert.True(t, objRes.FirstName == "Julia")
+	assert.True(t, objRes.LastName == "Rosas")
+	assert.True(t, objRes.WarehouseId == 3)
 
 }
 
-func TestUpdateOk(t *testing.T) {
+func TestGetEmployeeByIdNotFound(t *testing.T) {
 	routes := createServer()
-	reqFake, resFake := createRequestTest(http.MethodGet, getPathUrl("/employees/1"), "")
 
-	defer reqFake.Body.Close()
-	routes.ServeHTTP(resFake, reqFake)
+	post_req, post_res := createRequestTest(http.MethodPost, "/employees/", `{
+		"card_number_id": "1234",
+		"first_name": "Julia",
+		"last_name": "Rosas",
+		"warehouse_id": 3
+	}`)
 
-	assert.Equal(t, http.StatusOK, resFake.Code)
+	get_req, get_res := createRequestTest(http.MethodGet, "/employees/42", "")
 
-	type createdEmployee struct {
-		ID int `json:"id"`
-		employees.Employee
-	}
+	defer post_req.Body.Close()
+	defer get_req.Body.Close()
 
-	var oldObjRes createdEmployee
+	routes.ServeHTTP(post_res, post_req)
+	routes.ServeHTTP(get_res, get_req)
 
-	errFake := json.Unmarshal(resFake.Body.Bytes(), &oldObjRes)
-	assert.Nil(t, errFake)
+	assert.Equal(t, http.StatusNotFound, get_res.Code)
+}
 
-	req, res := createRequestTest(http.MethodPatch, getPathUrl(fmt.Sprintf("/employees/%d", oldObjRes.ID)),
-		`
-		{
-			"card_number_id": "1234",
-			"first_name": "Paloma",
-			"last_name": "Ribeiro",
-			"warehouse_id": 2
-		}`,
-	)
+func TestGetEmployeeByIdBadRequest(t *testing.T) {
+	routes := createServer()
 
-	defer req.Body.Close()
-	routes.ServeHTTP(res, req)
+	get_req, get_res := createRequestTest(http.MethodGet, "/employees/abc", "")
 
-	var newObjRes createdEmployee
+	defer get_req.Body.Close()
 
-	err := json.Unmarshal(res.Body.Bytes(), &newObjRes)
+	routes.ServeHTTP(get_res, get_req)
+
+	assert.Equal(t, http.StatusBadRequest, get_res.Code)
+}
+
+func TestUpdateEmployeeOK(t *testing.T) {
+	routes := createServer()
+
+	post_req, post_res := createRequestTest(http.MethodPost, "/employees/", `{
+		"card_number_id": "1234",
+		"first_name": "Julia",
+		"last_name": "Rosas",
+		"warehouse_id": 3
+		}`)
+
+	patch_req, patch_res := createRequestTest(http.MethodPatch, "/employees/1", `{
+		"card_number_id": "1234",
+		"first_name": "Maria",
+		"last_name": "Silva",
+		"warehouse_id": 4
+		}`)
+
+	defer post_req.Body.Close()
+	defer patch_req.Body.Close()
+
+	routes.ServeHTTP(post_res, post_req)
+	routes.ServeHTTP(patch_res, patch_req)
+
+	assert.Equal(t, http.StatusOK, patch_res.Code)
+
+	var objRes employees.Employee
+
+	err := json.Unmarshal(patch_res.Body.Bytes(), &objRes)
 
 	assert.Nil(t, err)
-	assert.Equal(t, http.StatusOK, res.Code)
-	assert.NotEqual(t, oldObjRes.CardNumberId, newObjRes.CardNumberId)
+	assert.True(t, objRes.ID == 1)
+	assert.True(t, objRes.CardNumberId == "1234")
+	assert.True(t, objRes.FirstName == "Maria")
+	assert.True(t, objRes.LastName == "Silva")
+	assert.True(t, objRes.WarehouseId == 4)
 }
 
-func TestUpdateNonExistent(t *testing.T) {
+func TestUpdateEmployeeNotFound(t *testing.T) {
 	routes := createServer()
 
-	reqValidateCheck, resValidateCheck := createRequestTest(http.MethodGet, getPathUrl("/employees/notint"), "")
+	post_req, post_res := createRequestTest(http.MethodPost, "/employees/", `{
+		"card_number_id": "1234",
+		"first_name": "Julia",
+		"last_name": "Rosas",
+		"warehouse_id": 3
+		}`)
 
-	defer reqValidateCheck.Body.Close()
-	routes.ServeHTTP(resValidateCheck, reqValidateCheck)
-	assert.Equal(t, http.StatusBadRequest, resValidateCheck.Code)
+	patch_req, patch_res := createRequestTest(http.MethodPatch, "/employees/10", `{
+		"card_number_id": "1234",
+		"first_name": "Julia",
+		"last_name": "Rosas",
+		"warehouse_id": 3
+		}`)
 
-	inexistentId := 10
-	req, res := createRequestTest(http.MethodPatch, getPathUrl(fmt.Sprintf("/employees/%d", inexistentId)),
+	defer post_req.Body.Close()
+	defer patch_req.Body.Close()
 
-		`{
-			"card_number_id": "1234",
-			"first_name": "Paloma",
-			"last_name": "Ribeiro",
-			"warehouse_id": 2
-		}
-		`,
-	)
+	routes.ServeHTTP(post_res, post_req)
+	routes.ServeHTTP(patch_res, patch_req)
 
-	defer req.Body.Close()
-	routes.ServeHTTP(res, req)
-
-	assert.Equal(t, http.StatusNotFound, res.Code)
-
+	assert.Equal(t, http.StatusNotFound, patch_res.Code)
 }
 
-func TestDeleteNonExistent(t *testing.T) {
+func TestUpdateEmployeeBadRequest(t *testing.T) {
 	routes := createServer()
-	inexistentId := 10
-	req, res := createRequestTest(http.MethodDelete, getPathUrl(fmt.Sprintf("/employees/%d", inexistentId)), "")
 
-	defer req.Body.Close()
+	patch_req, patch_res := createRequestTest(http.MethodPatch, "/employees/abc", `{
+		"card_number_id": "1234",
+		"first_name": "Julia",
+		"last_name": "Rosas",
+		"warehouse_id": 3
+		}`)
 
-	routes.ServeHTTP(res, req)
+	defer patch_req.Body.Close()
 
-	assert.Equal(t, http.StatusNotFound, res.Code)
+	routes.ServeHTTP(patch_res, patch_req)
 
+	assert.Equal(t, http.StatusBadRequest, patch_res.Code)
 }
 
-func TestDeleteOk(t *testing.T) {
+//
+func TestUpdateEmployeeUnprocessable(t *testing.T) {
 	routes := createServer()
-	existentId := 1
-	req, res := createRequestTest(http.MethodDelete, getPathUrl(fmt.Sprintf("/employees/%d", existentId)), "")
 
-	defer req.Body.Close()
-	routes.ServeHTTP(res, req)
+	post_req, post_res := createRequestTest(http.MethodPost, "/employees/", `{
+		"card_number_id": "1234",
+		"first_name": "Julia",
+		"last_name": "Rosas",
+		"warehouse_id": 3
+		}`)
 
-	assert.Equal(t, http.StatusNoContent, res.Code)
+	patch_req, patch_res := createRequestTest(http.MethodPatch, "/employees/1", `{
+		"card_number_id": "1234",
+		"last_name": "Rosas",
+		"warehouse_id": 4
+		}`)
+
+	secondPatch_req, secondPatch_res := createRequestTest(http.MethodPatch, "/employees/1", `{
+		"card_number_id": "1234",
+		"first_name": "Julia",
+		"warehouse_id": 3
+		}`)
+
+	thirdPatch_req, thirdPatch_res := createRequestTest(http.MethodPatch, "/employees/1", `{
+		"first_name": "Julia",
+		"last_name": "Rosas",
+		"warehouse_id": 3
+		}`)
+
+	defer post_req.Body.Close()
+	defer patch_req.Body.Close()
+	defer secondPatch_req.Body.Close()
+	defer thirdPatch_req.Body.Close()
+
+	routes.ServeHTTP(post_res, post_req)
+	routes.ServeHTTP(patch_res, patch_req)
+	routes.ServeHTTP(secondPatch_res, secondPatch_req)
+	routes.ServeHTTP(thirdPatch_res, thirdPatch_req)
+
+	assert.Equal(t, http.StatusUnprocessableEntity, patch_res.Code)
+	assert.Equal(t, http.StatusUnprocessableEntity, secondPatch_res.Code)
+	assert.Equal(t, http.StatusUnprocessableEntity, thirdPatch_res.Code)
+}
+
+func TestDeleteEmployeeOK(t *testing.T) {
+	routes := createServer()
+
+	post_req, post_res := createRequestTest(http.MethodPost, "/employees/", `{
+		"card_number_id": "1234",
+		"first_name": "Julia",
+		"last_name": "Rosas",
+		"warehouse_id": 3
+		}`)
+
+	get_req, get_res := createRequestTest(http.MethodGet, "/employees/", "")
+
+	routes.ServeHTTP(post_res, post_req)
+	routes.ServeHTTP(get_res, get_req)
+
+	objRes := struct {
+		Code int
+		Data []employees.Employee
+	}{}
+
+	err := json.Unmarshal(get_res.Body.Bytes(), &objRes)
+
+	employeesLen := len(objRes.Data)
+
+	assert.Nil(t, err)
+	assert.True(t, employeesLen > 0)
+
+	delete_req, delete_res := createRequestTest(http.MethodDelete, "/employees/1", "")
+
+	defer post_req.Body.Close()
+	defer delete_req.Body.Close()
+
+	routes.ServeHTTP(delete_res, delete_req)
+
+	secondGet_req, secondGet_res := createRequestTest(http.MethodGet, "/employees/", "")
+
+	routes.ServeHTTP(secondGet_res, secondGet_req)
+
+	secondObjRes := struct {
+		Code int
+		Data []employees.Employee
+	}{}
+
+	json.Unmarshal(secondGet_res.Body.Bytes(), &secondObjRes)
+
+	secondEmployeesLen := len(secondObjRes.Data)
+
+	assert.Equal(t, http.StatusNoContent, delete_res.Code)
+	assert.True(t, employeesLen-1 == secondEmployeesLen)
+}
+
+func TestDeleteEmployeesFail(t *testing.T) {
+	routes := createServer()
+
+	post_req, post_res := createRequestTest(http.MethodPost, "/employees/", `{
+		"card_number_id": "1234",
+		"first_name": "Julia",
+		"last_name": "Rosas",
+		"warehouse_id": 3
+		}`)
+
+	routes.ServeHTTP(post_res, post_req)
+
+	delete_req, delete_res := createRequestTest(http.MethodDelete, "/employees/10", "")
+
+	defer post_req.Body.Close()
+	defer delete_req.Body.Close()
+
+	routes.ServeHTTP(delete_res, delete_req)
+
+	assert.Equal(t, http.StatusNotFound, delete_res.Code)
+}
+
+func TestDeleteEmployeesBadRequest(t *testing.T) {
+	routes := createServer()
+
+	delete_req, delete_res := createRequestTest(http.MethodDelete, "/employees/abc", "")
+
+	defer delete_req.Body.Close()
+
+	routes.ServeHTTP(delete_res, delete_req)
+
+	assert.Equal(t, http.StatusBadRequest, delete_res.Code)
 }
