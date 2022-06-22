@@ -10,166 +10,228 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
 
 
-# Make data base, printed on Wed Jun 22 13:02:08 2022
+# Make data base, printed on Wed Jun 22 18:32:40 2022
 
 # Variables
 
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
- 
 # environment
 RUBY_VERSION = ruby-3.0.0
 # automatic
 ?F = $(notdir $?)
 # environment
+ELECTRON_NO_ATTACH_CONSOLE = 1
+# environment
+LC_CTYPE = en_US.UTF-8
+# environment
 VSCODE_LOG_NATIVE = false
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
+ 
 # environment
-GRADLE_HOME = /Users/palribeiro/.sdkman/candidates/gradle/current
-# environment
-rvm_path = /Users/palribeiro/.rvm
+rvm_path = /Users/leosilveira/.rvm
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
 # automatic
 @F = $(notdir $@)
 # makefile
-CURDIR := /Users/palribeiro/Documents/aulas-digitalhouse/mercado-fresco-packmain
+CURDIR := /Users/leosilveira/projects/mercado-fresco-packmain
 # makefile
 SHELL = /bin/sh
 # environment
-VSCODE_NLS_CONFIG = {"locale":"pt-br","availableLanguages":{"*":"pt-br"},"_languagePackId":"195456cb6bc5e7dd989215cd334fb359.pt-br","_translationsConfigFile":"/Users/palribeiro/Library/Application Support/Code/clp/195456cb6bc5e7dd989215cd334fb359.pt-br/tcf.json","_cacheRoot":"/Users/palribeiro/Library/Application Support/Code/clp/195456cb6bc5e7dd989215cd334fb359.pt-br","_resolvedLanguagePackCoreLocation":"/Users/palribeiro/Library/Application Support/Code/clp/195456cb6bc5e7dd989215cd334fb359.pt-br/30d9c6cd9483b2cc586687151bcbcd635f373630","_corruptedFile":"/Users/palribeiro/Library/Application Support/Code/clp/195456cb6bc5e7dd989215cd334fb359.pt-br/corrupted.info","_languagePackSupport":true}
+VSCODE_NLS_CONFIG = {"locale":"pt-br","availableLanguages":{"*":"pt-br"},"_languagePackId":"195456cb6bc5e7dd989215cd334fb359.pt-br","_translationsConfigFile":"/Users/leosilveira/Library/Application Support/Code/clp/195456cb6bc5e7dd989215cd334fb359.pt-br/tcf.json","_cacheRoot":"/Users/leosilveira/Library/Application Support/Code/clp/195456cb6bc5e7dd989215cd334fb359.pt-br","_resolvedLanguagePackCoreLocation":"/Users/leosilveira/Library/Application Support/Code/clp/195456cb6bc5e7dd989215cd334fb359.pt-br/30d9c6cd9483b2cc586687151bcbcd635f373630","_corruptedFile":"/Users/leosilveira/Library/Application Support/Code/clp/195456cb6bc5e7dd989215cd334fb359.pt-br/corrupted.info","_languagePackSupport":true}
 # environment
 _ = /usr/bin/make
+# environment
+VSCODE_PID = 25192
 # makefile (from `Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
+rvm_ruby_mode = 
+# environment
+rvm_ruby_make = 
+# environment
 VSCODE_VERBOSE_LOGGING = true
+# environment
+JOVIAL_VERSION = 2.3.0
 # environment
 __CFBundleIdentifier = com.microsoft.VSCode
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/ck/jk_ghfhn4dnd3d32h40n40h9k_699y/T/vscode-ipc-c05d4f16-f14d-4e8c-8605-72e56095d290.sock
+rvm_proxy = 
 # environment
-VSCODE_CWD = /
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/gh/gv8sl0rj0_3dzn8wvcw_nmnny1zd36/T/vscode-ipc-1b7b70d4-8c9f-4537-bebe-81e3a3959c48.sock
+# environment
+VSCODE_CWD = /Users/leosilveira/projects/mercado-fresco-packmain
 # environment
 GOPROXY = https://proxy.golang.org,direct
 # environment
-PATH = /Users/palribeiro/.rvm/gems/ruby-3.0.0/bin:/Users/palribeiro/.rvm/gems/ruby-3.0.0@global/bin:/Users/palribeiro/.rvm/rubies/ruby-3.0.0/bin:/Users/palribeiro/Library/Python/3.8/bin:/Users/palribeiro/Library/Python/3.9/bin:/Users/palribeiro/.sdkman/candidates/grails/current/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/Users/palribeiro/.rvm/bin:/Users/palribeiro/go/bin
+rvm_pretty_print_flag = 
 # environment
-SDKMAN_DIR = /Users/palribeiro/.sdkman
+PATH = /Users/leosilveira/.rvm/gems/ruby-3.0.0/bin:/Users/leosilveira/.rvm/gems/ruby-3.0.0@global/bin:/Users/leosilveira/.rvm/rubies/ruby-3.0.0/bin:/Users/leosilveira/Library/Python/3.8/bin:/Users/leosilveira/go/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/leosilveira/go/bin:/Users/leosilveira/.rvm/bin
 # environment
-SDKMAN_CANDIDATES_API = https://api.sdkman.io/2
+LSCOLORS = Gxfxcxdxbxegedabagacad
 # environment
-GOPATH = /Users/palribeiro/go
+rvm_niceness = 
 # environment
-SDKMAN_PLATFORM = darwinx64
+GOPATH = /Users/leosilveira/go
+# environment
+rvm_only_path_flag = 
+# environment
+rvm_gemstone_package_file = 
 # environment
 VSCODE_LOG_STACK = false
 # environment
 ELECTRON_RUN_AS_NODE = 1
+# environment
+rvm_alias_expanded = 
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.9o2T4cWCBJ/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.jOMHYThUPM/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
-rvm_bin_path = /Users/palribeiro/.rvm/bin
+rvm_bin_path = /Users/leosilveira/.rvm/bin
 # environment
-PWD = /Users/palribeiro/Documents/aulas-digitalhouse/mercado-fresco-packmain
+PWD = /Users/leosilveira/projects/mercado-fresco-packmain
 # environment
-GEM_HOME = /Users/palribeiro/.rvm/gems/ruby-3.0.0
+GEM_HOME = /Users/leosilveira/.rvm/gems/ruby-3.0.0
+# environment
+rvm_docs_type = 
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = undefined
 # environment
-GOMODCACHE = /Users/palribeiro/go/pkg/mod
+GOMODCACHE = /Users/leosilveira/go/pkg/mod
 # environment
-HOME = /Users/palribeiro
+HOME = /Users/leosilveira
 # default
 MAKEFILEPATH = $(shell /usr/bin/xcode-select -print-path 2>/dev/null || echo /Developer)/Makefiles
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/palribeiro/Library/Application Support/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
+VSCODE_CLI = 1
 # environment
-LOGNAME = palribeiro
+VSCODE_CODE_CACHE_PATH = /Users/leosilveira/Library/Application Support/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+LOGNAME = leosilveira
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# environment
+ZSH = /Users/leosilveira/.oh-my-zsh
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
 # environment
-GEM_PATH = /Users/palribeiro/.rvm/gems/ruby-3.0.0:/Users/palribeiro/.rvm/gems/ruby-3.0.0@global
+rvm_ruby_bits = 
+# environment
+GEM_PATH = /Users/leosilveira/.rvm/gems/ruby-3.0.0:/Users/leosilveira/.rvm/gems/ruby-3.0.0@global
 # environment
 XPC_FLAGS = 0x0
 # environment
-SDKMAN_VERSION = 5.15.0
+COLORTERM = truecolor
+# environment
+rvm_ruby_make_install = 
 # default
 MAKE = $(MAKE_COMMAND)
-# default
-MAKECMDGOALS := all
 # environment
-IRBRC = /Users/palribeiro/.rvm/rubies/ruby-3.0.0/.irbrc
+LC_TERMINAL = iTerm2
 # environment
-SHLVL = 1
+IRBRC = /Users/leosilveira/.rvm/rubies/ruby-3.0.0/.irbrc
 # environment
-JAVA_HOME = /Users/palribeiro/.sdkman/candidates/java/current
+SHLVL = 3
+ 
+# environment
+rvm_quiet_flag = 
 # default
 MAKE_VERSION := 3.81
 # environment
-USER = palribeiro
+USER = leosilveira
 # makefile
-.DEFAULT_GOAL := coverage
+.DEFAULT_GOAL := test
+# default
+MAKECMDGOALS := all
+# environment
+TERM_SESSION_ID = w0t0p0:D733BB7E-E90A-4277-B2DC-57326E2E4D93
 # environment
 rvm_version = 1.29.12 (latest)
+# environment
+LESS = -R
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
 # default
 MAKE_COMMAND := /Library/Developer/CommandLineTools/usr/bin/make
+# environment
+TERM_PROGRAM = iTerm.app
 # default
 .VARIABLES := 
 # environment
-TMPDIR = /var/folders/ck/jk_ghfhn4dnd3d32h40n40h9k_699y/T/
+TMPDIR = /var/folders/gh/gv8sl0rj0_3dzn8wvcw_nmnny1zd36/T/
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /Users/palribeiro/Library/Application Support/Code/1.68.1-main.sock
+VSCODE_IPC_HOOK = /Users/leosilveira/Library/Application Support/Code/1.68.1-main.sock
 # makefile
 MAKEFLAGS = Rrqp
 # environment
 MFLAGS = -Rrqp
- 
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = application.com.microsoft.VSCode.2110251.2110257
+TERM_PROGRAM_VERSION = 3.4.15
+# environment
+rvm_script_name = 
+# environment
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.2508597.2508603.BAC9E48A-33F0-4C91-B45D-A9506CD9627A
+# environment
+LC_TERMINAL_VERSION = 3.4.15
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
-# environment
-GRAILS_HOME = /Users/palribeiro/.sdkman/candidates/grails/current
 # automatic
 +F = $(notdir $+)
 # environment
-__CF_USER_TEXT_ENCODING = 0x64A3253E:0x0:0x47
+ITERM_SESSION_ID = w0t0p0:D733BB7E-E90A-4277-B2DC-57326E2E4D93
+# environment
+rvm_sdk = 
+# environment
+COLORFGBG = 7;0
+# environment
+JOVIAL_PLUGIN_VERSION = 1.1.3
+# environment
+__CF_USER_TEXT_ENCODING = 0x7C1FB466:0x0:0x47
 # environment
 COMMAND_MODE = unix2003
 # default
 MAKEFILES := 
+# environment
+HOMEBREW_NO_AUTO_UPDATE = true
 # automatic
 <F = $(notdir $<)
 # environment
-SDKMAN_CANDIDATES_DIR = /Users/palribeiro/.sdkman/candidates
+ITERM_PROFILE = Default
+# environment
+rvm_silent_flag = 
+# environment
+rvm_gemstone_url = 
+# environment
+PAGER = less
 # environment
 LC_ALL = C
+# environment
+VIRTUAL_ENV_DISABLE_PROMPT = true
+# environment
+rvm_bin_flag = 
 # automatic
 ^F = $(notdir $^)
 # environment
-rvm_prefix = /Users/palribeiro
+rvm_prefix = /Users/leosilveira
 # default
 SUFFIXES := 
+# environment
+rvm_ruby_file = 
 # default
 .INCLUDE_DIRS = /usr/local/include
 # environment
@@ -177,11 +239,17 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 60466
+TERM = xterm-256color
 # environment
-MY_RUBY_HOME = /Users/palribeiro/.rvm/rubies/ruby-3.0.0
+rvm_use_flag = 
+# environment
+rvm_hook = 
+# environment
+MY_RUBY_HOME = /Users/leosilveira/.rvm/rubies/ruby-3.0.0
+# environment
+rvm_nightly_flag = 
 # variable set hash-table stats:
-# Load=82/1024=8%, Rehash=0, Collisions=3/106=3%
+# Load=116/1024=11%, Rehash=0, Collisions=10/140=7%
 
 # Pattern-specific Variable Values
 
@@ -189,7 +257,7 @@ MY_RUBY_HOME = /Users/palribeiro/.rvm/rubies/ruby-3.0.0
 
 # Directories
 
-# . (device 16777225, inode 1874124): 13 files, no impossibilities.
+# . (device 16777223, inode 2029753): 13 files, no impossibilities.
 
 # 13 files, no impossibilities in 1 directories.
 
@@ -197,6 +265,7 @@ MY_RUBY_HOME = /Users/palribeiro/.rvm/rubies/ruby-3.0.0
 
 # No implicit rules.
 
+ 
 # Files
 
 # Not a target:
@@ -217,13 +286,21 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-22 12:43:02
+#  Last modified 2022-06-22 17:27:04
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
-.PRONY: coverage
+test:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 2):
+	go test -v ./... -covermode=atomic -coverpkg=./... -count=1  -race -timeout=30m -coverprofile=coverage.out
+	
+
+.PRONY: test coverage
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -238,12 +315,12 @@ coverage:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 2):
-	go test -v ./... -covermode=atomic -coverpkg=./... -count=1  -race -timeout=30m -coverprofile=coverage.out && go tool cover -html=coverage.out
+#  commands to execute (from `Makefile', line 5):
+	go tool cover -html=coverage.out
 	
 
 # files hash-table stats:
-# Load=6/1024=1%, Rehash=0, Collisions=0/19=0%
+# Load=7/1024=1%, Rehash=0, Collisions=0/21=0%
 # VPATH Search Paths
 
 # No `vpath' search paths.
@@ -255,6 +332,6 @@ coverage:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Wed Jun 22 13:02:08 2022
+# Finished Make data base on Wed Jun 22 18:32:40 2022
 
  

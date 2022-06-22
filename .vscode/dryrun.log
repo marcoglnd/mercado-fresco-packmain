@@ -1,4 +1,5 @@
-make: Entering directory `/Users/palribeiro/Documents/aulas-digitalhouse/mercado-fresco-packmain'
-go test -v ./... -covermode=atomic -coverpkg=./... -count=1  -race -timeout=30m -coverprofile=coverage.out && go tool cover -html=coverage.out
-make: Leaving directory `/Users/palribeiro/Documents/aulas-digitalhouse/mercado-fresco-packmain'
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/leosilveira/projects/mercado-fresco-packmain'
+go test -v ./... -covermode=atomic -coverpkg=./... -count=1  -race -timeout=30m -coverprofile=coverage.out
+make: Leaving directory `/Users/leosilveira/projects/mercado-fresco-packmain'
  
