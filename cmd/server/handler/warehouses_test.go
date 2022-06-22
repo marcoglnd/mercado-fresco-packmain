@@ -68,6 +68,21 @@ func TestCreateFail(t *testing.T) {
 func TestCreateConflict(t *testing.T) {
 	routes := createServerForWarehouse()
 
+	reqFake, resFake := createRequestTest(http.MethodPost, getPathUrl("/warehouses/"),
+		`
+	{
+		"warehouse_code": "BRO",
+		"address": "Rua Sao Paulo 22",
+		"telephone": "1130304040",
+		"minimum_capacity": 10,
+		"minimum_temperature": 20
+	}
+	`,
+	)
+
+	defer reqFake.Body.Close()
+	routes.ServeHTTP(resFake, reqFake)
+
 	req, res := createRequestTest(http.MethodPost, getPathUrl("/warehouses/"),
 		`
 		{
@@ -88,6 +103,22 @@ func TestCreateConflict(t *testing.T) {
 
 func TestFindAll(t *testing.T) {
 	routes := createServerForWarehouse()
+	reqFake, resFake := createRequestTest(
+		http.MethodPost,
+		getPathUrl("/warehouses/"),
+		`
+		{
+			"warehouse_code": "BRO",
+			"address": "Rua Sao Paulo 22",
+			"telephone": "1130304040",
+			"minimum_capacity": 10,
+			"minimum_temperature": 20
+		}
+		`,
+	)
+
+	defer reqFake.Body.Close()
+	routes.ServeHTTP(resFake, reqFake)
 	req, res := createRequestTest(http.MethodGet, getPathUrl("/warehouses/"), "")
 
 	defer req.Body.Close()
@@ -121,7 +152,22 @@ func TestFindByIdNonExistent(t *testing.T) {
 
 func TestFindByIdExistent(t *testing.T) {
 	routes := createServerForWarehouse()
+	reqFake, resFake := createRequestTest(
+		http.MethodPost,
+		getPathUrl("/warehouses/"),
+		`
+		{
+			"warehouse_code": "BRO",
+			"address": "Rua Sao Paulo 22",
+			"telephone": "1130304040",
+			"minimum_capacity": 10,
+			"minimum_temperature": 20
+		}
+		`,
+	)
 
+	defer reqFake.Body.Close()
+	routes.ServeHTTP(resFake, reqFake)
 	reqValidateCheck, resValidateCheck := createRequestTest(
 		http.MethodGet,
 		getPathUrl("/warehouses/notint"),
@@ -152,6 +198,22 @@ func TestFindByIdExistent(t *testing.T) {
 
 func TestUpdateOk(t *testing.T) {
 	routes := createServerForWarehouse()
+	reqFakePost, resFakePost := createRequestTest(
+		http.MethodPost,
+		getPathUrl("/warehouses/"),
+		`
+		{
+			"warehouse_code": "BRO",
+			"address": "Rua Sao Paulo 22",
+			"telephone": "1130304040",
+			"minimum_capacity": 10,
+			"minimum_temperature": 20
+		}
+		`,
+	)
+
+	defer reqFakePost.Body.Close()
+	routes.ServeHTTP(resFakePost, reqFakePost)
 	reqFake, resFake := createRequestTest(http.MethodGet, getPathUrl("/warehouses/1"), "")
 	defer reqFake.Body.Close()
 	routes.ServeHTTP(resFake, reqFake)
@@ -261,6 +323,20 @@ func TestDeleteNonExistent(t *testing.T) {
 
 func TestDeleteOk(t *testing.T) {
 	routes := createServerForWarehouse()
+	reqFakePost, resFakePost := createRequestTest(http.MethodPost, getPathUrl("/warehouses/"),
+		`
+		{
+			"warehouse_code": "BRO",
+			"address": "Rua Sao Paulo 22",
+			"telephone": "1130304040",
+			"minimum_capacity": 10,
+			"minimum_temperature": 20
+		}
+		`,
+	)
+
+	defer reqFakePost.Body.Close()
+	routes.ServeHTTP(resFakePost, reqFakePost)
 	existentId := 1
 	req, res := createRequestTest(
 		http.MethodDelete,
