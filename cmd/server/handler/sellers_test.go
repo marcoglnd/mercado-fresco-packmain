@@ -5,39 +5,14 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/sellers"
-
-	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
-func createServerForSeller() *gin.Engine {
-	gin.SetMode(gin.TestMode)
-
-	repo := sellers.NewRepository()
-	service := sellers.NewService(repo)
-
-	sellerController := controllers.NewSeller(service)
-
-	router := gin.Default()
-
-	pr := router.Group("/sellers")
-	{
-		pr.GET("/", sellerController.GetAll())
-		pr.GET("/:id", sellerController.GetById())
-		pr.POST("/", sellerController.Create())
-		pr.PATCH("/:id", sellerController.Update())
-		pr.DELETE("/:id", sellerController.Delete())
-	}
-
-	return router
-}
-
 func Test_CreateSeller_OK(t *testing.T) {
-	r := createServerForSeller()
+	r := createServer()
 
-	req, rr := createRequestTest(http.MethodPost, "/sellers/", `{
+	req, rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
 		"cid": 123, "company_name": "John", "address": "Rua Meli", "telephone": "1234"
 	}`)
 
@@ -47,9 +22,9 @@ func Test_CreateSeller_OK(t *testing.T) {
 }
 
 func Test_CreateSeller_bad_request(t *testing.T) {
-	r := createServerForSeller()
+	r := createServer()
 
-	req, rr := createRequestTest(http.MethodPost, "/sellers/", `{
+	req, rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
 		"cid": "123", "company_name": "Jhon", "address": "Doe", "telephone": "123456"
 	}`)
 
@@ -59,9 +34,9 @@ func Test_CreateSeller_bad_request(t *testing.T) {
 }
 
 func Test_CreateSeller_fail(t *testing.T) {
-	r := createServerForSeller()
+	r := createServer()
 
-	req, rr := createRequestTest(http.MethodPost, "/sellers/", `{
+	req, rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
 		"company_name": "Jhon", "address": "Doe"
 	}`)
 
@@ -71,13 +46,13 @@ func Test_CreateSeller_fail(t *testing.T) {
 }
 
 func Test_CreateSeller_conflict(t *testing.T) {
-	r := createServerForSeller()
+	r := createServer()
 
-	req, rr := createRequestTest(http.MethodPost, "/sellers/", `{
+	req, rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
 		"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
 	}`)
 
-	second_req, second_rr := createRequestTest(http.MethodPost, "/sellers/", `{
+	second_req, second_rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
 		"cid": 402323, "company_name": "Maria", "address": "Silva", "telephone": "4321"
 	}`)
 
@@ -88,9 +63,9 @@ func Test_CreateSeller_conflict(t *testing.T) {
 }
 
 func Test_GetAllSellers_OK(t *testing.T) {
-	r := createServerForSeller()
+	r := createServer()
 
-	req, rr := createRequestTest(http.MethodGet, "/sellers/", "")
+	req, rr := createRequestTest(http.MethodGet, getPathUrl("/sellers/"), "")
 
 	defer req.Body.Close()
 
@@ -110,13 +85,13 @@ func Test_GetAllSellers_OK(t *testing.T) {
 }
 
 func Test_GetSellerById_existent(t *testing.T) {
-	r := createServerForSeller()
+	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/sellers/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
 		"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
 	}`)
 
-	get_req, get_rr := createRequestTest(http.MethodGet, "/sellers/1", "")
+	get_req, get_rr := createRequestTest(http.MethodGet, getPathUrl("/sellers/1"), "")
 
 	defer post_req.Body.Close()
 	defer get_req.Body.Close()
@@ -139,13 +114,13 @@ func Test_GetSellerById_existent(t *testing.T) {
 }
 
 func Test_GetSellerById_non_existent(t *testing.T) {
-	r := createServerForSeller()
+	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/sellers/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
 		"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
 	}`)
 
-	get_req, get_rr := createRequestTest(http.MethodGet, "/sellers/10", "")
+	get_req, get_rr := createRequestTest(http.MethodGet, getPathUrl("/sellers/10"), "")
 
 	defer post_req.Body.Close()
 	defer get_req.Body.Close()
@@ -157,13 +132,13 @@ func Test_GetSellerById_non_existent(t *testing.T) {
 }
 
 func Test_UpdateSeller_OK(t *testing.T) {
-	r := createServerForSeller()
+	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/sellers/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
 		"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
 	}`)
 
-	patch_req, patch_rr := createRequestTest(http.MethodPatch, "/sellers/1", `{
+	patch_req, patch_rr := createRequestTest(http.MethodPatch, getPathUrl("/sellers/1"), `{
 		"cid": 400000, "company_name": "Maria", "address": "Receba", "telephone": "4321"
 	}`)
 
@@ -188,13 +163,13 @@ func Test_UpdateSeller_OK(t *testing.T) {
 }
 
 func Test_UpdateSeller_non_existent(t *testing.T) {
-	r := createServerForSeller()
+	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/sellers/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
 		"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
 	}`)
 
-	patch_req, patch_rr := createRequestTest(http.MethodPatch, "/sellers/10", `{
+	patch_req, patch_rr := createRequestTest(http.MethodPatch, getPathUrl("/sellers/10"), `{
 		"cid": 400000, "company_name": "Maria", "address": "Receba", "telephone": "4321"
 	}`)
 
@@ -208,13 +183,13 @@ func Test_UpdateSeller_non_existent(t *testing.T) {
 }
 
 func Test_DeleteSeller_OK(t *testing.T) {
-	r := createServerForSeller()
+	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/sellers/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
 		"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
 	}`)
 
-	get_req, get_rr := createRequestTest(http.MethodGet, "/sellers/", "")
+	get_req, get_rr := createRequestTest(http.MethodGet, getPathUrl("/sellers/"), "")
 
 	r.ServeHTTP(post_rr, post_req)
 	r.ServeHTTP(get_rr, get_req)
@@ -231,14 +206,14 @@ func Test_DeleteSeller_OK(t *testing.T) {
 	assert.Nil(t, err)
 	assert.True(t, buyersLen > 0)
 
-	delete_req, delete_rr := createRequestTest(http.MethodDelete, "/sellers/1", "")
+	delete_req, delete_rr := createRequestTest(http.MethodDelete, getPathUrl("/sellers/1"), "")
 
 	defer post_req.Body.Close()
 	defer delete_req.Body.Close()
 
 	r.ServeHTTP(delete_rr, delete_req)
 
-	secondGet_req, secondGet_rr := createRequestTest(http.MethodGet, "/sellers/", "")
+	secondGet_req, secondGet_rr := createRequestTest(http.MethodGet, getPathUrl("/sellers/"), "")
 
 	r.ServeHTTP(secondGet_rr, secondGet_req)
 
@@ -256,15 +231,15 @@ func Test_DeleteSeller_OK(t *testing.T) {
 }
 
 func Test_DeleteSeller_non_existent(t *testing.T) {
-	r := createServerForSeller()
+	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/sellers/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
 		"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
 	}`)
 
 	r.ServeHTTP(post_rr, post_req)
 
-	delete_req, delete_rr := createRequestTest(http.MethodDelete, "/sellers/10", "")
+	delete_req, delete_rr := createRequestTest(http.MethodDelete, getPathUrl("/sellers/10"), "")
 
 	defer post_req.Body.Close()
 	defer delete_req.Body.Close()
