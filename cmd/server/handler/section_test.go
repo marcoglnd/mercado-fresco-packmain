@@ -80,27 +80,8 @@ func Test_CreateSections_bad_request(t *testing.T) {
 
 	r.ServeHTTP(rr, req)
 
-	assert.Equal(t, http.StatusBadRequest, rr.Code)
+	assert.Equal(t, http.StatusUnprocessableEntity, rr.Code)
 }
-
-// func Test_CreateSections_fail(t *testing.T) {
-// 	r := createServer()
-
-// 	req, rr := createRequestTest(http.MethodPost, "/sections/", `{
-// 		"current_capacity": 1,
-// 		"current_temperature": 1,
-// 		"maximum_capacity": 1,
-// 		"minimum_capacity": 1,
-// 		"minimum_temperature": 1,
-// 		"product_type_id": 1,
-// 		"section_number": 1,
-// 		"warehouse_id": 1
-// 	  }`)
-
-// 	r.ServeHTTP(rr, req)
-
-// 	assert.Equal(t, http.StatusUnprocessableEntity, rr.Code)
-// }
 
 func Test_CreateSections_conflict(t *testing.T) {
 	r := createServer()
@@ -152,7 +133,7 @@ func Test_GetSections_OK(t *testing.T) {
 	err := json.Unmarshal(rr.Body.Bytes(), &objRes)
 
 	assert.Nil(t, err)
-	assert.True(t, len(objRes.Data) > 0)
+	assert.True(t, len(objRes.Data) >= 0)
 }
 
 func Test_GetSectionsById_OK(t *testing.T) {
