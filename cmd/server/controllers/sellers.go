@@ -31,23 +31,20 @@ func NewSeller(s sellers.Service) *SellerController {
 // @Router /sellers [get]
 func (c *SellerController) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-		if token != "123456" {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "token inválido",
-			})
-			return
-		}
 
 		s, err := c.service.GetAll()
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{
-				"error": err.Error(),
-			})
+			ctx.AbortWithStatusJSON(
+				http.StatusUnprocessableEntity,
+				gin.H{"error": err.Error()})
 			return
 		}
 
-		ctx.JSON(http.StatusOK, s)
+		ctx.JSON(
+			http.StatusOK, gin.H{
+				"data": s,
+			},
+		)
 	}
 }
 
@@ -97,17 +94,12 @@ type requestSellers struct {
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
 // @Router /sellers [post]
-func (c *SellerController) CreateNewSeller() gin.HandlerFunc {
+func (c *SellerController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-		if token != "123456" {
-			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token inválido"})
-			return
-		}
 
 		var req requestSellers
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{
+			ctx.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
 			return
@@ -130,7 +122,7 @@ func (c *SellerController) CreateNewSeller() gin.HandlerFunc {
 			return
 		}
 
-		s, err := c.service.Store(req.Cid, req.Company_name, req.Address, req.Telephone)
+		s, err := c.service.Create(req.Cid, req.Company_name, req.Address, req.Telephone)
 		if err != nil {
 			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 			return
@@ -154,11 +146,6 @@ func (c *SellerController) CreateNewSeller() gin.HandlerFunc {
 // @Router /sellers/{id} [patch]
 func (c *SellerController) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != "123456" {
-			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token inválido"})
-			return
-		}
 
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
@@ -211,11 +198,6 @@ func (c *SellerController) Update() gin.HandlerFunc {
 // @Router /sellers/{id} [delete]
 func (c *SellerController) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != "123456" {
-			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token inválido"})
-			return
-		}
 
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
