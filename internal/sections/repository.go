@@ -4,12 +4,10 @@ import "fmt"
 
 var sectionList []Section = []Section{}
 
-var lastID int
-
 type Repository interface {
 	GetAll() ([]Section, error)
 	GetById(id int) (Section, error)
-	Create(id, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId int) (Section, error)
+	Create(sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId int) (Section, error)
 	LastID() (int, error)
 	Update(id, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId int) (Section, error)
 	Delete(id int) error
@@ -31,24 +29,44 @@ func (repository) GetById(id int) (Section, error) {
 }
 
 func (repository) LastID() (int, error) {
-	return lastID, nil
+	if len(sectionList) == 0 {
+		return 1, nil
+	}
+	lastId := sectionList[len(sectionList)-1].ID + 1
+	return lastId, nil
 }
 
-func (repository) Create(id, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId int) (Section, error){
+func (r *repository) Create(sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId int) (Section, error) {
+	sectionsList, err := r.GetAll()
+	if err != nil {
+		return Section{}, err
+	}
+
+	for i := range sectionsList {
+		if sectionsList[i].SectionNumber == sectionNumber {
+			return Section{}, fmt.Errorf("sectionNumber %v do Section já existe", sectionNumber)
+		}
+	}
+
+	lastID, err := r.LastID()
+
+	if err != nil {
+		return Section{}, err
+	}
+
 	for i := range sectionList {
 		if sectionList[i].SectionNumber == sectionNumber {
 			return Section{}, fmt.Errorf("SectionNumber %d já existe", sectionNumber)
 		}
 	}
-	section := Section{id, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId}
+	section := Section{lastID, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId}
 	sectionList = append(sectionList, section)
-	lastID = section.ID
 	return section, nil
 }
 
 func (repository) Update(
 	id, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity,
-	maximumCapacity, warehouseId, productTypeId int) (Section, error){
+	maximumCapacity, warehouseId, productTypeId int) (Section, error) {
 	section := Section{
 		SectionNumber:      sectionNumber,
 		CurrentTemperature: currentTemperature,

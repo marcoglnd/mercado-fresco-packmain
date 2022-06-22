@@ -111,7 +111,7 @@ func (c *Employee) Create() gin.HandlerFunc {
 		employee, err := c.service.Create(req.CardNumberId, req.FirstName, req.LastName, req.WarehouseId)
 
 		if err != nil {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 			return
 		}
 		ctx.JSON(http.StatusCreated, employee)

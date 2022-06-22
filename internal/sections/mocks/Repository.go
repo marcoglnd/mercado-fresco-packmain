@@ -12,20 +12,20 @@ type Repository struct {
 	mock.Mock
 }
 
-// Create provides a mock function with given fields: id, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId
-func (_m *Repository) Create(id int, sectionNumber int, currentTemperature int, minimumTemperature int, currentCapacity int, minimumCapacity int, maximumCapacity int, warehouseId int, productTypeId int) (sections.Section, error) {
-	ret := _m.Called(id, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId)
+// Create provides a mock function with given fields: sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId
+func (_m *Repository) Create(sectionNumber int, currentTemperature int, minimumTemperature int, currentCapacity int, minimumCapacity int, maximumCapacity int, warehouseId int, productTypeId int) (sections.Section, error) {
+	ret := _m.Called(sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId)
 
 	var r0 sections.Section
-	if rf, ok := ret.Get(0).(func(int, int, int, int, int, int, int, int, int) sections.Section); ok {
-		r0 = rf(id, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId)
+	if rf, ok := ret.Get(0).(func(int, int, int, int, int, int, int, int) sections.Section); ok {
+		r0 = rf(sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId)
 	} else {
 		r0 = ret.Get(0).(sections.Section)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(int, int, int, int, int, int, int, int, int) error); ok {
-		r1 = rf(id, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId)
+	if rf, ok := ret.Get(1).(func(int, int, int, int, int, int, int, int) error); ok {
+		r1 = rf(sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId)
 	} else {
 		r1 = ret.Error(1)
 	}
