@@ -2,6 +2,7 @@ package warehouses
 
 var warehouses []Warehouse = []Warehouse{}
 
+//go:generate mockgen -source=./repository.go -destination=./mocks/repository_mock.go
 type Repository interface {
 	Create(
 		warehouseCode string,
