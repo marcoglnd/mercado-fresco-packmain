@@ -5,7 +5,7 @@ import "fmt"
 type Repository interface {
 	GetAll() ([]Employee, error)
 	GetById(id int) (Employee, error)
-	Create(id int, cardNumberId, firstName, lastName string, warehouseId int) (Employee, error)
+	Create(cardNumberId, firstName, lastName string, warehouseId int) (Employee, error)
 	LastID() (int, error)
 	Update(id int, cardNumberId, firstName, lastName string, warehouseId int) (Employee, error)
 	Delete(id int) error
@@ -43,10 +43,28 @@ func (repository) LastID() (int, error) {
 	return lastID, nil
 }
 
-func (repository) Create(id int, cardNumberId, firstName, lastName string, warehouseId int) (Employee, error) {
-	employee := Employee{id, cardNumberId, firstName, lastName, warehouseId}
+func (r *repository) Create(cardNumberId, firstName, lastName string, warehouseId int) (Employee, error) {
+	listOfEmployees, err := r.GetAll()
+
+	if err != nil {
+		return Employee{}, err
+	}
+	for i := range listOfEmployees {
+		if listOfEmployees[i].CardNumberId == cardNumberId {
+			return Employee{}, fmt.Errorf("cardNumberId %s already exists", cardNumberId)
+		}
+	}
+
+	lastID, err := r.LastID()
+
+	if err != nil {
+		return Employee{}, err
+	}
+
+	lastID++
+
+	employee := Employee{lastID, cardNumberId, firstName, lastName, warehouseId}
 	listEmployees = append(listEmployees, employee)
-	lastID = employee.ID
 	return employee, nil
 }
 
