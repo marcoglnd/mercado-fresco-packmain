@@ -17,9 +17,6 @@ API Support
 **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 ### `GET: /buyers`
-get all buyers
-
-##### Responses
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
