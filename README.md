@@ -17,28 +17,20 @@ API Support
 **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 ### `GET: /buyers`
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 200 | OK | [schemes.Buyer](#schemesBuyer)|
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) |
 
-#### POST
-##### Summary
-
-Create buyer
-
-##### Description
-
-Add a new buyer to the list
-
-##### Parameters
+#### `POST: /buyers`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | buyer | body | Buyer to create | Yes | [controllers.requestBuyer](#controllersrequestbuyer) |
 
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
