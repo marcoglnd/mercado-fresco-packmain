@@ -20,7 +20,7 @@ API Support
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | OK | [schemes.JSONSuccessResult](#schemesjsonsuccessresult) & object |
+| 200 | OK | [schemes.Buyer](#schemesBuyer)|
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) |
 
 #### POST
