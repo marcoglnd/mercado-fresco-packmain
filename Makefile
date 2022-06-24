@@ -1,6 +1,9 @@
 server:
 	go run ./...
 
+swag:
+	swag init -g cmd/server/main.go
+
 test:
 	go test -v ./... -covermode=atomic -coverpkg=./... -count=1  -race -timeout=30m -coverprofile=coverage.out
 
@@ -13,4 +16,4 @@ dockerup:
 dockerdown:
 	docker compose down
 
-.PRONY: server test coverage dockerup dockerdown
+.PRONY: server swag test coverage dockerup dockerdown
