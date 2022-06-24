@@ -10,9 +10,9 @@ This API Handle MELI Products.
 ### Terms of service
 <https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones>
 
-**Contact information:**  
-API Support  
-<https://developers.mercadolibre.com.ar/support>  
+**Contact information:**
+API Support
+<https://developers.mercadolibre.com.ar/support>
 
 **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
 
@@ -38,24 +38,15 @@ API Support
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) |
 | 422 | Unprocessable Entity | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) |
 
-### /buyers/{id}
+### `DELETE: /buyers/{id}`
 
-#### DELETE
-##### Summary
-
-Delete buyer
-
-##### Description
-
-Delete existing buyer in list
-
-##### Parameters
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | id | path | Buyer ID | Yes | integer |
 
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
@@ -63,22 +54,14 @@ Delete existing buyer in list
 | 400 | Bad Request | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-#### GET
-##### Summary
-
-Buyer by id
-
-##### Description
-
-get buyer by its id
-
-##### Parameters
+### `GET: /buyers/{id}`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | id | path | Buyer ID | Yes | integer |
 
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
@@ -86,23 +69,15 @@ get buyer by its id
 | 400 | Bad Request | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) |
 
-#### PATCH
-##### Summary
-
-Update buyer
-
-##### Description
-
-Update existing buyer in list
-
-##### Parameters
+#### `PATCH: /buyers/{id}`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | id | path | Buyer ID | Yes | integer |
 | buyer | body | Buyer to update | Yes | [controllers.requestBuyer](#controllersrequestbuyer) |
 
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
@@ -110,40 +85,21 @@ Update existing buyer in list
 | 400 | Bad Request | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) |
 
-### /employees
-
-#### GET
-##### Summary
-
-List employees
-
-##### Description
-
-get all employees
-
-##### Responses
+### `GET: /employees`
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 200 | OK | [schemes.JSONSuccessResult](#schemesjsonsuccessresult) & object |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-#### POST
-##### Summary
-
-Create employee
-
-##### Description
-
-Add a new employee to the list
-
-##### Parameters
+### `POST: /employees`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | employee | body | Employee to create | Yes | [controllers.requestEmployee](#controllersrequestemployee) |
-
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
@@ -151,24 +107,14 @@ Add a new employee to the list
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 | 422 | Unprocessable Entity | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-### /employees/{id}
-
-#### DELETE
-##### Summary
-
-Delete employee
-
-##### Description
-
-Delete existing employee in list
-
-##### Parameters
+### `DELETE: /employees/{id}`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | id | path | Employee ID | Yes | integer |
 
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
@@ -176,22 +122,14 @@ Delete existing employee in list
 | 400 | Bad Request | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-#### GET
-##### Summary
-
-Employee by id
-
-##### Description
-
-get employee by id
-
-##### Parameters
+### `GET: /employees/{id}`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | id | path | Employee ID | Yes | integer |
 
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
@@ -199,23 +137,14 @@ get employee by id
 | 400 | Bad Request | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-#### PATCH
-##### Summary
-
-Update employee
-
-##### Description
-
-Update existing employee in list
-
-##### Parameters
+### `PATCH: /employees/{id}`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | id | path | Employee ID | Yes | integer |
 | employee | body | Employee to update | Yes | [controllers.requestEmployee](#controllersrequestemployee) |
-
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
@@ -223,40 +152,21 @@ Update existing employee in list
 | 400 | Bad Request | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-### /products
-
-#### GET
-##### Summary
-
-List products
-
-##### Description
-
-get all products
-
-##### Responses
+#### `GET: /products`
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 200 | OK | [schemes.JSONSuccessResult](#schemesjsonsuccessresult) & object |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-#### POST
-##### Summary
-
-Create product
-
-##### Description
-
-Add a new product to the list
-
-##### Parameters
+### `POST: /products`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | product | body | Product to create | Yes | [controllers.requestProducts](#controllersrequestproducts) |
-
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
@@ -264,24 +174,14 @@ Add a new product to the list
 | 409 | Conflict | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 | 422 | Unprocessable Entity | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-### /products/{id}
-
-#### DELETE
-##### Summary
-
-Delete product
-
-##### Description
-
-Delete existing product in list
-
-##### Parameters
+### `DELETE: /products/{id}`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | id | path | product ID | Yes | integer |
 
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
@@ -289,22 +189,13 @@ Delete existing product in list
 | 400 | Bad Request | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-#### GET
-##### Summary
-
-Product by id
-
-##### Description
-
-get product by it's id
-
-##### Parameters
+### `GET: /products/{id}`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | id | path | Product ID | Yes | integer |
-
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
@@ -312,23 +203,14 @@ get product by it's id
 | 400 | Bad Request | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-#### PATCH
-##### Summary
-
-Update product
-
-##### Description
-
-Update existing product in list
-
-##### Parameters
+### `PATCH: /products/{id}`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | id | path | Product ID | Yes | integer |
 | product | body | Product to update | Yes | [controllers.requestProducts](#controllersrequestproducts) |
-
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
@@ -337,65 +219,36 @@ Update existing product in list
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 | 422 | Unprocessable Entity | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-### /sections
-
-#### GET
-##### Summary
-
-List sections
-
-##### Description
-
-get all sections
-
-##### Responses
+### `GET: /sections`
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 200 | OK | [schemes.JSONSuccessResult](#schemesjsonsuccessresult) & object |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-#### POST
-##### Summary
-
-Create section
-
-##### Description
-
-Add a new section to the list
-
-##### Parameters
+### `POST: /sections`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | section | body | Section to create | Yes | [controllers.requestSection](#controllersrequestsection) |
 
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 201 | Created | [schemes.Section](#schemessection) |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 | 422 | Unprocessable Entity | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
-
-### /sections/{id}
-
-#### DELETE
-##### Summary
-
-Delete section
-
-##### Description
-
-Delete existing sections in list
-
-##### Parameters
+### `DELETE: /sections/{id}`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | id | path | Section ID | Yes | integer |
 
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
@@ -403,22 +256,14 @@ Delete existing sections in list
 | 400 | Bad Request | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-#### GET
-##### Summary
-
-Section by id
-
-##### Description
-
-get section by its id
-
-##### Parameters
+### `GET: /sections/{id}`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | id | path | Section ID | Yes | integer |
 
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
@@ -426,23 +271,15 @@ get section by its id
 | 400 | Bad Request | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-#### PATCH
-##### Summary
-
-Update section
-
-##### Description
-
-Update existing section in list
-
-##### Parameters
+### `PATCH: /sections/{id}`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | id | path | Section ID | Yes | integer |
 | section | body | Section to update | Yes | [controllers.requestSection](#controllersrequestsection) |
 
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
@@ -450,47 +287,29 @@ Update existing section in list
 | 400 | Bad Request | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-### /sellers
-
-#### GET
-##### Summary
-
-List sellers
-
-##### Description
-
-get all sellers
-
-##### Parameters
+### `GET: /sellers`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | token | header | token | Yes | string |
 
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 200 | OK | [schemes.JSONSuccessResult](#schemesjsonsuccessresult) & object |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-#### POST
-##### Summary
-
-Create seller
-
-##### Description
-
-Add a new Seller to the list
-
-##### Parameters
+### `POST: /sellers`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | token | header | token | Yes | string |
 | Seller | body | seller to create | Yes | [controllers.requestSellers](#controllersrequestsellers) |
 
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
@@ -498,25 +317,15 @@ Add a new Seller to the list
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 | 422 | Unprocessable Entity | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-### /sellers/{id}
-
-#### DELETE
-##### Summary
-
-Delete seller
-
-##### Description
-
-Delete existing seller in list
-
-##### Parameters
+### `DELETE: /sellers/{id}`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | id | path | Seller ID | Yes | integer |
 | token | header | token | Yes | string |
 
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
@@ -524,23 +333,15 @@ Delete existing seller in list
 | 400 | Bad Request | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-#### GET
-##### Summary
-
-Seller by id
-
-##### Description
-
-get Seller by it's id
-
-##### Parameters
+### `GET:  /sellers/{id}`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | id | path | Seller ID | Yes | integer |
 | token | header | token | Yes | string |
 
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
@@ -548,24 +349,15 @@ get Seller by it's id
 | 400 | Bad Request | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-#### PATCH
-##### Summary
-
-Update seller
-
-##### Description
-
-Update existing Seller in list
-
-##### Parameters
+### `PATCH:  /sellers/{id}`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | id | path | Seller ID | Yes | integer |
 | token | header | token | Yes | string |
 | seller | body | Seller to update | Yes | [controllers.requestSellers](#controllersrequestsellers) |
-
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
@@ -573,64 +365,35 @@ Update existing Seller in list
 | 400 | Bad Request | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-### /warehouses
-
-#### GET
-##### Summary
-
-List warehouses
-
-##### Description
-
-get all warehouses
-
-##### Responses
+### `GET: /warehouses`
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 200 | OK | [schemes.JSONSuccessResult](#schemesjsonsuccessresult) & object |
 | 422 | Unprocessable Entity | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
 
-#### POST
-##### Summary
-
-Create warehouse
-
-##### Description
-
-Add a new warehouse checking for duplicate warehouses code before
-
-##### Parameters
+### `POST: /warehouses`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | warehouse | body | Warehouse to create | Yes | [warehouses.CreateWarehouseInput](#warehousescreatewarehouseinput) |
 
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 201 | Created | [warehouses.Warehouse](#warehouseswarehouse) |
 | 422 | Unprocessable Entity | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) & object |
-
-### /warehouses/{id}
-
-#### DELETE
-##### Summary
-
-Delete warehouse
-
-##### Description
-
-Delete existing warehouse in list
-
-##### Parameters
+### `DELETE: /warehouses/{id}`
+##### `Parameters`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | id | path | warehouse ID | Yes | integer |
 
-##### Responses
+##### `Responses`
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
