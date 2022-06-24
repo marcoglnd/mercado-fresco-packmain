@@ -14,7 +14,7 @@ func TestCreateProductOK(t *testing.T) {
 
 	req, rr := createRequestTest(http.MethodPost, getPathUrl("/products/"), `{
 		"description": "Yogurt",
-		"expiration_rate": 1,
+		"expiration_rate": 11,
 		"freezing_rate": 2,
 		"height": 6.4,
 		"length": 4.5,
