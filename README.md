@@ -24,7 +24,7 @@ API Support
 | 200 | OK | [schemes.Buyer](#schemesBuyer)|
 | 404 | Not Found | [schemes.JSONBadReqResult](#schemesjsonbadreqresult) |
 
-#### `POST: /buyers`
+### `POST: /buyers`
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
