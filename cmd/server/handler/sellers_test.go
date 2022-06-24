@@ -11,9 +11,9 @@ import (
 
 func Test_CreateSeller_OK(t *testing.T) {
 	r := createServer()
-
+	// TODO: refac
 	req, rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
-		"cid": 123, "company_name": "John", "address": "Rua Meli", "telephone": "1234"
+		"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
 	}`)
 
 	r.ServeHTTP(rr, req)
