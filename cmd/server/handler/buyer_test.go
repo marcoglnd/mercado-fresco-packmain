@@ -3,8 +3,10 @@ package controllers_test
 import (
 	"encoding/json"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
+	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/buyers"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/buyers/mocks"
 
