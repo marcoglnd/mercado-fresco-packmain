@@ -1,7 +1,6 @@
 package controllers_test
 
 import (
-	"database/sql"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
