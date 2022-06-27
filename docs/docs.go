@@ -706,8 +706,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/products.Product"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "409": {
+                        "description": "Conflict",
                         "schema": {
                             "allOf": [
                                 {
@@ -947,6 +947,24 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "Not Found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
                         "schema": {
                             "allOf": [
                                 {
@@ -2294,7 +2312,7 @@ const docTemplate = `{
         "schemes.Seller": {
             "type": "object",
             "properties": {
-                "adress": {
+                "address": {
                     "type": "string"
                 },
                 "cid": {
@@ -2342,12 +2360,9 @@ const docTemplate = `{
         },
         "warehouses.UpdateWarehouseInput": {
             "type": "object",
-<<<<<<< HEAD
-=======
             "required": [
                 "warehouse_code"
             ],
->>>>>>> 61d18264e53dada3fc57ca35aa9a76241acee6f2
             "properties": {
                 "address": {
                     "type": "string"
