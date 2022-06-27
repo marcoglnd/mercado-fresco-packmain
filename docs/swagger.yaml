@@ -95,6 +95,33 @@ definitions:
       telephone:
         type: string
     type: object
+  products.Product:
+    properties:
+      description:
+        type: string
+      expiration_rate:
+        type: integer
+      freezing_rate:
+        type: integer
+      height:
+        type: number
+      id:
+        type: integer
+      length:
+        type: number
+      netweight:
+        type: number
+      product_code:
+        type: string
+      product_type_id:
+        type: integer
+      recommended_freezing_temperature:
+        type: number
+      seller_id:
+        type: integer
+      width:
+        type: number
+    type: object
   schemes.Buyer:
     properties:
       card_number_id:
@@ -127,33 +154,6 @@ definitions:
     properties:
       data: {}
     type: object
-  schemes.Product:
-    properties:
-      description:
-        type: string
-      expiration_rate:
-        type: integer
-      freezing_rate:
-        type: integer
-      height:
-        type: number
-      id:
-        type: integer
-      length:
-        type: number
-      netweight:
-        type: number
-      product_code:
-        type: string
-      product_type_id:
-        type: integer
-      recommended_freezing_temperature:
-        type: number
-      seller_id:
-        type: integer
-      width:
-        type: number
-    type: object
   schemes.Section:
     properties:
       current_capacity:
@@ -177,7 +177,7 @@ definitions:
     type: object
   schemes.Seller:
     properties:
-      adress:
+      address:
         type: string
       cid:
         type: integer
@@ -332,15 +332,30 @@ paths:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/schemes.Buyer'
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  type: string
+              type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/schemes.JSONBadReqResult'
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/schemes.JSONBadReqResult'
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
       summary: Delete buyer
       tags:
       - Buyers
@@ -491,7 +506,12 @@ paths:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/schemes.Employee'
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  type: string
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -610,7 +630,7 @@ paths:
             - $ref: '#/definitions/schemes.JSONSuccessResult'
             - properties:
                 data:
-                  $ref: '#/definitions/schemes.Product'
+                  $ref: '#/definitions/products.Product'
               type: object
         "404":
           description: Not Found
@@ -641,9 +661,9 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/schemes.Product'
-        "404":
-          description: Not Found
+            $ref: '#/definitions/products.Product'
+        "409":
+          description: Conflict
           schema:
             allOf:
             - $ref: '#/definitions/schemes.JSONBadReqResult'
@@ -680,7 +700,12 @@ paths:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/schemes.Product'
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  type: string
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -718,7 +743,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schemes.Product'
+            $ref: '#/definitions/products.Product'
         "400":
           description: Bad Request
           schema:
@@ -762,7 +787,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schemes.Product'
+            $ref: '#/definitions/products.Product'
         "400":
           description: Bad Request
           schema:
@@ -774,6 +799,15 @@ paths:
               type: object
         "404":
           description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
           schema:
             allOf:
             - $ref: '#/definitions/schemes.JSONBadReqResult'
@@ -869,7 +903,12 @@ paths:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/schemes.Section'
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  type: string
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -1078,7 +1117,7 @@ paths:
             - $ref: '#/definitions/schemes.JSONSuccessResult'
             - properties:
                 data:
-                  $ref: '#/definitions/schemes.Seller'
+                  type: string
               type: object
         "400":
           description: Bad Request
@@ -1267,7 +1306,14 @@ paths:
       - application/json
       responses:
         "204":
-          description: ""
+          description: No Content
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - properties:
+                data:
+                  type: string
+              type: object
         "400":
           description: Bad Request
           schema:
