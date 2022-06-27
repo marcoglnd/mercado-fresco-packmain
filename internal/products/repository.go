@@ -1,6 +1,8 @@
 package products
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Repository interface {
 	GetAll() ([]Product, error)
@@ -62,9 +64,18 @@ func (r *repository) VerifyProductCode(productCode string) (bool, error) {
 }
 
 func (r *repository) CreateNewProduct(
-	description string, expirationRate, freezingRate int,
-	height, length, netWeight float64, productCode string,
-	recommendedFreezingTemperature, width float64, productTypeId, sellerId int) (Product, error) {
+	description string,
+	expirationRate,
+	freezingRate int,
+	height,
+	length,
+	netWeight float64,
+	productCode string,
+	recommendedFreezingTemperature,
+	width float64,
+	productTypeId,
+	sellerId int,
+) (Product, error) {
 	id, err := r.LastId()
 	if err != nil {
 		return Product{}, err
@@ -88,6 +99,8 @@ func (r *repository) CreateNewProduct(
 	}
 	listOfProducts = append(listOfProducts, prod)
 	return prod, nil
+	// db := db.StorageDB
+	// stmt, err := db.Prepare()
 }
 
 func (repository) Update(
