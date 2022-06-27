@@ -3,10 +3,15 @@ package controllers_test
 import (
 	"encoding/json"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
+	"github.com/gin-gonic/gin"
+	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/employees"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/employees/mocks"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestCreatEmployeeOk(t *testing.T) {
@@ -102,35 +107,39 @@ func TestGetAllOk(t *testing.T) {
 }
 
 func TestGetEmployeeByIdOk(t *testing.T) {
-	routes := createServer()
+	employee := &employees.Employee{
+		ID:           1,
+		CardNumberId: "1234",
+		FirstName:    "Luiza",
+		LastName:     "Maria",
+		WarehouseId:  123,
+	}
 
-	post_req, post_res := createRequestTest(http.MethodPost, getPathUrl("/employees/"), `{
-		"card_number_id": "1234",
-		"first_name": "Julia",
-		"last_name": "Rosas",
-		"warehouse_id": 3
-	}`)
+	mockService := new(mocks.Service)
+	mockService.On("GetById", mock.AnythingOfType("int")).Return(*employee, nil)
 
-	get_req, get_res := createRequestTest(http.MethodGet, getPathUrl("/employees/1"), "")
+	res := httptest.NewRecorder()
+	ctx, engine := gin.CreateTestContext(res)
+	newEmployee := controllers.NewEmployee(mockService)
 
-	defer post_req.Body.Close()
-	defer get_req.Body.Close()
+	engine.GET("/api/v1/employees/:id", newEmployee.GetById())
+	request, err := http.NewRequest(http.MethodGet, "/api/v1/employees/1", nil)
+	assert.NoError(t, err)
+	ctx.Request = request
+	engine.ServeHTTP(res, ctx.Request)
 
-	routes.ServeHTTP(post_res, post_req)
-	routes.ServeHTTP(get_res, get_req)
-
-	assert.Equal(t, http.StatusOK, get_res.Code)
+	assert.Equal(t, http.StatusOK, res.Code)
 
 	var objRes employees.Employee
 
-	err := json.Unmarshal(get_res.Body.Bytes(), &objRes)
+	err = json.Unmarshal(res.Body.Bytes(), &objRes)
 
 	assert.Nil(t, err)
 	assert.True(t, objRes.ID == 1)
 	assert.True(t, objRes.CardNumberId == "1234")
-	assert.True(t, objRes.FirstName == "Julia")
-	assert.True(t, objRes.LastName == "Rosas")
-	assert.True(t, objRes.WarehouseId == 3)
+	assert.True(t, objRes.FirstName == "Luiza")
+	assert.True(t, objRes.LastName == "Maria")
+	assert.True(t, objRes.WarehouseId == 123)
 
 }
 
