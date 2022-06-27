@@ -4,9 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
+	"github.com/gin-gonic/gin"
+	"github.com/golang/mock/gomock"
+	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses"
+	mock_warehouses "github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses/mocks"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -135,49 +140,33 @@ func TestFindByIdNonExistent(t *testing.T) {
 }
 
 func TestFindByIdExistent(t *testing.T) {
-	routes := createServer()
-	reqFake, resFake := createRequestTest(
-		http.MethodPost,
-		getPathUrl("/warehouses/"),
-		`
-		{
-			"warehouse_code": "BRO",
-			"address": "Rua Sao Paulo 22",
-			"telephone": "1130304040",
-			"minimum_capacity": 10,
-			"minimum_temperature": 20
-		}
-		`,
-	)
+	ctrl := gomock.NewController(t)
+	fakeWarehouse := &warehouses.Warehouse{
+		ID:                 1,
+		WarehouseCode:      "UBS",
+		Address:            "Rua Sao Joao",
+		Telephone:          "3120104030",
+		MinimumCapacity:    10,
+		MinimumTemperature: 10,
+	}
+	serviceMock := mock_warehouses.NewMockService(ctrl)
+	serviceMock.EXPECT().FindById(fakeWarehouse.ID).Return(fakeWarehouse, nil)
 
-	defer reqFake.Body.Close()
-	routes.ServeHTTP(resFake, reqFake)
-	reqValidateCheck, resValidateCheck := createRequestTest(
-		http.MethodGet,
-		getPathUrl("/warehouses/notint"),
-		"",
-	)
+	rr := httptest.NewRecorder()
+	ctx, engine := gin.CreateTestContext(rr)
+	wc := controllers.NewWarehouse(serviceMock)
 
-	defer reqValidateCheck.Body.Close()
-	routes.ServeHTTP(resValidateCheck, reqValidateCheck)
-	assert.Equal(t, http.StatusBadRequest, resValidateCheck.Code)
-
-	existentId := 1
-	req, res := createRequestTest(
-		http.MethodGet,
-		getPathUrl(fmt.Sprintf("/warehouses/%d", existentId)),
-		"",
-	)
-
-	defer req.Body.Close()
-	routes.ServeHTTP(res, req)
+	engine.GET("/:id", wc.GetById())
+	request, err := http.NewRequest(http.MethodGet, "/1", nil)
+	ctx.Request = request
+	engine.ServeHTTP(rr, ctx.Request)
+	assert.NoError(t, err)
 
 	var objRes warehouses.Warehouse
-
-	err := json.Unmarshal(res.Body.Bytes(), &objRes)
-
+	err = json.Unmarshal(rr.Body.Bytes(), &objRes)
 	assert.Nil(t, err)
-	assert.Equal(t, http.StatusOK, res.Code)
+	assert.Equal(t, http.StatusOK, rr.Code)
+	assert.Equal(t, *fakeWarehouse, objRes)
 }
 
 func TestUpdateOk(t *testing.T) {

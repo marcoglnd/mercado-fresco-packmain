@@ -123,16 +123,16 @@ func (mr *MockServiceMockRecorder) IsWarehouseCodeAvailable(warehouseCode interf
 }
 
 // Update mocks base method.
-func (m *MockService) Update(currentWarehouse warehouses.Warehouse, warehouseCode, address, telephone string, minimumCapacity, minimumTemperature int) (*warehouses.Warehouse, error) {
+func (m *MockService) Update(warehouseId int, warehouseCode, address, telephone string, minimumCapacity, minimumTemperature int) (*warehouses.Warehouse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Update", currentWarehouse, warehouseCode, address, telephone, minimumCapacity, minimumTemperature)
+	ret := m.ctrl.Call(m, "Update", warehouseId, warehouseCode, address, telephone, minimumCapacity, minimumTemperature)
 	ret0, _ := ret[0].(*warehouses.Warehouse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Update indicates an expected call of Update.
-func (mr *MockServiceMockRecorder) Update(currentWarehouse, warehouseCode, address, telephone, minimumCapacity, minimumTemperature interface{}) *gomock.Call {
+func (mr *MockServiceMockRecorder) Update(warehouseId, warehouseCode, address, telephone, minimumCapacity, minimumTemperature interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockService)(nil).Update), currentWarehouse, warehouseCode, address, telephone, minimumCapacity, minimumTemperature)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockService)(nil).Update), warehouseId, warehouseCode, address, telephone, minimumCapacity, minimumTemperature)
 }
