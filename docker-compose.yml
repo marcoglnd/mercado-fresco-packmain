@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  mariadb:
+    image: mariadb:10.8.3
+    container_name: mercado-fresco
+    hostname: mercado-fresco
+    restart: unless-stopped
+    volumes:
+      - ./db/:/docker-entrypoint-initdb.d
+      - ./db/.data:/var/lib/mysql
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    environment:
+      - MARIADB_ROOT_PASSWORD=${DB_PASS}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "-u$DB_USER", "-p$DB_PASS", "ping", "-h", "localhost"]
+      interval: 20s
+      timeout: 30s
+      retries: 3
+    env_file: .env

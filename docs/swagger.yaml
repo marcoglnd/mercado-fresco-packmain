@@ -177,7 +177,7 @@ definitions:
     type: object
   schemes.Seller:
     properties:
-      adress:
+      address:
         type: string
       cid:
         type: integer
@@ -223,11 +223,8 @@ definitions:
         type: string
       warehouse_code:
         type: string
-<<<<<<< HEAD
-=======
     required:
     - warehouse_code
->>>>>>> 61d18264e53dada3fc57ca35aa9a76241acee6f2
     type: object
   warehouses.Warehouse:
     properties:
@@ -665,8 +662,8 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/products.Product'
-        "404":
-          description: Not Found
+        "409":
+          description: Conflict
           schema:
             allOf:
             - $ref: '#/definitions/schemes.JSONBadReqResult'
@@ -802,6 +799,15 @@ paths:
               type: object
         "404":
           description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
           schema:
             allOf:
             - $ref: '#/definitions/schemes.JSONBadReqResult'
