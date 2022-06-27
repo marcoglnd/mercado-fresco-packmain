@@ -44,7 +44,6 @@ func (r *repository) Create(cardNumberId, firstName, lastName string) (Buyer, er
 
 	for i := range buyers {
 		if buyers[i].CardNumberID == cardNumberId {
-			fmt.Println("olaaaaa")
 			return Buyer{}, fmt.Errorf("CardNumberID %s do Buyer já existe", cardNumberId)
 		}
 	}
