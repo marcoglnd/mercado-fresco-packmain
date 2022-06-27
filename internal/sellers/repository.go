@@ -6,13 +6,11 @@ import "fmt"
 
 var sr []Seller = []Seller{}
 
-var lastID int
-
 // Este repositório é uma interface, portanto tem alguns métodos
 type Repository interface {
 	GetAll() ([]Seller, error)
 	GetById(id int) (Seller, error)
-	Store(id int, cid int, company_name string, address string, telephone string) (Seller, error)
+	Create(cid int, company_name string, address string, telephone string) (Seller, error)
 	LastID() (int, error)
 	Update(id int, cid int, company_name string, address string, telephone string) (Seller, error)
 	Delete(id int) error
@@ -42,13 +40,32 @@ func (repository) GetById(id int) (Seller, error) {
 }
 
 func (repository) LastID() (int, error) {
-	return lastID, nil
+	if len(sr) == 0 {
+		return 1, nil
+	}
+	lastId := sr[len(sr)-1].ID + 1
+	return lastId, nil
 }
 
-func (repository) Store(id int, cid int, company_name string, address string, telephone string) (Seller, error) {
-	p := Seller{id, cid, company_name, address, telephone}
+func (r *repository) Create(cid int, company_name string, address string, telephone string) (Seller, error) {
+	sellerList, err := r.GetAll()
+	if err != nil {
+		return Seller{}, err
+	}
+	for i := range sellerList {
+		if sellerList[i].Cid == cid {
+			return Seller{}, fmt.Errorf("cid %d do seller já existe", cid)
+		}
+	}
+
+	lastID, err := r.LastID()
+
+	if err != nil {
+		return Seller{}, err
+	}
+
+	p := Seller{lastID, cid, company_name, address, telephone}
 	sr = append(sr, p)
-	lastID = p.ID
 	return p, nil
 }
 

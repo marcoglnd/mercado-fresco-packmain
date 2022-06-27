@@ -11,3 +11,6 @@ type Section struct {
 	WarehouseId        int `json:"warehouse_id"`
 	ProductTypeId      int `json:"product_type_id"`
 }
+
+
+// Sections Section sections section copy font kkkk apagar
