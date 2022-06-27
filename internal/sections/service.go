@@ -1,11 +1,10 @@
-package sections 
+package sections
 
-import "fmt"
 type Service interface {
 	GetAll() ([]Section, error)
 	GetById(id int) (Section, error)
-	Create(sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity,maximumCapacity, warehouseId, productTypeId int) (Section, error)
-	Update(id, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity,maximumCapacity, warehouseId, productTypeId int) (Section, error)
+	Create(sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId int) (Section, error)
+	Update(id, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId int) (Section, error)
 	Delete(id int) error
 }
 
@@ -36,26 +35,8 @@ func (s service) GetById(id int) (Section, error) {
 }
 
 func (s service) Create(sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId int) (Section, error) {
-	sectionsList, err := s.repository.GetAll()
-	if err != nil {
-		return Section{}, err
-	}
 
-	for i := range sectionsList {
-		if sectionsList[i].SectionNumber == sectionNumber {
-			return Section{}, fmt.Errorf("sectionNumber %v do Section já existe", sectionNumber)
-		}
-	}
-
-	lastID, err := s.repository.LastID()
-
-	if err != nil {
-		return Section{}, err
-	}
-
-	lastID++
-
-	section, err := s.repository.Create(lastID, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity,maximumCapacity, warehouseId, productTypeId)
+	section, err := s.repository.Create(sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId)
 
 	if err != nil {
 		return Section{}, err

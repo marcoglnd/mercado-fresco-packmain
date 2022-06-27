@@ -6,28 +6,12 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/gin-gonic/gin"
-	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/routes"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses"
 	"github.com/stretchr/testify/assert"
 )
 
-func getPathUrl(url string) string {
-	PATH := "/api/v1"
-	return fmt.Sprintf("%s%s", PATH, url)
-}
-
-func createServerForWarehouse() *gin.Engine {
-	gin.SetMode(gin.TestMode)
-	router := gin.Default()
-	routerGroup := router.Group(getPathUrl(""))
-	routes.AddRoutes(routerGroup)
-
-	return router
-}
-
 func TestCreateOk(t *testing.T) {
-	routes := createServerForWarehouse()
+	routes := createServer()
 	req, res := createRequestTest(http.MethodPost, getPathUrl("/warehouses/"),
 		`
 		{
@@ -47,7 +31,7 @@ func TestCreateOk(t *testing.T) {
 }
 
 func TestCreateFail(t *testing.T) {
-	routes := createServerForWarehouse()
+	routes := createServer()
 	req, res := createRequestTest(http.MethodPost, getPathUrl("/warehouses/"),
 		`
 		{
@@ -66,7 +50,7 @@ func TestCreateFail(t *testing.T) {
 }
 
 func TestCreateConflict(t *testing.T) {
-	routes := createServerForWarehouse()
+	routes := createServer()
 
 	reqFake, resFake := createRequestTest(http.MethodPost, getPathUrl("/warehouses/"),
 		`
@@ -102,7 +86,7 @@ func TestCreateConflict(t *testing.T) {
 }
 
 func TestFindAll(t *testing.T) {
-	routes := createServerForWarehouse()
+	routes := createServer()
 	reqFake, resFake := createRequestTest(
 		http.MethodPost,
 		getPathUrl("/warehouses/"),
@@ -136,7 +120,7 @@ func TestFindAll(t *testing.T) {
 }
 
 func TestFindByIdNonExistent(t *testing.T) {
-	routes := createServerForWarehouse()
+	routes := createServer()
 	inexistentId := 10
 	req, res := createRequestTest(
 		http.MethodGet,
@@ -151,7 +135,7 @@ func TestFindByIdNonExistent(t *testing.T) {
 }
 
 func TestFindByIdExistent(t *testing.T) {
-	routes := createServerForWarehouse()
+	routes := createServer()
 	reqFake, resFake := createRequestTest(
 		http.MethodPost,
 		getPathUrl("/warehouses/"),
@@ -197,7 +181,7 @@ func TestFindByIdExistent(t *testing.T) {
 }
 
 func TestUpdateOk(t *testing.T) {
-	routes := createServerForWarehouse()
+	routes := createServer()
 	reqFakePost, resFakePost := createRequestTest(
 		http.MethodPost,
 		getPathUrl("/warehouses/"),
@@ -252,7 +236,7 @@ func TestUpdateOk(t *testing.T) {
 }
 
 func TestUpdateInvalidSchema(t *testing.T) {
-	routes := createServerForWarehouse()
+	routes := createServer()
 
 	req, res := createRequestTest(
 		http.MethodPatch,
@@ -275,7 +259,7 @@ func TestUpdateInvalidSchema(t *testing.T) {
 }
 
 func TestUpdateNonExistent(t *testing.T) {
-	routes := createServerForWarehouse()
+	routes := createServer()
 
 	reqValidateCheck, resValidateCheck := createRequestTest(
 		http.MethodGet,
@@ -309,7 +293,7 @@ func TestUpdateNonExistent(t *testing.T) {
 }
 
 func TestDeleteNonExistent(t *testing.T) {
-	routes := createServerForWarehouse()
+	routes := createServer()
 	inexistentId := 10
 	req, res := createRequestTest(
 		http.MethodDelete,
@@ -322,7 +306,7 @@ func TestDeleteNonExistent(t *testing.T) {
 }
 
 func TestDeleteOk(t *testing.T) {
-	routes := createServerForWarehouse()
+	routes := createServer()
 	reqFakePost, resFakePost := createRequestTest(http.MethodPost, getPathUrl("/warehouses/"),
 		`
 		{
@@ -349,7 +333,7 @@ func TestDeleteOk(t *testing.T) {
 }
 
 func TestDeleteInvalidParam(t *testing.T) {
-	routes := createServerForWarehouse()
+	routes := createServer()
 	reqValidateCheck, resValidateCheck := createRequestTest(
 		http.MethodGet,
 		getPathUrl("/warehouses/notint"),

@@ -1,54 +1,18 @@
 package controllers_test
 
 import (
-	"bytes"
 	"encoding/json"
 	"net/http"
-	"net/http/httptest"
 	"testing"
 
-	"github.com/gin-gonic/gin"
-	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/products"
 	"github.com/stretchr/testify/assert"
 )
 
-func createServer() *gin.Engine {
-	gin.SetMode(gin.TestMode)
-
-	repo := products.NewRepository()
-	service := products.NewService(repo)
-	controller := controllers.NewProduct(service)
-
-	router := gin.Default()
-
-	pr := router.Group("/products")
-	{
-		pr.GET("/", controller.GetAll())
-		pr.GET("/:id", controller.GetById())
-		pr.POST("/", controller.CreateNewProduct())
-		pr.PATCH("/:id", controller.Update())
-		pr.DELETE("/:id", controller.Delete())
-	}
-
-	return router
-}
-
-func createRequestTest(
-	method string,
-	url string,
-	body string,
-) (*http.Request, *httptest.ResponseRecorder) {
-	req := httptest.NewRequest(method, url, bytes.NewBuffer([]byte(body)))
-	req.Header.Add("Content-Type", "application/json")
-
-	return req, httptest.NewRecorder()
-}
-
 func TestCreateProductOK(t *testing.T) {
 	r := createServer()
 
-	req, rr := createRequestTest(http.MethodPost, "/products/", `{
+	req, rr := createRequestTest(http.MethodPost, getPathUrl("/products/"), `{
 		"description": "Yogurt",
 		"expiration_rate": 1,
 		"freezing_rate": 2,
@@ -70,7 +34,7 @@ func TestCreateProductOK(t *testing.T) {
 func TestCreateProductUnprocessable(t *testing.T) {
 	r := createServer()
 
-	req, rr := createRequestTest(http.MethodPost, "/products/", `{
+	req, rr := createRequestTest(http.MethodPost, getPathUrl("/products/"), `{
 		"description": "Yogurt",
 		"expiration_rate": 1,
 		"freezing_rate": 2,
@@ -83,7 +47,7 @@ func TestCreateProductUnprocessable(t *testing.T) {
 		"seller_id": 2
 		}`)
 
-	second_req, second_rr := createRequestTest(http.MethodPost, "/products/", `{
+	second_req, second_rr := createRequestTest(http.MethodPost, getPathUrl("/products/"), `{
 		"description": "Yogurt",
 		"expiration_rate": 1,
 		"height": 6.4,
@@ -96,7 +60,7 @@ func TestCreateProductUnprocessable(t *testing.T) {
 		"seller_id": 2
 		}`)
 
-	third_req, third_rr := createRequestTest(http.MethodPost, "/products/", `{
+	third_req, third_rr := createRequestTest(http.MethodPost, getPathUrl("/products/"), `{
 		"expiration_rate": 1,
 		"freezing_rate": 2,
 		"height": 6.4,
@@ -121,7 +85,7 @@ func TestCreateProductUnprocessable(t *testing.T) {
 func TestCreateProductConflict(t *testing.T) {
 	r := createServer()
 
-	req, rr := createRequestTest(http.MethodPost, "/products/", `{
+	req, rr := createRequestTest(http.MethodPost, getPathUrl("/products/"), `{
 		"description": "Yogurt",
 		"expiration_rate": 1,
 		"freezing_rate": 2,
@@ -135,7 +99,7 @@ func TestCreateProductConflict(t *testing.T) {
 		"seller_id": 2
 		}`)
 
-	second_req, second_rr := createRequestTest(http.MethodPost, "/products/", `{
+	second_req, second_rr := createRequestTest(http.MethodPost, getPathUrl("/products/"), `{
 		"description": "Queijo",
 		"expiration_rate": 2,
 		"freezing_rate": 3,
@@ -158,7 +122,7 @@ func TestCreateProductConflict(t *testing.T) {
 func TestGetAllOK(t *testing.T) {
 	r := createServer()
 
-	req, rr := createRequestTest(http.MethodGet, "/products/", "")
+	req, rr := createRequestTest(http.MethodGet, getPathUrl("/products/"), "")
 
 	defer req.Body.Close()
 
@@ -180,7 +144,7 @@ func TestGetAllOK(t *testing.T) {
 func TestGetProductByIdOK(t *testing.T) {
 	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/products/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/products/"), `{
 		"description": "Yogurt",
 		"expiration_rate": 1,
 		"freezing_rate": 2,
@@ -194,7 +158,7 @@ func TestGetProductByIdOK(t *testing.T) {
 		"seller_id": 2
 		}`)
 
-	get_req, get_rr := createRequestTest(http.MethodGet, "/products/1", "")
+	get_req, get_rr := createRequestTest(http.MethodGet, getPathUrl("/products/1"), "")
 
 	defer post_req.Body.Close()
 	defer get_req.Body.Close()
@@ -226,7 +190,7 @@ func TestGetProductByIdOK(t *testing.T) {
 func TestGetProductByIdNotFound(t *testing.T) {
 	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/products/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/products/"), `{
 		"description": "Yogurt",
 		"expiration_rate": 1,
 		"freezing_rate": 2,
@@ -240,7 +204,7 @@ func TestGetProductByIdNotFound(t *testing.T) {
 		"seller_id": 2
 		}`)
 
-	get_req, get_rr := createRequestTest(http.MethodGet, "/products/10", "")
+	get_req, get_rr := createRequestTest(http.MethodGet, getPathUrl("/products/10"), "")
 
 	defer post_req.Body.Close()
 	defer get_req.Body.Close()
@@ -254,7 +218,7 @@ func TestGetProductByIdNotFound(t *testing.T) {
 func TestGetProductByIdBadRequest(t *testing.T) {
 	r := createServer()
 
-	get_req, get_rr := createRequestTest(http.MethodGet, "/products/abc", "")
+	get_req, get_rr := createRequestTest(http.MethodGet, getPathUrl("/products/abc"), "")
 
 	defer get_req.Body.Close()
 
@@ -266,7 +230,7 @@ func TestGetProductByIdBadRequest(t *testing.T) {
 func TestUpdateProductOK(t *testing.T) {
 	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/products/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/products/"), `{
 		"description": "Yogurt",
 		"expiration_rate": 1,
 		"freezing_rate": 2,
@@ -280,7 +244,7 @@ func TestUpdateProductOK(t *testing.T) {
 		"seller_id": 2
 		}`)
 
-	patch_req, patch_rr := createRequestTest(http.MethodPatch, "/products/1", `{
+	patch_req, patch_rr := createRequestTest(http.MethodPatch, getPathUrl("/products/1"), `{
 		"description": "Queijo",
 		"expiration_rate": 2,
 		"freezing_rate": 3,
@@ -324,7 +288,7 @@ func TestUpdateProductOK(t *testing.T) {
 func TestUpdateProductNotFound(t *testing.T) {
 	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/products/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/products/"), `{
 		"description": "Yogurt",
 		"expiration_rate": 1,
 		"freezing_rate": 2,
@@ -338,7 +302,7 @@ func TestUpdateProductNotFound(t *testing.T) {
 		"seller_id": 2
 		}`)
 
-	patch_req, patch_rr := createRequestTest(http.MethodPatch, "/products/10", `{
+	patch_req, patch_rr := createRequestTest(http.MethodPatch, getPathUrl("/products/10"), `{
 		"description": "Queijo",
 		"expiration_rate": 2,
 		"freezing_rate": 3,
@@ -364,7 +328,7 @@ func TestUpdateProductNotFound(t *testing.T) {
 func TestUpdateProductBadRequest(t *testing.T) {
 	r := createServer()
 
-	patch_req, patch_rr := createRequestTest(http.MethodPatch, "/products/abc", `{
+	patch_req, patch_rr := createRequestTest(http.MethodPatch, getPathUrl("/products/abc"), `{
 		"description": "Queijo",
 		"expiration_rate": 2,
 		"freezing_rate": 3,
@@ -388,7 +352,7 @@ func TestUpdateProductBadRequest(t *testing.T) {
 func TestUpdateProductUnprocessable(t *testing.T) {
 	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/products/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/products/"), `{
 		"description": "Yogurt",
 		"expiration_rate": 1,
 		"freezing_rate": 2,
@@ -402,7 +366,7 @@ func TestUpdateProductUnprocessable(t *testing.T) {
 		"seller_id": 2
 		}`)
 
-	patch_req, patch_rr := createRequestTest(http.MethodPatch, "/products/1", `{
+	patch_req, patch_rr := createRequestTest(http.MethodPatch, getPathUrl("/products/1"), `{
 		"expiration_rate": 2,
 		"freezing_rate": 3,
 		"height": 8.6,
@@ -415,7 +379,7 @@ func TestUpdateProductUnprocessable(t *testing.T) {
 		"seller_id": 1
 		}`)
 
-	secondPatch_req, secondPatch_rr := createRequestTest(http.MethodPatch, "/products/1", `{
+	secondPatch_req, secondPatch_rr := createRequestTest(http.MethodPatch, getPathUrl("/products/1"), `{
 		"freezing_rate": 3,
 		"height": 8.6,
 		"length": 2.4,
@@ -427,7 +391,7 @@ func TestUpdateProductUnprocessable(t *testing.T) {
 		"seller_id": 1
 		}`)
 
-	thirdPatch_req, thirdPatch_rr := createRequestTest(http.MethodPatch, "/products/1", `{
+	thirdPatch_req, thirdPatch_rr := createRequestTest(http.MethodPatch, getPathUrl("/products/1"), `{
 		"description": "Queijo",
 		"expiration_rate": 2,
 		"freezing_rate": 3,
@@ -456,7 +420,7 @@ func TestUpdateProductUnprocessable(t *testing.T) {
 func TestDeleteProductOK(t *testing.T) {
 	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/products/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/products/"), `{
 		"description": "Yogurt",
 		"expiration_rate": 1,
 		"freezing_rate": 2,
@@ -470,7 +434,7 @@ func TestDeleteProductOK(t *testing.T) {
 		"seller_id": 2
 		}`)
 
-	get_req, get_rr := createRequestTest(http.MethodGet, "/products/", "")
+	get_req, get_rr := createRequestTest(http.MethodGet, getPathUrl("/products/"), "")
 
 	r.ServeHTTP(post_rr, post_req)
 	r.ServeHTTP(get_rr, get_req)
@@ -487,14 +451,14 @@ func TestDeleteProductOK(t *testing.T) {
 	assert.Nil(t, err)
 	assert.True(t, productsLen > 0)
 
-	delete_req, delete_rr := createRequestTest(http.MethodDelete, "/products/1", "")
+	delete_req, delete_rr := createRequestTest(http.MethodDelete, getPathUrl("/products/1"), "")
 
 	defer post_req.Body.Close()
 	defer delete_req.Body.Close()
 
 	r.ServeHTTP(delete_rr, delete_req)
 
-	secondGet_req, secondGet_rr := createRequestTest(http.MethodGet, "/products/", "")
+	secondGet_req, secondGet_rr := createRequestTest(http.MethodGet, getPathUrl("/products/"), "")
 
 	r.ServeHTTP(secondGet_rr, secondGet_req)
 
@@ -514,7 +478,7 @@ func TestDeleteProductOK(t *testing.T) {
 func TestDeleteProductsFail(t *testing.T) {
 	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/products/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/products/"), `{
 		"description": "Yogurt",
 		"expiration_rate": 1,
 		"freezing_rate": 2,
@@ -530,7 +494,7 @@ func TestDeleteProductsFail(t *testing.T) {
 
 	r.ServeHTTP(post_rr, post_req)
 
-	delete_req, delete_rr := createRequestTest(http.MethodDelete, "/products/10", "")
+	delete_req, delete_rr := createRequestTest(http.MethodDelete, getPathUrl("/products/10"), "")
 
 	defer post_req.Body.Close()
 	defer delete_req.Body.Close()
@@ -543,7 +507,7 @@ func TestDeleteProductsFail(t *testing.T) {
 func TestDeleteProductsBadRequest(t *testing.T) {
 	r := createServer()
 
-	delete_req, delete_rr := createRequestTest(http.MethodDelete, "/products/abc", "")
+	delete_req, delete_rr := createRequestTest(http.MethodDelete, getPathUrl("/products/abc"), "")
 
 	defer delete_req.Body.Close()
 

@@ -1,7 +1,5 @@
 package employees
 
-import "fmt"
-
 type Service interface {
 	GetAll() ([]Employee, error)
 	GetById(id int) (Employee, error)
@@ -38,21 +36,8 @@ func (s service) GetById(id int) (Employee, error) {
 }
 
 func (s service) Create(cardNumberId, firstName, lastName string, warehouseId int) (Employee, error) {
-	lastID, err := s.repository.LastID()
 
-	if err != nil {
-		return Employee{}, err
-	}
-
-	for i := range listEmployees {
-		if listEmployees[i].CardNumberId == cardNumberId {
-			return Employee{}, fmt.Errorf("CardNumberId %s already exist", cardNumberId)
-		}
-	}
-
-	lastID++
-
-	employee, err := s.repository.Create(lastID, cardNumberId, firstName, lastName, warehouseId)
+	employee, err := s.repository.Create(cardNumberId, firstName, lastName, warehouseId)
 
 	if err != nil {
 		return Employee{}, err

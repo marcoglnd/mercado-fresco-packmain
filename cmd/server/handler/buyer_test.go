@@ -1,56 +1,18 @@
 package controllers_test
 
 import (
-	"bytes"
 	"encoding/json"
 	"net/http"
-	"net/http/httptest"
 	"testing"
 
-	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/buyers"
-
-	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
-
-func createServer() *gin.Engine {
-	gin.SetMode(gin.TestMode)
-
-	repo := buyers.NewRepository()
-	service := buyers.NewService(repo)
-
-	buyerController := controllers.NewBuyer(service)
-
-	router := gin.Default()
-
-	pr := router.Group("/buyers")
-	{
-		pr.GET("/", buyerController.GetAll())
-		pr.GET("/:id", buyerController.GetById())
-		pr.POST("/", buyerController.Create())
-		pr.PATCH("/:id", buyerController.Update())
-		pr.DELETE("/:id", buyerController.Delete())
-	}
-
-	return router
-}
-
-func createRequestTest(
-	method string,
-	url string,
-	body string,
-) (*http.Request, *httptest.ResponseRecorder) {
-	req := httptest.NewRequest(method, url, bytes.NewBuffer([]byte(body)))
-	req.Header.Add("Content-Type", "application/json")
-
-	return req, httptest.NewRecorder()
-}
 
 func Test_CreateBuyer_OK(t *testing.T) {
 	r := createServer()
 
-	req, rr := createRequestTest(http.MethodPost, "/buyers/", `{
+	req, rr := createRequestTest(http.MethodPost, getPathUrl("/buyers/"), `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
 	}`)
 
@@ -62,11 +24,11 @@ func Test_CreateBuyer_OK(t *testing.T) {
 func Test_CreateBuyer_conflict(t *testing.T) {
 	r := createServer()
 
-	req, rr := createRequestTest(http.MethodPost, "/buyers/", `{
+	req, rr := createRequestTest(http.MethodPost, getPathUrl("/buyers/"), `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
 	}`)
 
-	second_req, second_rr := createRequestTest(http.MethodPost, "/buyers/", `{
+	second_req, second_rr := createRequestTest(http.MethodPost, getPathUrl("/buyers/"), `{
 		"card_number_id": "402323", "first_name": "Maria", "last_name": "Silva"
 	}`)
 
@@ -79,15 +41,15 @@ func Test_CreateBuyer_conflict(t *testing.T) {
 func Test_CreateBuyer_unprocessable(t *testing.T) {
 	r := createServer()
 
-	req, rr := createRequestTest(http.MethodPost, "/buyers/", `{
+	req, rr := createRequestTest(http.MethodPost, getPathUrl("/buyers/"), `{
 		"first_name": "Jhon", "last_name": "Doe"
 	}`)
 
-	second_req, second_rr := createRequestTest(http.MethodPost, "/buyers/", `{
+	second_req, second_rr := createRequestTest(http.MethodPost, getPathUrl("/buyers/"), `{
 		"card_number_id": "401010", "last_name": "Silva"
 	}`)
 
-	third_req, third_rr := createRequestTest(http.MethodPost, "/buyers/", `{
+	third_req, third_rr := createRequestTest(http.MethodPost, getPathUrl("/buyers/"), `{
 		"card_number_id": "401010", "first_name": "Jhon"
 	}`)
 
@@ -103,7 +65,7 @@ func Test_CreateBuyer_unprocessable(t *testing.T) {
 func Test_GetBuyers_OK(t *testing.T) {
 	r := createServer()
 
-	req, rr := createRequestTest(http.MethodGet, "/buyers/", "")
+	req, rr := createRequestTest(http.MethodGet, getPathUrl("/buyers/"), "")
 
 	defer req.Body.Close()
 
@@ -125,11 +87,11 @@ func Test_GetBuyers_OK(t *testing.T) {
 func Test_GetBuyerById_OK(t *testing.T) {
 	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/buyers/"), `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
 	}`)
 
-	get_req, get_rr := createRequestTest(http.MethodGet, "/buyers/1", "")
+	get_req, get_rr := createRequestTest(http.MethodGet, getPathUrl("/buyers/1"), "")
 
 	defer post_req.Body.Close()
 	defer get_req.Body.Close()
@@ -153,11 +115,11 @@ func Test_GetBuyerById_OK(t *testing.T) {
 func Test_GetBuyerById_notFound(t *testing.T) {
 	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/buyers/"), `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
 	}`)
 
-	get_req, get_rr := createRequestTest(http.MethodGet, "/buyers/10", "")
+	get_req, get_rr := createRequestTest(http.MethodGet, getPathUrl("/buyers/10"), "")
 
 	defer post_req.Body.Close()
 	defer get_req.Body.Close()
@@ -171,7 +133,7 @@ func Test_GetBuyerById_notFound(t *testing.T) {
 func Test_GetBuyerById_badRequest(t *testing.T) {
 	r := createServer()
 
-	get_req, get_rr := createRequestTest(http.MethodGet, "/buyers/abc", "")
+	get_req, get_rr := createRequestTest(http.MethodGet, getPathUrl("/buyers/abc"), "")
 
 	defer get_req.Body.Close()
 
@@ -183,11 +145,11 @@ func Test_GetBuyerById_badRequest(t *testing.T) {
 func Test_UpdateBuyer_OK(t *testing.T) {
 	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/buyers/"), `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
 	}`)
 
-	patch_req, patch_rr := createRequestTest(http.MethodPatch, "/buyers/1", `{
+	patch_req, patch_rr := createRequestTest(http.MethodPatch, getPathUrl("/buyers/1"), `{
 		"card_number_id": "400000", "first_name": "Maria", "last_name": "Silva"
 	}`)
 
@@ -213,11 +175,11 @@ func Test_UpdateBuyer_OK(t *testing.T) {
 func Test_UpdateBuyer_notFound(t *testing.T) {
 	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/buyers/"), `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
 	}`)
 
-	patch_req, patch_rr := createRequestTest(http.MethodPatch, "/buyers/10", `{
+	patch_req, patch_rr := createRequestTest(http.MethodPatch, getPathUrl("/buyers/10"), `{
 		"card_number_id": "400000", "first_name": "Maria", "last_name": "Silva"
 	}`)
 
@@ -233,7 +195,7 @@ func Test_UpdateBuyer_notFound(t *testing.T) {
 func Test_UpdateBuyer_badRequest(t *testing.T) {
 	r := createServer()
 
-	patch_req, patch_rr := createRequestTest(http.MethodPatch, "/buyers/abc", `{
+	patch_req, patch_rr := createRequestTest(http.MethodPatch, getPathUrl("/buyers/abc"), `{
 		"card_number_id": "400000", "first_name": "Maria", "last_name": "Silva"
 	}`)
 
@@ -247,19 +209,19 @@ func Test_UpdateBuyer_badRequest(t *testing.T) {
 func Test_UpdateBuyer_unprocessable(t *testing.T) {
 	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/buyers/"), `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
 	}`)
 
-	patch_req, patch_rr := createRequestTest(http.MethodPatch, "/buyers/1", `{
+	patch_req, patch_rr := createRequestTest(http.MethodPatch, getPathUrl("/buyers/1"), `{
 		"first_name": "Maria", "last_name": "Silva"
 	}`)
 
-	secondPatch_req, secondPatch_rr := createRequestTest(http.MethodPatch, "/buyers/1", `{
+	secondPatch_req, secondPatch_rr := createRequestTest(http.MethodPatch, getPathUrl("/buyers/1"), `{
 		"card_number_id": "400000", "last_name": "Silva"
 	}`)
 
-	thirdPatch_req, thirdPatch_rr := createRequestTest(http.MethodPatch, "/buyers/1", `{
+	thirdPatch_req, thirdPatch_rr := createRequestTest(http.MethodPatch, getPathUrl("/buyers/1"), `{
 		"card_number_id": "400000", "first_name": "Maria"
 	}`)
 
@@ -281,11 +243,11 @@ func Test_UpdateBuyer_unprocessable(t *testing.T) {
 func Test_DeleteBuyer_OK(t *testing.T) {
 	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/buyers/"), `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
 	}`)
 
-	get_req, get_rr := createRequestTest(http.MethodGet, "/buyers/", "")
+	get_req, get_rr := createRequestTest(http.MethodGet, getPathUrl("/buyers/"), "")
 
 	r.ServeHTTP(post_rr, post_req)
 	r.ServeHTTP(get_rr, get_req)
@@ -302,14 +264,14 @@ func Test_DeleteBuyer_OK(t *testing.T) {
 	assert.Nil(t, err)
 	assert.True(t, buyersLen > 0)
 
-	delete_req, delete_rr := createRequestTest(http.MethodDelete, "/buyers/1", "")
+	delete_req, delete_rr := createRequestTest(http.MethodDelete, getPathUrl("/buyers/1"), "")
 
 	defer post_req.Body.Close()
 	defer delete_req.Body.Close()
 
 	r.ServeHTTP(delete_rr, delete_req)
 
-	secondGet_req, secondGet_rr := createRequestTest(http.MethodGet, "/buyers/", "")
+	secondGet_req, secondGet_rr := createRequestTest(http.MethodGet, getPathUrl("/buyers/"), "")
 
 	r.ServeHTTP(secondGet_rr, secondGet_req)
 
@@ -329,13 +291,13 @@ func Test_DeleteBuyer_OK(t *testing.T) {
 func Test_DeleteBuyer_fail(t *testing.T) {
 	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, "/buyers/", `{
+	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/buyers/"), `{
 		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
 	}`)
 
 	r.ServeHTTP(post_rr, post_req)
 
-	delete_req, delete_rr := createRequestTest(http.MethodDelete, "/buyers/10", "")
+	delete_req, delete_rr := createRequestTest(http.MethodDelete, getPathUrl("/buyers/10"), "")
 
 	defer post_req.Body.Close()
 	defer delete_req.Body.Close()
