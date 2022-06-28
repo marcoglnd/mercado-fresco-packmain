@@ -24,7 +24,6 @@ type Repository interface {
 }
 
 var listOfProducts []Product = []Product{}
-var lastId int = 1
 type repository struct{}
 
 func (repository) GetAll() ([]Product, error) {
@@ -129,7 +128,6 @@ func (r *repository) CreateNewProduct(
 	}
 	insertedId, _ := result.LastInsertId()
 	prod.Id = int(insertedId)
-	lastId = prod.Id
 	return prod, nil
 }
 
