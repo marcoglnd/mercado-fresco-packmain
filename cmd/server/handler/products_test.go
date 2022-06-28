@@ -2,11 +2,17 @@ package controllers_test
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
+	"github.com/gin-gonic/gin"
+	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/products"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/products/mocks"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestCreateProductOK(t *testing.T) {
@@ -142,36 +148,39 @@ func TestGetAllOK(t *testing.T) {
 }
 
 func TestGetProductByIdOK(t *testing.T) {
-	r := createServer()
+	seller := &products.Product{
+		Id: 1,
+		Description:                    "Yogurt",
+		ExpirationRate:                 1,
+		FreezingRate:                   2,
+		Height:                         6.4,
+		Length:                         4.5,
+		NetWeight:                      3.4,
+		ProductCode:                    "PROD01",
+		RecommendedFreezingTemperature: 1.3,
+		Width:                          1.2,
+		ProductTypeId:                  2,
+		SellerId:                       2,
+	}
+	mockService := new(mocks.Service)
+	mockService.On("GetById", mock.AnythingOfType("int")).Return(*seller, nil)
 
-	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/products/"), `{
-		"description": "Yogurt",
-		"expiration_rate": 1,
-		"freezing_rate": 2,
-		"height": 6.4,
-		"length": 4.5,
-		"netweight": 3.4,
-		"product_code": "PROD01",
-		"recommended_freezing_temperature": 1.3,
-		"width": 1.2,
-		"product_type_id": 2,
-		"seller_id": 2
-		}`)
+	rr := httptest.NewRecorder()
+	ctx, engine := gin.CreateTestContext(rr)
+	ns := controllers.NewProduct(mockService)
 
-	get_req, get_rr := createRequestTest(http.MethodGet, getPathUrl("/products/1"), "")
+	engine.GET("/api/v1/products/:id", ns.GetById())
+	request, err := http.NewRequest(http.MethodGet, "/api/v1/products/1", nil)
+	assert.NoError(t, err)
+	ctx.Request = request
+	engine.ServeHTTP(rr, ctx.Request)
 
-	defer post_req.Body.Close()
-	defer get_req.Body.Close()
-
-	r.ServeHTTP(post_rr, post_req)
-	r.ServeHTTP(get_rr, get_req)
-
-	assert.Equal(t, http.StatusOK, get_rr.Code)
+	assert.Equal(t, http.StatusOK, rr.Code)
 
 	var objRes products.Product
 
-	err := json.Unmarshal(get_rr.Body.Bytes(), &objRes)
-
+	err = json.Unmarshal(rr.Body.Bytes(), &objRes)
+	log.Print(objRes)
 	assert.Nil(t, err)
 	assert.True(t, objRes.Id == 1)
 	assert.True(t, objRes.Description == "Yogurt")
