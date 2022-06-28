@@ -11,7 +11,7 @@ type Service interface {
 		address string,
 		telephone string,
 		minimumCapacity int,
-		minimumTemperature int,
+		minimumTemperature float32,
 	) (*Warehouse, error)
 	Update(
 		warehouseId int,
@@ -19,7 +19,7 @@ type Service interface {
 		address string,
 		telephone string,
 		minimumCapacity int,
-		minimumTemperature int,
+		minimumTemperature float32,
 	) (*Warehouse, error)
 	FindById(id int) (*Warehouse, error)
 	FindByWarehouseCode(warehouseCode string) (*Warehouse, error)
@@ -41,7 +41,7 @@ func (s *service) Create(
 	address string,
 	telephone string,
 	minimumCapacity int,
-	minimumTemperature int,
+	minimumTemperature float32,
 ) (*Warehouse, error) {
 
 	if err := s.IsWarehouseCodeAvailable(warehouseCode); err != nil {
@@ -80,7 +80,7 @@ func (s *service) Update(
 	address string,
 	telephone string,
 	minimumCapacity int,
-	minimumTemperature int,
+	minimumTemperature float32,
 ) (*Warehouse, error) {
 
 	currentW, err := s.FindById(warehouseId)
