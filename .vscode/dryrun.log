@@ -1,0 +1,4 @@
+make: Entering directory `/Users/leosilveira/projects/mercado-fresco-packmain'
+go run ./...
+make: Leaving directory `/Users/leosilveira/projects/mercado-fresco-packmain'
+ 

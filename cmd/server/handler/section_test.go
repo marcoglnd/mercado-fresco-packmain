@@ -3,14 +3,16 @@ package controllers_test
 import (
 	"encoding/json"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
+	"github.com/gin-gonic/gin"
+	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/sections"
-
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/sections/mocks"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
-
-
 
 func Test_CreateSections_OK(t *testing.T) {
 	r := createServer()
@@ -102,32 +104,59 @@ func Test_GetSections_OK(t *testing.T) {
 }
 
 func Test_GetSectionsById_OK(t *testing.T) {
-	r := createServer()
+	// r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/sections/"), `{
-		"current_capacity": 1,
-		"current_temperature": 1,
-		"maximum_capacity": 1,
-		"minimum_capacity": 1,
-		"minimum_temperature": 1,
-		"product_type_id": 1,
-		"section_number": 1,
-		"warehouse_id": 1
-	  }`)
+	// post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/sections/"), `{
+	// 	"current_capacity": 1,
+	// 	"current_temperature": 1,
+	// 	"maximum_capacity": 1,
+	// 	"minimum_capacity": 1,
+	// 	"minimum_temperature": 1,
+	// 	"product_type_id": 1,
+	// 	"section_number": 1,
+	// 	"warehouse_id": 1
+	//   }`)
 
-	get_req, get_rr := createRequestTest(http.MethodGet, getPathUrl("/sections/1"), "")
+	// get_req, get_rr := createRequestTest(http.MethodGet, getPathUrl("/sections/1"), "")
 
-	defer post_req.Body.Close()
-	defer get_req.Body.Close()
+	// defer post_req.Body.Close()
+	// defer get_req.Body.Close()
 
-	r.ServeHTTP(post_rr, post_req)
-	r.ServeHTTP(get_rr, get_req)
+	section := &sections.Section{
+		ID:                 1,
+		CurrentCapacity:    1,
+		CurrentTemperature: 1,
+		MaximumCapacity:    1,
+		MinimumCapacity:    1,
+		MinimumTemperature: 1,
+		ProductTypeId:      1,
+		SectionNumber:      1,
+		WarehouseId:        1,
+	}
 
-	assert.Equal(t, http.StatusOK, get_rr.Code)
+	mockService := new(mocks.Service)
+	mockService.On("GetById", mock.AnythingOfType("int")).Return(*section, nil)
+
+	rr := httptest.NewRecorder()
+	ctx, engine := gin.CreateTestContext(rr)
+	ns := controllers.NewSection(mockService)
+
+	engine.GET("/api/v1/sections/1", ns.GetById())
+	request, err := http.NewRequest(http.MethodGet, "/api/v1/sections/1", nil)
+	assert.NoError(t, err)
+	ctx.Request = request
+	engine.ServeHTTP(rr, ctx.Request)
+
+	// r.ServeHTTP(post_rr, post_req)
+	// r.ServeHTTP(get_rr, get_req)
+
+	// assert.Equal(t, http.StatusOK, get_rr.Code)
+	assert.Equal(t, http.StatusOK, rr.Code)
 
 	var objRes sections.Section
 
-	err := json.Unmarshal(get_rr.Body.Bytes(), &objRes)
+	// err := json.Unmarshal(get_rr.Body.Bytes(), &objRes)
+	err = json.Unmarshal(rr.Body.Bytes(), &objRes)
 
 	assert.Nil(t, err)
 	assert.True(t, objRes.ID == 1)
