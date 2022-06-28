@@ -1,7 +1,11 @@
 package products
 
 import (
+	"database/sql"
 	"fmt"
+	"log"
+
+	"github.com/marcoglnd/mercado-fresco-packmain/db"
 )
 
 type Repository interface {
@@ -20,7 +24,7 @@ type Repository interface {
 }
 
 var listOfProducts []Product = []Product{}
-
+var lastId int = 1
 type repository struct{}
 
 func (repository) GetAll() ([]Product, error) {
@@ -76,15 +80,14 @@ func (r *repository) CreateNewProduct(
 	productTypeId,
 	sellerId int,
 ) (Product, error) {
-	id, err := r.LastId()
-	if err != nil {
-		return Product{}, err
-	}
-	if verification, err := r.VerifyProductCode(productCode); !verification {
-		return Product{}, err
-	}
+	// id, err := r.LastId()
+	// if err != nil {
+	// 	return Product{}, err
+	// }
+	// if verification, err := r.VerifyProductCode(productCode); !verification {
+	// 	return Product{}, err
+	// }
 	prod := Product{
-		Id:                             id,
 		Description:                    description,
 		ExpirationRate:                 expirationRate,
 		FreezingRate:                   freezingRate,
@@ -97,10 +100,37 @@ func (r *repository) CreateNewProduct(
 		ProductTypeId:                  productTypeId,
 		SellerId:                       sellerId,
 	}
-	listOfProducts = append(listOfProducts, prod)
+	// listOfProducts = append(listOfProducts, prod)
+	// return prod, nil
+	db := db.StorageDB
+	stmt, err := db.Prepare(sqlStore)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+	var result sql.Result
+
+	result, err = stmt.Exec(
+		// lastId,
+		description,
+		expirationRate,
+		freezingRate,
+		height,
+		length,
+		netWeight,
+		productCode,
+		recommendedFreezingTemperature,
+		width,
+		productTypeId,
+		sellerId,
+	)
+	if err != nil {
+		return Product{}, err
+	}
+	insertedId, _ := result.LastInsertId()
+	prod.Id = int(insertedId)
+	lastId = prod.Id
 	return prod, nil
-	// db := db.StorageDB
-	// stmt, err := db.Prepare()
 }
 
 func (repository) Update(

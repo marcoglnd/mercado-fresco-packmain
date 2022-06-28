@@ -1,10 +1,7 @@
 package main
 
 import (
-	"log"
-
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/routes"
 	"github.com/marcoglnd/mercado-fresco-packmain/docs"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -27,10 +24,10 @@ import (
 // @query.collection.format multi
 
 func main() {
-	err := godotenv.Load("../../.env")
-	if err != nil {
-		log.Fatal("failed to load .env")
-	}
+	// err := godotenv.Load("../../.env")
+	// if err != nil {
+	// 	log.Fatal("failed to load .env")
+	// }
 	PATH := "/api/v1"
 	router := gin.Default()
 	routerGroup := router.Group(PATH)
