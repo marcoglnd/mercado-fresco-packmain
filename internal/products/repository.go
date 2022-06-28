@@ -79,13 +79,6 @@ func (r *repository) CreateNewProduct(
 	productTypeId,
 	sellerId int,
 ) (Product, error) {
-	// id, err := r.LastId()
-	// if err != nil {
-	// 	return Product{}, err
-	// }
-	// if verification, err := r.VerifyProductCode(productCode); !verification {
-	// 	return Product{}, err
-	// }
 	prod := Product{
 		Description:                    description,
 		ExpirationRate:                 expirationRate,
@@ -99,8 +92,6 @@ func (r *repository) CreateNewProduct(
 		ProductTypeId:                  productTypeId,
 		SellerId:                       sellerId,
 	}
-	// listOfProducts = append(listOfProducts, prod)
-	// return prod, nil
 	db := db.StorageDB
 	stmt, err := db.Prepare(sqlStore)
 	if err != nil {
@@ -110,7 +101,6 @@ func (r *repository) CreateNewProduct(
 	var result sql.Result
 
 	result, err = stmt.Exec(
-		// lastId,
 		description,
 		expirationRate,
 		freezingRate,
@@ -126,7 +116,10 @@ func (r *repository) CreateNewProduct(
 	if err != nil {
 		return Product{}, err
 	}
-	insertedId, _ := result.LastInsertId()
+	insertedId, err := result.LastInsertId()
+	if err != nil {
+		return Product{}, err
+	}
 	prod.Id = int(insertedId)
 	return prod, nil
 }
