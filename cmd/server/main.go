@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/routes"
+	"github.com/marcoglnd/mercado-fresco-packmain/db"
 	"github.com/marcoglnd/mercado-fresco-packmain/docs"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
@@ -24,14 +25,12 @@ import (
 // @query.collection.format multi
 
 func main() {
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	conn := db.InitDB()
+
 	PATH := "/api/v1"
 	router := gin.Default()
 	routerGroup := router.Group(PATH)
-	routes.AddRoutes(routerGroup)
+	routes.AddRoutes(routerGroup, conn)
 	docs.SwaggerInfo.BasePath = PATH
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run()

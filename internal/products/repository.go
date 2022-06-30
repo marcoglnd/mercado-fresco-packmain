@@ -4,8 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-
-	"github.com/marcoglnd/mercado-fresco-packmain/db"
 )
 
 type Repository interface {
@@ -24,7 +22,8 @@ type Repository interface {
 }
 
 var listOfProducts []Product = []Product{}
-type repository struct{}
+
+type repository struct{ db *sql.DB }
 
 func (repository) GetAll() ([]Product, error) {
 	return listOfProducts, nil
@@ -92,8 +91,7 @@ func (r *repository) CreateNewProduct(
 		ProductTypeId:                  productTypeId,
 		SellerId:                       sellerId,
 	}
-	db := db.StorageDB
-	stmt, err := db.Prepare(sqlStore)
+	stmt, err := r.db.Prepare(sqlStore)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -172,6 +170,6 @@ func (repository) Delete(id int) error {
 	return nil
 }
 
-func NewRepository() Repository {
-	return &repository{}
+func NewRepository(db *sql.DB) Repository {
+	return &repository{db: db}
 }

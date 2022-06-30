@@ -9,11 +9,7 @@ import (
 	"github.com/marcoglnd/mercado-fresco-packmain/utils"
 )
 
-var (
-	StorageDB *sql.DB
-)
-
-func init() {
+func InitDB() (*sql.DB) {
 	config, err := utils.LoadConfig(".")
 	if err != nil {
 		log.Fatal("cannot load config:", err)
@@ -25,13 +21,13 @@ func init() {
 		config.DBServer,
 		config.DBPort,
 	)
-	// dataSource := "root:secret@tcp(localhost:3306)/mercado_fresco?parseTime=true"
-	StorageDB, err = sql.Open("mysql", dataSource)
+	conn, err := sql.Open("mysql", dataSource)
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err = StorageDB.Ping(); err != nil {
+	if err = conn.Ping(); err != nil {
 		log.Fatal(err)
 	}
 	log.Println("database configured")
+	return conn
 }
