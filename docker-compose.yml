@@ -18,4 +18,5 @@ services:
       interval: 20s
       timeout: 30s
       retries: 3
-    env_file: .env
+    env_file:
+      - .env
