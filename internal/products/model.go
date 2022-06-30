@@ -1,5 +1,7 @@
 package products
 
+import "context"
+
 type Product struct {
 	Id                             int64   `json:"id"`
 	Description                    string  `json:"description"`
@@ -13,4 +15,20 @@ type Product struct {
 	Width                          float64 `json:"width"`
 	ProductTypeId                  int     `json:"product_type_id"`
 	SellerId                       int     `json:"seller_id"`
+}
+
+type Repository interface {
+	GetAll(ctx context.Context) (*[]Product, error)
+	GetById(ctx context.Context, id int) (*Product, error)
+	CreateNewProduct(ctx context.Context, product *Product) (*Product, error)
+	Update(ctx context.Context, product *Product) (*Product, error)
+	Delete(ctx context.Context, id int) error
+}
+
+type Service interface {
+	GetAll(ctx context.Context) (*[]Product, error)
+	GetById(ctx context.Context, id int) (*Product, error)
+	CreateNewProduct(ctx context.Context, product *Product) (*Product, error)
+	Update(ctx context.Context, product *Product) (*Product, error)
+	Delete(ctx context.Context, id int) error
 }

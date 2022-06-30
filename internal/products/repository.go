@@ -6,18 +6,6 @@ import (
 	"fmt"
 )
 
-type Repository interface {
-	GetAll() ([]Product, error)
-	GetById(id int) (Product, error)
-	LastId() (int, error)
-	CreateNewProduct(ctx context.Context, product *Product) (*Product, error)
-	Update(
-		id int, description string, expirationRate, freezingRate int,
-		height, length, netWeight float64, productCode string,
-		recommendedFreezingTemperature, width float64, productTypeId, sellerId int) (Product, error)
-	Delete(id int) error
-}
-
 var listOfProducts []Product = []Product{}
 
 type repository struct{ db *sql.DB }
