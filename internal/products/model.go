@@ -1,6 +1,9 @@
 package products
 
-import "context"
+import (
+	"context"
+	"errors"
+)
 
 type Product struct {
 	Id                             int64   `json:"id"`
@@ -32,3 +35,7 @@ type Service interface {
 	Update(ctx context.Context, product *Product) (*Product, error)
 	Delete(ctx context.Context, id int) error
 }
+
+var (
+	ErrIDNotFound = errors.New("section id not found")
+)

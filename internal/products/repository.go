@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 )
 
 type repository struct{ db *sql.DB }
@@ -65,7 +64,7 @@ func (r *repository) GetById(ctx context.Context, id int) (*Product, error) {
 		&product.SellerId,
 	)
 	if errors.Is(err, sql.ErrNoRows) {
-		return &product, errors.New("section id not found")
+		return &product, ErrIDNotFound
 	}
 
 	if err != nil {
@@ -128,7 +127,7 @@ func (r *repository) Update(ctx context.Context, product *Product) (*Product, er
 
 	affectedRows, err := result.RowsAffected()
 	if affectedRows == 0 {
-		return &newProduct, errors.New("section id not found")
+		return &newProduct, ErrIDNotFound
 	}
 
 	if err != nil {
@@ -138,19 +137,22 @@ func (r *repository) Update(ctx context.Context, product *Product) (*Product, er
 	return product, nil
 }
 
-func (repository) Delete(id int) error {
-	deleted := false
-	var index int
-	for i := range listOfProducts {
-		if listOfProducts[i].Id == int64(id) {
-			index = i
-			deleted = true
-		}
+func (r *repository) Delete(ctx context.Context, id int) error {
+	result, err := r.db.ExecContext(ctx, sqlDelete, id)
+	if err != nil {
+		return err
 	}
-	if !deleted {
-		return fmt.Errorf("product %d not found", id)
+
+	affectedRows, err := result.RowsAffected()
+
+	if affectedRows == 0 {
+		return ErrIDNotFound
 	}
-	listOfProducts = append(listOfProducts[:index], listOfProducts[index+1:]...)
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
