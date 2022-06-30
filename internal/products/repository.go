@@ -3,6 +3,7 @@ package products
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 )
 
@@ -44,19 +45,34 @@ func (r *repository) GetAll(ctx context.Context) (*[]Product, error) {
 	return &products, nil
 }
 
-func (repository) GetById(id int) (Product, error) {
-	var product Product
-	foundProduct := false
-	for i := range listOfProducts {
-		if listOfProducts[i].Id == int64(id) {
-			product = listOfProducts[i]
-			foundProduct = true
-		}
+func (r *repository) GetById(ctx context.Context, id int) (*Product, error) {
+	row := r.db.QueryRowContext(ctx, sqlGetById, id)
+
+	product := Product{}
+
+	err := row.Scan(
+		&product.Id,
+		&product.Description,
+		&product.ExpirationRate,
+		&product.FreezingRate,
+		&product.Height,
+		&product.Length,
+		&product.NetWeight,
+		&product.ProductCode,
+		&product.RecommendedFreezingTemperature,
+		&product.Width,
+		&product.ProductTypeId,
+		&product.SellerId,
+	)
+	if errors.Is(err, sql.ErrNoRows) {
+		return &product, errors.New("section id not found")
 	}
-	if !foundProduct {
-		return Product{}, fmt.Errorf("product %d not found", id)
+
+	if err != nil {
+		return &product, err
 	}
-	return product, nil
+
+	return &product, nil
 }
 
 func (repository) LastId() (int, error) {
