@@ -22,18 +22,18 @@ type Product struct {
 
 type Repository interface {
 	GetAll(ctx context.Context) (*[]Product, error)
-	GetById(ctx context.Context, id int) (*Product, error)
+	GetById(ctx context.Context, id int64) (*Product, error)
 	CreateNewProduct(ctx context.Context, product *Product) (*Product, error)
 	Update(ctx context.Context, product *Product) (*Product, error)
-	Delete(ctx context.Context, id int) error
+	Delete(ctx context.Context, id int64) error
 }
 
 type Service interface {
 	GetAll(ctx context.Context) (*[]Product, error)
-	GetById(ctx context.Context, id int) (*Product, error)
+	GetById(ctx context.Context, id int64) (*Product, error)
 	CreateNewProduct(ctx context.Context, product *Product) (*Product, error)
 	Update(ctx context.Context, product *Product) (*Product, error)
-	Delete(ctx context.Context, id int) error
+	Delete(ctx context.Context, id int64) error
 }
 
 var (

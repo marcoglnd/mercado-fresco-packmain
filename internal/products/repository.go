@@ -44,7 +44,7 @@ func (r *repository) GetAll(ctx context.Context) (*[]Product, error) {
 	return &products, nil
 }
 
-func (r *repository) GetById(ctx context.Context, id int) (*Product, error) {
+func (r *repository) GetById(ctx context.Context, id int64) (*Product, error) {
 	row := r.db.QueryRowContext(ctx, sqlGetById, id)
 
 	product := Product{}
@@ -137,7 +137,7 @@ func (r *repository) Update(ctx context.Context, product *Product) (*Product, er
 	return product, nil
 }
 
-func (r *repository) Delete(ctx context.Context, id int) error {
+func (r *repository) Delete(ctx context.Context, id int64) error {
 	result, err := r.db.ExecContext(ctx, sqlDelete, id)
 	if err != nil {
 		return err
