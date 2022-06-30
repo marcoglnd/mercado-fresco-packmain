@@ -37,13 +37,13 @@ func (_m *Repository) CreateNewProduct(ctx context.Context, product *products.Pr
 	return r0, r1
 }
 
-// Delete provides a mock function with given fields: id
-func (_m *Repository) Delete(id int) error {
-	ret := _m.Called(id)
+// Delete provides a mock function with given fields: ctx, id
+func (_m *Repository) Delete(ctx context.Context, id int64) error {
+	ret := _m.Called(ctx, id)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(int) error); ok {
-		r0 = rf(id)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) error); ok {
+		r0 = rf(ctx, id)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -51,22 +51,22 @@ func (_m *Repository) Delete(id int) error {
 	return r0
 }
 
-// GetAll provides a mock function with given fields:
-func (_m *Repository) GetAll() ([]products.Product, error) {
-	ret := _m.Called()
+// GetAll provides a mock function with given fields: ctx
+func (_m *Repository) GetAll(ctx context.Context) (*[]products.Product, error) {
+	ret := _m.Called(ctx)
 
-	var r0 []products.Product
-	if rf, ok := ret.Get(0).(func() []products.Product); ok {
-		r0 = rf()
+	var r0 *[]products.Product
+	if rf, ok := ret.Get(0).(func(context.Context) *[]products.Product); ok {
+		r0 = rf(ctx)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]products.Product)
+			r0 = ret.Get(0).(*[]products.Product)
 		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -74,20 +74,22 @@ func (_m *Repository) GetAll() ([]products.Product, error) {
 	return r0, r1
 }
 
-// GetById provides a mock function with given fields: id
-func (_m *Repository) GetById(id int) (products.Product, error) {
-	ret := _m.Called(id)
+// GetById provides a mock function with given fields: ctx, id
+func (_m *Repository) GetById(ctx context.Context, id int64) (*products.Product, error) {
+	ret := _m.Called(ctx, id)
 
-	var r0 products.Product
-	if rf, ok := ret.Get(0).(func(int) products.Product); ok {
-		r0 = rf(id)
+	var r0 *products.Product
+	if rf, ok := ret.Get(0).(func(context.Context, int64) *products.Product); ok {
+		r0 = rf(ctx, id)
 	} else {
-		r0 = ret.Get(0).(products.Product)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*products.Product)
+		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(int) error); ok {
-		r1 = rf(id)
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, id)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -95,41 +97,22 @@ func (_m *Repository) GetById(id int) (products.Product, error) {
 	return r0, r1
 }
 
-// LastId provides a mock function with given fields:
-func (_m *Repository) LastId() (int, error) {
-	ret := _m.Called()
+// Update provides a mock function with given fields: ctx, product
+func (_m *Repository) Update(ctx context.Context, product *products.Product) (*products.Product, error) {
+	ret := _m.Called(ctx, product)
 
-	var r0 int
-	if rf, ok := ret.Get(0).(func() int); ok {
-		r0 = rf()
+	var r0 *products.Product
+	if rf, ok := ret.Get(0).(func(context.Context, *products.Product) *products.Product); ok {
+		r0 = rf(ctx, product)
 	} else {
-		r0 = ret.Get(0).(int)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*products.Product)
+		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// Update provides a mock function with given fields: id, description, expirationRate, freezingRate, height, length, netWeight, productCode, recommendedFreezingTemperature, width, productTypeId, sellerId
-func (_m *Repository) Update(id int, description string, expirationRate int, freezingRate int, height float64, length float64, netWeight float64, productCode string, recommendedFreezingTemperature float64, width float64, productTypeId int, sellerId int) (products.Product, error) {
-	ret := _m.Called(id, description, expirationRate, freezingRate, height, length, netWeight, productCode, recommendedFreezingTemperature, width, productTypeId, sellerId)
-
-	var r0 products.Product
-	if rf, ok := ret.Get(0).(func(int, string, int, int, float64, float64, float64, string, float64, float64, int, int) products.Product); ok {
-		r0 = rf(id, description, expirationRate, freezingRate, height, length, netWeight, productCode, recommendedFreezingTemperature, width, productTypeId, sellerId)
-	} else {
-		r0 = ret.Get(0).(products.Product)
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func(int, string, int, int, float64, float64, float64, string, float64, float64, int, int) error); ok {
-		r1 = rf(id, description, expirationRate, freezingRate, height, length, netWeight, productCode, recommendedFreezingTemperature, width, productTypeId, sellerId)
+	if rf, ok := ret.Get(1).(func(context.Context, *products.Product) error); ok {
+		r1 = rf(ctx, product)
 	} else {
 		r1 = ret.Error(1)
 	}
