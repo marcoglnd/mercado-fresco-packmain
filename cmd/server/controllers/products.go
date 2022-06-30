@@ -3,7 +3,6 @@ package controllers
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/products"
@@ -29,7 +28,7 @@ func NewProduct(p products.Service) *Controller {
 // @Router /products [get]
 func (c *Controller) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		data, err := c.service.GetAll()
+		data, err := c.service.GetAll(ctx.Request.Context())
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
@@ -52,15 +51,19 @@ func (c *Controller) GetAll() gin.HandlerFunc {
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products/{id} [get]
+
+type getProductId struct {
+	Id int64 `uri:"id" binding:"required,min=1"`
+}
+
 func (c *Controller) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		id := ctx.Param("id")
-		intId, err := strconv.Atoi(id)
-		if err != nil {
+		var req getProductId
+		if err := ctx.ShouldBindUri(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 			return
 		}
-		product, err := c.service.GetById(intId)
+		product, err := c.service.GetById(ctx.Request.Context(), req.Id)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": "invalid id"})
 			return
@@ -100,19 +103,20 @@ func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 			ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid inputs"})
 			return
 		}
-		product, err := c.service.CreateNewProduct(ctx,
+		product, err := c.service.CreateNewProduct(
+			ctx.Request.Context(),
 			&products.Product{
-				Description: req.Description,
-				ExpirationRate: req.ExpirationRate,
-				FreezingRate: req.FreezingRate,
-				Height: req.Height,
-				Length: req.Length,
-				NetWeight: req.NetWeight,
-				ProductCode: req.ProductCode,
+				Description:                    req.Description,
+				ExpirationRate:                 req.ExpirationRate,
+				FreezingRate:                   req.FreezingRate,
+				Height:                         req.Height,
+				Length:                         req.Length,
+				NetWeight:                      req.NetWeight,
+				ProductCode:                    req.ProductCode,
 				RecommendedFreezingTemperature: req.RecommendedFreezingTemperature,
-				Width: req.Width,
-				ProductTypeId: req.ProductTypeId,
-				SellerId: req.SellerId,
+				Width:                          req.Width,
+				ProductTypeId:                  req.ProductTypeId,
+				SellerId:                       req.SellerId,
 			},
 		)
 		if err != nil {
@@ -142,16 +146,28 @@ func (c *Controller) Update() gin.HandlerFunc {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid inputs"})
 			return
 		}
-		id := ctx.Param("id")
-		intId, err := strconv.Atoi(id)
-		if err != nil {
+		var reqId getProductId
+		if err := ctx.ShouldBindUri(&reqId); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 			return
 		}
-		product, err := c.service.Update(intId,
-			req.Description, req.ExpirationRate, req.FreezingRate,
-			req.Height, req.Length, req.NetWeight, req.ProductCode,
-			req.RecommendedFreezingTemperature, req.Width, req.ProductTypeId, req.SellerId)
+		product, err := c.service.Update(
+			ctx.Request.Context(),
+			&products.Product{
+				Id:                             reqId.Id,
+				Description:                    req.Description,
+				ExpirationRate:                 req.ExpirationRate,
+				FreezingRate:                   req.FreezingRate,
+				Height:                         req.Height,
+				Length:                         req.Length,
+				NetWeight:                      req.NetWeight,
+				ProductCode:                    req.ProductCode,
+				RecommendedFreezingTemperature: req.RecommendedFreezingTemperature,
+				Width:                          req.Width,
+				ProductTypeId:                  req.ProductTypeId,
+				SellerId:                       req.SellerId,
+			},
+		)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
@@ -172,18 +188,18 @@ func (c *Controller) Update() gin.HandlerFunc {
 // @Router /products/{id} [delete]
 func (c *Controller) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		id, err := strconv.Atoi(ctx.Param("id"))
-		if err != nil {
+		var req getProductId
+		if err := ctx.ShouldBindUri(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 			return
 		}
 
-		err = c.service.Delete(int(id))
+		err := c.service.Delete(ctx.Request.Context(), req.Id)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
 
-		ctx.JSON(http.StatusNoContent, gin.H{"data": fmt.Sprintf("product %d removed", id)})
+		ctx.JSON(http.StatusNoContent, gin.H{"data": fmt.Sprintf("product %d removed", req.Id)})
 	}
 }
