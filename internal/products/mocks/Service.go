@@ -3,6 +3,8 @@
 package mocks
 
 import (
+	context "context"
+
 	products "github.com/marcoglnd/mercado-fresco-packmain/internal/products"
 	mock "github.com/stretchr/testify/mock"
 )
@@ -12,20 +14,22 @@ type Service struct {
 	mock.Mock
 }
 
-// CreateNewProduct provides a mock function with given fields: description, expirationRate, freezingRate, height, length, netWeight, productCode, recommendedFreezingTemperature, width, productTypeId, sellerId
-func (_m *Service) CreateNewProduct(description string, expirationRate int, freezingRate int, height float64, length float64, netWeight float64, productCode string, recommendedFreezingTemperature float64, width float64, productTypeId int, sellerId int) (products.Product, error) {
-	ret := _m.Called(description, expirationRate, freezingRate, height, length, netWeight, productCode, recommendedFreezingTemperature, width, productTypeId, sellerId)
+// CreateNewProduct provides a mock function with given fields: ctx, product
+func (_m *Service) CreateNewProduct(ctx context.Context, product *products.Product) (*products.Product, error) {
+	ret := _m.Called(ctx, product)
 
-	var r0 products.Product
-	if rf, ok := ret.Get(0).(func(string, int, int, float64, float64, float64, string, float64, float64, int, int) products.Product); ok {
-		r0 = rf(description, expirationRate, freezingRate, height, length, netWeight, productCode, recommendedFreezingTemperature, width, productTypeId, sellerId)
+	var r0 *products.Product
+	if rf, ok := ret.Get(0).(func(context.Context, *products.Product) *products.Product); ok {
+		r0 = rf(ctx, product)
 	} else {
-		r0 = ret.Get(0).(products.Product)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*products.Product)
+		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string, int, int, float64, float64, float64, string, float64, float64, int, int) error); ok {
-		r1 = rf(description, expirationRate, freezingRate, height, length, netWeight, productCode, recommendedFreezingTemperature, width, productTypeId, sellerId)
+	if rf, ok := ret.Get(1).(func(context.Context, *products.Product) error); ok {
+		r1 = rf(ctx, product)
 	} else {
 		r1 = ret.Error(1)
 	}

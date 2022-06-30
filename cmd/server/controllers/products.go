@@ -100,18 +100,21 @@ func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 			ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid inputs"})
 			return
 		}
-		product, err := c.service.CreateNewProduct(
-			req.Description,
-			req.ExpirationRate,
-			req.FreezingRate,
-			req.Height,
-			req.Length,
-			req.NetWeight,
-			req.ProductCode,
-			req.RecommendedFreezingTemperature,
-			req.Width,
-			req.ProductTypeId,
-			req.SellerId)
+		product, err := c.service.CreateNewProduct(ctx,
+			&products.Product{
+				Description: req.Description,
+				ExpirationRate: req.ExpirationRate,
+				FreezingRate: req.FreezingRate,
+				Height: req.Height,
+				Length: req.Length,
+				NetWeight: req.NetWeight,
+				ProductCode: req.ProductCode,
+				RecommendedFreezingTemperature: req.RecommendedFreezingTemperature,
+				Width: req.Width,
+				ProductTypeId: req.ProductTypeId,
+				SellerId: req.SellerId,
+			},
+		)
 		if err != nil {
 			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 			return
