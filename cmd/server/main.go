@@ -1,10 +1,7 @@
 package main
 
 import (
-	"log"
-
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/routes"
 	"github.com/marcoglnd/mercado-fresco-packmain/docs"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -27,10 +24,10 @@ import (
 // @query.collection.format multi
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal(err)
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 	PATH := "/api/v1"
 	router := gin.Default()
 	routerGroup := router.Group(PATH)
