@@ -139,9 +139,22 @@ func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products/{id} [patch]
+type requestProductsUpdated struct {
+	Description                    string  `json:"description"`
+	ExpirationRate                 int     `json:"expiration_rate"`
+	FreezingRate                   int     `json:"freezing_rate"`
+	Height                         float64 `json:"height"`
+	Length                         float64 `json:"length"`
+	NetWeight                      float64 `json:"netweight"`
+	ProductCode                    string  `json:"product_code"`
+	RecommendedFreezingTemperature float64 `json:"recommended_freezing_temperature"`
+	Width                          float64 `json:"width"`
+	ProductTypeId                  int     `json:"product_type_id"`
+	SellerId                       int     `json:"seller_id"`
+}
 func (c *Controller) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var req requestProducts
+		var req requestProductsUpdated
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid inputs"})
 			return
