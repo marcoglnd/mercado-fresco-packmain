@@ -4,38 +4,30 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/marcoglnd/mercado-fresco-packmain/utils"
 )
 
-var (
-	StorageDB *sql.DB
-)
-
-var (
-	DBUser   = os.Getenv("DB_USER")
-	DBPass   = os.Getenv("DB_PASS")
-	DBServer = os.Getenv("DB_SERVER")
-	DBPort   = os.Getenv("DB_PORT")
-)
-
-func init() {
+func InitDB() (*sql.DB) {
+	config, err := utils.LoadConfig(".")
+	if err != nil {
+		log.Fatal("cannot load config:", err)
+	}
 	dataSource := fmt.Sprintf(
 		"%v:%v@tcp(%v:%v)/mercado_fresco?parseTime=true",
-		DBUser,
-		DBPass,
-		DBServer,
-		DBPort,
+		config.DBUser,
+		config.DBPass,
+		config.DBServer,
+		config.DBPort,
 	)
-	// dataSource := "root:secret@tcp(localhost:3306)/mercado_fresco?parseTime=true"
-	var err error
-	StorageDB, err = sql.Open("mysql", dataSource)
+	conn, err := sql.Open("mysql", dataSource)
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err = StorageDB.Ping(); err != nil {
+	if err = conn.Ping(); err != nil {
 		log.Fatal(err)
 	}
 	log.Println("database configured")
+	return conn
 }

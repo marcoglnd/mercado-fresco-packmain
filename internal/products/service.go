@@ -1,11 +1,11 @@
 package products
 
+import "context"
+
 type Service interface {
 	GetAll() ([]Product, error)
 	GetById(id int) (Product, error)
-	CreateNewProduct(description string, expirationRate, freezingRate int,
-		height, length, netWeight float64, productCode string,
-		recommendedFreezingTemperature, width float64, productTypeId, sellerId int) (Product, error)
+	CreateNewProduct(ctx context.Context, product *Product) (*Product, error)
 	Update(
 		id int, description string, expirationRate, freezingRate int,
 		height, length, netWeight float64, productCode string,
@@ -39,16 +39,10 @@ func (s service) GetById(id int) (Product, error) {
 	return pr, nil
 }
 
-func (s *service) CreateNewProduct(
-	description string, expirationRate, freezingRate int,
-	height, length, netWeight float64, productCode string,
-	recommendedFreezingTemperature, width float64, productTypeId, sellerId int) (Product, error) {
-	newProd, err := s.repository.CreateNewProduct(
-		description, expirationRate, freezingRate, height,
-		length, netWeight, productCode, recommendedFreezingTemperature,
-		width, productTypeId, sellerId)
+func (s *service) CreateNewProduct(ctx context.Context, product *Product) (*Product, error) {
+	newProd, err := s.repository.CreateNewProduct(ctx, product)
 	if err != nil {
-		return Product{}, err
+		return newProd, err
 	}
 	return newProd, nil
 }

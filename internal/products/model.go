@@ -1,7 +1,7 @@
 package products
 
 type Product struct {
-	Id                             int     `json:"id"`
+	Id                             int64   `json:"id"`
 	Description                    string  `json:"description"`
 	ExpirationRate                 int     `json:"expiration_rate"`
 	FreezingRate                   int     `json:"freezing_rate"`
