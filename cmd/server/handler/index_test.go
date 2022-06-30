@@ -19,7 +19,8 @@ func createServer() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	router := gin.Default()
 	routerGroup := router.Group(getPathUrl(""))
-	routes.AddRoutes(routerGroup)
+	// TODO: REFAC
+	routes.AddRoutes(routerGroup, nil)
 
 	return router
 }
