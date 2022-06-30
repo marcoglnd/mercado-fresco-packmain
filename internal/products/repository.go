@@ -6,12 +6,42 @@ import (
 	"fmt"
 )
 
-var listOfProducts []Product = []Product{}
-
 type repository struct{ db *sql.DB }
 
-func (repository) GetAll() ([]Product, error) {
-	return listOfProducts, nil
+func (r *repository) GetAll(ctx context.Context) (*[]Product, error) {
+	products := []Product{}
+
+	rows, err := r.db.QueryContext(ctx, sqlGetAll)
+	if err != nil {
+		return &products, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var product Product
+
+		if err := rows.Scan(
+			&product.Id,
+			&product.Description,
+			&product.ExpirationRate,
+			&product.FreezingRate,
+			&product.Height,
+			&product.Length,
+			&product.NetWeight,
+			&product.ProductCode,
+			&product.RecommendedFreezingTemperature,
+			&product.Width,
+			&product.ProductTypeId,
+			&product.SellerId,
+		); err != nil {
+			return &products, err
+		}
+
+		products = append(products, product)
+	}
+
+	return &products, nil
 }
 
 func (repository) GetById(id int) (Product, error) {
