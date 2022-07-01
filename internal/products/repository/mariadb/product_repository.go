@@ -92,7 +92,7 @@ func (r *repository) CreateNewProduct(ctx context.Context, product *domain.Produ
 	}
 	result, err := r.db.ExecContext(
 		ctx,
-		sqlStore,
+		sqlInsert,
 		&newProduct.Description,
 		&newProduct.ExpirationRate,
 		&newProduct.FreezingRate,
@@ -183,6 +183,6 @@ func (r *repository) Delete(ctx context.Context, id int64) error {
 	return nil
 }
 
-func NewRepository(db *sql.DB) domain.Repository {
+func NewMariaDBRepository(db *sql.DB) domain.Repository {
 	return &repository{db: db}
 }

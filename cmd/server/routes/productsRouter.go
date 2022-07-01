@@ -10,7 +10,7 @@ import (
 )
 
 func productsRouter(superRouter *gin.RouterGroup, conn *sql.DB) {
-	repo := mariadb.NewRepository(conn)
+	repo := mariadb.NewMariaDBRepository(conn)
 	service := service.NewService(repo)
 	controller := controller.NewProduct(service)
 
