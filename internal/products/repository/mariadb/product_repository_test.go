@@ -17,6 +17,7 @@ var (
 	queryGetAll  = regexp.QuoteMeta(sqlGetAll)
 	queryGetById = regexp.QuoteMeta(sqlGetById)
 	queryUpdate  = regexp.QuoteMeta(sqlUpdate)
+	queryDelete  = regexp.QuoteMeta(sqlDelete)
 )
 
 var rowsStruct = []string{
@@ -230,7 +231,7 @@ func TestUpdateProduct(t *testing.T) {
 				mockProduct.ProductTypeId,
 				mockProduct.SellerId,
 				mockProduct.Id,
-			).WillReturnResult(sqlmock.NewResult(1, 1))
+			).WillReturnResult(sqlmock.NewResult(0, 1))
 
 		repo := NewMariaDBRepository(db)
 
@@ -247,7 +248,7 @@ func TestUpdateProduct(t *testing.T) {
 
 		mock.ExpectExec(queryUpdate).
 			WithArgs(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
-			WillReturnResult(sqlmock.NewResult(1, 1))
+			WillReturnResult(sqlmock.NewResult(0, 1))
 
 		repo := NewMariaDBRepository(db)
 		_, err = repo.Update(context.Background(), &mockProduct)
@@ -278,6 +279,55 @@ func TestUpdateProduct(t *testing.T) {
 
 		repo := NewMariaDBRepository(db)
 		_, err = repo.Update(context.Background(), &mockProduct)
+		assert.Error(t, err)
+		assert.Equal(t, domain.ErrIDNotFound, err)
+	})
+}
+
+func TestDeleteProduct(t *testing.T) {
+	mockProduct := utils.CreateRandomProduct()
+
+	t.Run("success", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mock.ExpectExec(queryDelete).
+			WithArgs(
+				mockProduct.Id,
+			).WillReturnResult(sqlmock.NewResult(0, 1))
+
+		repo := NewMariaDBRepository(db)
+
+		err = repo.Delete(context.Background(), mockProduct.Id)
+		assert.NoError(t, err)
+	})
+
+	t.Run("fail to delete product", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mock.ExpectExec(queryDelete).
+			WithArgs(0).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
+		repo := NewMariaDBRepository(db)
+		err = repo.Delete(context.Background(), mockProduct.Id)
+		assert.Error(t, err)
+	})
+
+	t.Run("Product not updated", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mock.ExpectExec(queryDelete).
+			WithArgs(mockProduct.Id).
+			WillReturnResult(sqlmock.NewResult(0, 0))
+
+		repo := NewMariaDBRepository(db)
+		err = repo.Delete(context.Background(), mockProduct.Id)
 		assert.Error(t, err)
 		assert.Equal(t, domain.ErrIDNotFound, err)
 	})
