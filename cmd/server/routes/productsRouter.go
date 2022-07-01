@@ -4,14 +4,14 @@ import (
 	"database/sql"
 
 	"github.com/gin-gonic/gin"
-	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/products"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/products/controller"
 )
 
 func productsRouter(superRouter *gin.RouterGroup, conn *sql.DB) {
 	repo := products.NewRepository(conn)
 	service := products.NewService(repo)
-	controller := controllers.NewProduct(service)
+	controller := controller.NewProduct(service)
 
 	pr := superRouter.Group("/products")
 	{
