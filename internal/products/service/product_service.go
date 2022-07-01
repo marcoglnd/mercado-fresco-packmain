@@ -1,18 +1,22 @@
-package products
+package service
 
-import "context"
+import (
+	"context"
+
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/products/domain"
+)
 
 type service struct {
-	repository Repository
+	repository domain.Repository
 }
 
-func NewService(r Repository) Service {
+func NewService(r domain.Repository) domain.Service {
 	return &service{
 		repository: r,
 	}
 }
 
-func (s *service) GetAll(ctx context.Context) (*[]Product, error) {
+func (s *service) GetAll(ctx context.Context) (*[]domain.Product, error) {
 	listOfProducts, err := s.repository.GetAll(ctx)
 	if err != nil {
 		return listOfProducts, err
@@ -21,7 +25,7 @@ func (s *service) GetAll(ctx context.Context) (*[]Product, error) {
 	return listOfProducts, nil
 }
 
-func (s service) GetById(ctx context.Context, id int64) (*Product, error) {
+func (s service) GetById(ctx context.Context, id int64) (*domain.Product, error) {
 	product, err := s.repository.GetById(ctx, id)
 	if err != nil {
 		return product, err
@@ -30,7 +34,7 @@ func (s service) GetById(ctx context.Context, id int64) (*Product, error) {
 	return product, nil
 }
 
-func (s *service) CreateNewProduct(ctx context.Context, product *Product) (*Product, error) {
+func (s *service) CreateNewProduct(ctx context.Context, product *domain.Product) (*domain.Product, error) {
 	newProd, err := s.repository.CreateNewProduct(ctx, product)
 	if err != nil {
 		return newProd, err
@@ -38,7 +42,7 @@ func (s *service) CreateNewProduct(ctx context.Context, product *Product) (*Prod
 	return newProd, nil
 }
 
-func (s *service) Update(ctx context.Context, product *Product) (*Product, error) {
+func (s *service) Update(ctx context.Context, product *domain.Product) (*domain.Product, error) {
 	current, err := s.GetById(ctx, product.Id)
 	if err != nil {
 		return product, err
