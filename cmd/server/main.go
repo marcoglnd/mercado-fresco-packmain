@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/routes"
 	"github.com/marcoglnd/mercado-fresco-packmain/docs"
 	ginSwagger "github.com/swaggo/gin-swagger"
