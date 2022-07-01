@@ -118,6 +118,7 @@ func (r *repository) CreateNewProduct(ctx context.Context, product *domain.Produ
 
 func (r *repository) Update(ctx context.Context, product *domain.Product) (*domain.Product, error) {
 	newProduct := domain.Product{
+		Id: product.Id,
 		Description:                    product.Description,
 		ExpirationRate:                 product.ExpirationRate,
 		FreezingRate:                   product.FreezingRate,
@@ -145,6 +146,7 @@ func (r *repository) Update(ctx context.Context, product *domain.Product) (*doma
 		&newProduct.Width,
 		&newProduct.ProductTypeId,
 		&newProduct.SellerId,
+		&newProduct.Id,
 	)
 	if err != nil {
 		return &newProduct, err
