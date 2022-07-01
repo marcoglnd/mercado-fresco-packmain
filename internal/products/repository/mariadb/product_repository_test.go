@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/products/domain"
 	"github.com/marcoglnd/mercado-fresco-packmain/utils"
 	"github.com/stretchr/testify/assert"
 )
@@ -15,7 +16,7 @@ var (
 	queryInsert  = regexp.QuoteMeta(sqlInsert)
 	queryGetAll  = regexp.QuoteMeta(sqlGetAll)
 	queryGetById = regexp.QuoteMeta(sqlGetById)
-	queryUpdate = regexp.QuoteMeta(sqlUpdate)
+	queryUpdate  = regexp.QuoteMeta(sqlUpdate)
 )
 
 var rowsStruct = []string{
@@ -237,5 +238,47 @@ func TestUpdateProduct(t *testing.T) {
 		assert.NoError(t, err)
 
 		assert.Equal(t, &mockProduct, sec)
+	})
+
+	t.Run("fail to update product", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mock.ExpectExec(queryUpdate).
+			WithArgs(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
+			WillReturnResult(sqlmock.NewResult(1, 1))
+
+		repo := NewMariaDBRepository(db)
+		_, err = repo.Update(context.Background(), &mockProduct)
+		assert.Error(t, err)
+	})
+
+	t.Run("Product not updated", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mock.ExpectExec(queryUpdate).
+			WithArgs(
+				mockProduct.Description,
+				mockProduct.ExpirationRate,
+				mockProduct.FreezingRate,
+				mockProduct.Height,
+				mockProduct.Length,
+				mockProduct.NetWeight,
+				mockProduct.ProductCode,
+				mockProduct.RecommendedFreezingTemperature,
+				mockProduct.Width,
+				mockProduct.ProductTypeId,
+				mockProduct.SellerId,
+				mockProduct.Id,
+			).
+			WillReturnResult(sqlmock.NewResult(0, 0))
+
+		repo := NewMariaDBRepository(db)
+		_, err = repo.Update(context.Background(), &mockProduct)
+		assert.Error(t, err)
+		assert.Equal(t, domain.ErrIDNotFound, err)
 	})
 }

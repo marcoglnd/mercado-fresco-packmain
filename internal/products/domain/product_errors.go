@@ -5,5 +5,5 @@ import (
 )
 
 var (
-	ErrIDNotFound = errors.New("section id not found")
+	ErrIDNotFound = errors.New("product id not found")
 )
