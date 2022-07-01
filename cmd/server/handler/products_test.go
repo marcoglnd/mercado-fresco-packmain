@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/marcoglnd/mercado-fresco-packmain/internal/products"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/products/domain"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -132,7 +132,7 @@ func TestGetAllOK(t *testing.T) {
 
 	objRes := struct {
 		Code int
-		Data []products.Product
+		Data []domain.Product
 	}{}
 
 	err := json.Unmarshal(rr.Body.Bytes(), &objRes)
@@ -168,7 +168,7 @@ func TestGetProductByIdOK(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, get_rr.Code)
 
-	var objRes products.Product
+	var objRes domain.Product
 
 	err := json.Unmarshal(get_rr.Body.Bytes(), &objRes)
 
@@ -266,7 +266,7 @@ func TestUpdateProductOK(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, patch_rr.Code)
 
-	var objRes products.Product
+	var objRes domain.Product
 
 	err := json.Unmarshal(patch_rr.Body.Bytes(), &objRes)
 
@@ -441,7 +441,7 @@ func TestDeleteProductOK(t *testing.T) {
 
 	objRes := struct {
 		Code int
-		Data []products.Product
+		Data []domain.Product
 	}{}
 
 	err := json.Unmarshal(get_rr.Body.Bytes(), &objRes)
@@ -464,7 +464,7 @@ func TestDeleteProductOK(t *testing.T) {
 
 	secondObjRes := struct {
 		Code int
-		Data []products.Product
+		Data []domain.Product
 	}{}
 
 	json.Unmarshal(secondGet_rr.Body.Bytes(), &secondObjRes)
