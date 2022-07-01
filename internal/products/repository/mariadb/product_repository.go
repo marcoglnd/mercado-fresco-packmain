@@ -1,4 +1,4 @@
-package products
+package mariadb
 
 import (
 	"context"

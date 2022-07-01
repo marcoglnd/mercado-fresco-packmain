@@ -6,10 +6,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/products"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/products/controller"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/products/repository/mariadb"
 )
 
 func productsRouter(superRouter *gin.RouterGroup, conn *sql.DB) {
-	repo := products.NewRepository(conn)
+	repo := mariadb.NewRepository(conn)
 	service := products.NewService(repo)
 	controller := controller.NewProduct(service)
 
