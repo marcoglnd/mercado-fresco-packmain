@@ -12,8 +12,9 @@ import (
 )
 
 var (
-	queryInsert = regexp.QuoteMeta(sqlInsert)
-	queryGetAll = regexp.QuoteMeta(sqlGetAll)
+	queryInsert  = regexp.QuoteMeta(sqlInsert)
+	queryGetAll  = regexp.QuoteMeta(sqlGetAll)
+	queryGetById = regexp.QuoteMeta(sqlGetById)
 )
 
 var rowsStruct = []string{
@@ -79,15 +80,79 @@ func TestCreateNewProduct(t *testing.T) {
 }
 
 func TestGetAll(t *testing.T) {
-	db, mock, err := sqlmock.New()
-	assert.NoError(t, err)
-	defer db.Close()
+	t.Run("success", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
 
-	mockProducts := utils.CreateRandomListProduct()
+		mockProducts := utils.CreateRandomListProduct()
 
-	rows := sqlmock.NewRows(rowsStruct)
-	for _, mockProduct := range mockProducts {
-		rows.AddRow(
+		rows := sqlmock.NewRows(rowsStruct)
+		for _, mockProduct := range mockProducts {
+			rows.AddRow(
+				mockProduct.Id,
+				mockProduct.Description,
+				mockProduct.ExpirationRate,
+				mockProduct.FreezingRate,
+				mockProduct.Height,
+				mockProduct.Length,
+				mockProduct.NetWeight,
+				mockProduct.ProductCode,
+				mockProduct.RecommendedFreezingTemperature,
+				mockProduct.Width,
+				mockProduct.ProductTypeId,
+				mockProduct.SellerId,
+			)
+		}
+
+		mock.ExpectQuery(queryGetAll).WillReturnRows(rows)
+
+		productsRepo := NewMariaDBRepository(db)
+
+		result, err := productsRepo.GetAll(context.Background())
+		assert.NoError(t, err)
+
+		assert.Equal(t, result, &mockProducts)
+	})
+
+	t.Run("fail to scan product", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		rows := sqlmock.NewRows(rowsStruct).AddRow("", "", "", "", "", "", "", "", "", "", "", "")
+
+		mock.ExpectQuery(queryGetAll).WillReturnRows(rows)
+
+		productsRepo := NewMariaDBRepository(db)
+
+		_, err = productsRepo.GetAll(context.Background())
+		assert.Error(t, err)
+	})
+
+	t.Run("fail to select product", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mock.ExpectQuery(queryGetAll).WillReturnError(sql.ErrNoRows)
+
+		productsRepo := NewMariaDBRepository(db)
+
+		_, err = productsRepo.GetAll(context.Background())
+		assert.Error(t, err)
+	})
+}
+
+func TestGetById(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mockProduct := utils.CreateRandomProduct()
+
+		rows := sqlmock.NewRows(rowsStruct).AddRow(
 			mockProduct.Id,
 			mockProduct.Description,
 			mockProduct.ExpirationRate,
@@ -101,42 +166,42 @@ func TestGetAll(t *testing.T) {
 			mockProduct.ProductTypeId,
 			mockProduct.SellerId,
 		)
-	}
 
-	mock.ExpectQuery(queryGetAll).WillReturnRows(rows)
+		mock.ExpectQuery(queryGetById).WillReturnRows(rows)
 
-	productsRepo := NewMariaDBRepository(db)
+		productsRepo := NewMariaDBRepository(db)
 
-	result, err := productsRepo.GetAll(context.Background())
-	assert.NoError(t, err)
+		result, err := productsRepo.GetById(context.Background(), 0)
+		assert.NoError(t, err)
 
-	assert.Equal(t, result, &mockProducts)
-}
+		assert.Equal(t, result, &mockProduct)
+	})
 
-func TestGetAllFailScan(t *testing.T) {
-	db, mock, err := sqlmock.New()
-	assert.NoError(t, err)
-	defer db.Close()
+	t.Run("fail to scan product", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
 
-	rows := sqlmock.NewRows(rowsStruct).AddRow("", "", "", "", "", "", "", "", "", "", "", "")
+		rows := sqlmock.NewRows(rowsStruct).AddRow("", "", "", "", "", "", "", "", "", "", "", "")
 
-	mock.ExpectQuery(queryGetAll).WillReturnRows(rows)
+		mock.ExpectQuery(queryGetById).WillReturnRows(rows)
 
-	productsRepo := NewMariaDBRepository(db)
+		productsRepo := NewMariaDBRepository(db)
 
-	_, err = productsRepo.GetAll(context.Background())
-	assert.Error(t, err)
-}
+		_, err = productsRepo.GetById(context.Background(), 1)
+		assert.Error(t, err)
+	})
 
-func TestGetAllFailSelect(t *testing.T) {
-	db, mock, err := sqlmock.New()
-	assert.NoError(t, err)
-	defer db.Close()
+	t.Run("fail to select product", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
 
-	mock.ExpectQuery(queryGetAll).WillReturnError(sql.ErrNoRows)
+		mock.ExpectQuery(queryGetById).WillReturnError(sql.ErrNoRows)
 
-	productsRepo := NewMariaDBRepository(db)
+		productsRepo := NewMariaDBRepository(db)
 
-	_, err = productsRepo.GetAll(context.Background())
-	assert.Error(t, err)
+		_, err = productsRepo.GetById(context.Background(), 0)
+		assert.Error(t, err)
+	})
 }
