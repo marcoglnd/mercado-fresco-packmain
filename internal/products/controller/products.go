@@ -5,14 +5,14 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/marcoglnd/mercado-fresco-packmain/internal/products"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/products/domain"
 )
 
 type Controller struct {
-	service products.Service
+	service domain.Service
 }
 
-func NewProduct(p products.Service) *Controller {
+func NewProduct(p domain.Service) *Controller {
 	return &Controller{
 		service: p,
 	}
@@ -105,7 +105,7 @@ func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 		}
 		product, err := c.service.CreateNewProduct(
 			ctx.Request.Context(),
-			&products.Product{
+			&domain.Product{
 				Description:                    req.Description,
 				ExpirationRate:                 req.ExpirationRate,
 				FreezingRate:                   req.FreezingRate,
@@ -152,6 +152,7 @@ type requestProductsUpdated struct {
 	ProductTypeId                  int     `json:"product_type_id"`
 	SellerId                       int     `json:"seller_id"`
 }
+
 func (c *Controller) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req requestProductsUpdated
@@ -166,7 +167,7 @@ func (c *Controller) Update() gin.HandlerFunc {
 		}
 		product, err := c.service.Update(
 			ctx.Request.Context(),
-			&products.Product{
+			&domain.Product{
 				Id:                             reqId.Id,
 				Description:                    req.Description,
 				ExpirationRate:                 req.ExpirationRate,

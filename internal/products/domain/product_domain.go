@@ -1,8 +1,7 @@
-package products
+package domain
 
 import (
 	"context"
-	"errors"
 )
 
 type Product struct {
@@ -35,7 +34,3 @@ type Service interface {
 	Update(ctx context.Context, product *Product) (*Product, error)
 	Delete(ctx context.Context, id int64) error
 }
-
-var (
-	ErrIDNotFound = errors.New("section id not found")
-)
