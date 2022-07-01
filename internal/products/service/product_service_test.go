@@ -80,3 +80,39 @@ func TestGetAll(t *testing.T) {
 		mockProductsRepo.AssertExpectations(t)
 	})
 }
+
+func TestGetById(t *testing.T) {
+	mockProductsRepo := mocks.NewService(t)
+
+	mockProduct := utils.CreateRandomProduct()
+
+	t.Run("GetById in case of success", func(t *testing.T) {
+		mockProductsRepo.On("GetById", mock.Anything, mock.AnythingOfType("int64")).Return(&mockProduct, nil).Once()
+
+		service := NewService(mockProductsRepo)
+
+		product, err := service.GetById(context.Background(), mockProduct.Id)
+
+		assert.NoError(t, err)
+		assert.NotEmpty(t, product)
+
+		assert.Equal(t, &mockProduct, product)
+
+		mockProductsRepo.AssertExpectations(t)
+
+	})
+
+	t.Run("GetById in case of error", func(t *testing.T) {
+		mockProductsRepo.On("GetById", mock.Anything, mock.AnythingOfType("int64")).
+		Return(nil, errors.New("failed to retrieve product")).Once()
+
+		service := NewService(mockProductsRepo)
+
+		product, err := service.GetById(context.Background(), mockProduct.Id)
+
+		assert.Error(t, err)
+		assert.Empty(t, product)
+
+		mockProductsRepo.AssertExpectations(t)
+	})
+}
