@@ -4,12 +4,14 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/products/domain"
 )
 
 type repository struct{ db *sql.DB }
 
-func (r *repository) GetAll(ctx context.Context) (*[]Product, error) {
-	products := []Product{}
+func (r *repository) GetAll(ctx context.Context) (*[]domain.Product, error) {
+	products := []domain.Product{}
 
 	rows, err := r.db.QueryContext(ctx, sqlGetAll)
 	if err != nil {
@@ -19,7 +21,7 @@ func (r *repository) GetAll(ctx context.Context) (*[]Product, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var product Product
+		var product domain.Product
 
 		if err := rows.Scan(
 			&product.Id,
@@ -44,10 +46,10 @@ func (r *repository) GetAll(ctx context.Context) (*[]Product, error) {
 	return &products, nil
 }
 
-func (r *repository) GetById(ctx context.Context, id int64) (*Product, error) {
+func (r *repository) GetById(ctx context.Context, id int64) (*domain.Product, error) {
 	row := r.db.QueryRowContext(ctx, sqlGetById, id)
 
-	product := Product{}
+	product := domain.Product{}
 
 	err := row.Scan(
 		&product.Id,
@@ -64,7 +66,7 @@ func (r *repository) GetById(ctx context.Context, id int64) (*Product, error) {
 		&product.SellerId,
 	)
 	if errors.Is(err, sql.ErrNoRows) {
-		return &product, ErrIDNotFound
+		return &product, domain.ErrIDNotFound
 	}
 
 	if err != nil {
@@ -74,19 +76,19 @@ func (r *repository) GetById(ctx context.Context, id int64) (*Product, error) {
 	return &product, nil
 }
 
-func (r *repository) CreateNewProduct(ctx context.Context, product *Product) (*Product, error) {
-	newProduct := Product{
-		Description: product.Description,
-		ExpirationRate: product.ExpirationRate,
-		FreezingRate: product.FreezingRate,
-		Height: product.Height,
-		Length: product.Length,
-		NetWeight: product.NetWeight,
-		ProductCode: product.ProductCode,
+func (r *repository) CreateNewProduct(ctx context.Context, product *domain.Product) (*domain.Product, error) {
+	newProduct := domain.Product{
+		Description:                    product.Description,
+		ExpirationRate:                 product.ExpirationRate,
+		FreezingRate:                   product.FreezingRate,
+		Height:                         product.Height,
+		Length:                         product.Length,
+		NetWeight:                      product.NetWeight,
+		ProductCode:                    product.ProductCode,
 		RecommendedFreezingTemperature: product.RecommendedFreezingTemperature,
-		Width: product.Width,
-		ProductTypeId: product.ProductTypeId,
-		SellerId: product.SellerId,
+		Width:                          product.Width,
+		ProductTypeId:                  product.ProductTypeId,
+		SellerId:                       product.SellerId,
 	}
 	result, err := r.db.ExecContext(
 		ctx,
@@ -114,19 +116,19 @@ func (r *repository) CreateNewProduct(ctx context.Context, product *Product) (*P
 	return &newProduct, nil
 }
 
-func (r *repository) Update(ctx context.Context, product *Product) (*Product, error) {
-	newProduct := Product{
-		Description: product.Description,
-		ExpirationRate: product.ExpirationRate,
-		FreezingRate: product.FreezingRate,
-		Height: product.Height,
-		Length: product.Length,
-		NetWeight: product.NetWeight,
-		ProductCode: product.ProductCode,
+func (r *repository) Update(ctx context.Context, product *domain.Product) (*domain.Product, error) {
+	newProduct := domain.Product{
+		Description:                    product.Description,
+		ExpirationRate:                 product.ExpirationRate,
+		FreezingRate:                   product.FreezingRate,
+		Height:                         product.Height,
+		Length:                         product.Length,
+		NetWeight:                      product.NetWeight,
+		ProductCode:                    product.ProductCode,
 		RecommendedFreezingTemperature: product.RecommendedFreezingTemperature,
-		Width: product.Width,
-		ProductTypeId: product.ProductTypeId,
-		SellerId: product.SellerId,
+		Width:                          product.Width,
+		ProductTypeId:                  product.ProductTypeId,
+		SellerId:                       product.SellerId,
 	}
 
 	result, err := r.db.ExecContext(
@@ -150,7 +152,7 @@ func (r *repository) Update(ctx context.Context, product *Product) (*Product, er
 
 	affectedRows, err := result.RowsAffected()
 	if affectedRows == 0 {
-		return &newProduct, ErrIDNotFound
+		return &newProduct, domain.ErrIDNotFound
 	}
 
 	if err != nil {
@@ -169,7 +171,7 @@ func (r *repository) Delete(ctx context.Context, id int64) error {
 	affectedRows, err := result.RowsAffected()
 
 	if affectedRows == 0 {
-		return ErrIDNotFound
+		return domain.ErrIDNotFound
 	}
 
 	if err != nil {
@@ -179,6 +181,6 @@ func (r *repository) Delete(ctx context.Context, id int64) error {
 	return nil
 }
 
-func NewRepository(db *sql.DB) Repository {
+func NewRepository(db *sql.DB) domain.Repository {
 	return &repository{db: db}
 }
