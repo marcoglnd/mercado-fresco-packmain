@@ -1,4 +1,4 @@
-package employees
+package domain
 
 type Employee struct {
 	ID           int    `json:"id"`

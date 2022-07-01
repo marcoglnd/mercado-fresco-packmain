@@ -1,4 +1,4 @@
-package employees
+package service
 
 type Service interface {
 	GetAll() ([]Employee, error)
