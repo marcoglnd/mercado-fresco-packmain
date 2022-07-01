@@ -3,10 +3,16 @@ package controllers_test
 import (
 	"encoding/json"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
+	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/buyers"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/buyers/mocks"
+
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func Test_CreateBuyer_OK(t *testing.T) {
@@ -85,25 +91,30 @@ func Test_GetBuyers_OK(t *testing.T) {
 }
 
 func Test_GetBuyerById_OK(t *testing.T) {
-	r := createServer()
+	buyer := &buyers.Buyer{
+		ID:           1,
+		CardNumberID: "402323",
+		FirstName:    "Jhon",
+		LastName:     "Doe",
+	}
+	mockService := new(mocks.Service)
+	mockService.On("GetById", mock.AnythingOfType("int")).Return(*buyer, nil)
 
-	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/buyers/"), `{
-		"card_number_id": "402323", "first_name": "Jhon", "last_name": "Doe"
-	}`)
+	rr := httptest.NewRecorder()
+	ctx, engine := gin.CreateTestContext(rr)
+	ns := controllers.NewBuyer(mockService)
 
-	get_req, get_rr := createRequestTest(http.MethodGet, getPathUrl("/buyers/1"), "")
+	engine.GET("/api/v1/buyers/:id", ns.GetById())
+	request, err := http.NewRequest(http.MethodGet, "/api/v1/buyers/1", nil)
+	assert.NoError(t, err)
+	ctx.Request = request
+	engine.ServeHTTP(rr, ctx.Request)
 
-	defer post_req.Body.Close()
-	defer get_req.Body.Close()
-
-	r.ServeHTTP(post_rr, post_req)
-	r.ServeHTTP(get_rr, get_req)
-
-	assert.Equal(t, http.StatusOK, get_rr.Code)
+	assert.Equal(t, http.StatusOK, rr.Code)
 
 	var objRes buyers.Buyer
 
-	err := json.Unmarshal(get_rr.Body.Bytes(), &objRes)
+	err = json.Unmarshal(rr.Body.Bytes(), &objRes)
 
 	assert.Nil(t, err)
 	assert.True(t, objRes.ID == 1)

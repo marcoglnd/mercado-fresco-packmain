@@ -3,14 +3,16 @@ package controllers_test
 import (
 	"encoding/json"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
+	"github.com/gin-gonic/gin"
+	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/sections"
-
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/sections/mocks"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
-
-
 
 func Test_CreateSections_OK(t *testing.T) {
 	r := createServer()
@@ -102,38 +104,48 @@ func Test_GetSections_OK(t *testing.T) {
 }
 
 func Test_GetSectionsById_OK(t *testing.T) {
-	r := createServer()
 
-	post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/sections/"), `{
-		"current_capacity": 1,
-		"current_temperature": 1,
-		"maximum_capacity": 1,
-		"minimum_capacity": 1,
-		"minimum_temperature": 1,
-		"product_type_id": 1,
-		"section_number": 1,
-		"warehouse_id": 1
-	  }`)
+	section := &sections.Section{
+		ID:                 1,
+		CurrentCapacity:    1,
+		CurrentTemperature: 1,
+		MaximumCapacity:    1,
+		MinimumCapacity:    1,
+		MinimumTemperature: 1,
+		ProductTypeId:      1,
+		SectionNumber:      1,
+		WarehouseId:        1,
+	}
 
-	get_req, get_rr := createRequestTest(http.MethodGet, getPathUrl("/sections/1"), "")
+	mockService := new(mocks.Service)
+	mockService.On("GetById", mock.AnythingOfType("int")).Return(*section, nil)
 
-	defer post_req.Body.Close()
-	defer get_req.Body.Close()
+	res := httptest.NewRecorder()
+	ctx, engine := gin.CreateTestContext(res)
+	newSection := controllers.NewSection(mockService)
 
-	r.ServeHTTP(post_rr, post_req)
-	r.ServeHTTP(get_rr, get_req)
+	engine.GET("/api/v1/sections/:id", newSection.GetById())
+	request, err := http.NewRequest(http.MethodGet, "/api/v1/sections/1", nil)
+	assert.NoError(t, err)
+	ctx.Request = request
+	engine.ServeHTTP(res, ctx.Request)
 
-	assert.Equal(t, http.StatusOK, get_rr.Code)
+	assert.Equal(t, http.StatusOK, res.Code)
 
 	var objRes sections.Section
 
-	err := json.Unmarshal(get_rr.Body.Bytes(), &objRes)
+	err = json.Unmarshal(res.Body.Bytes(), &objRes)
 
 	assert.Nil(t, err)
 	assert.True(t, objRes.ID == 1)
-	// assert.True(t, objRes.CardNumberID == "402323")
-	// assert.True(t, objRes.FirstName == "Jhon")
-	// assert.True(t, objRes.LastName == "Doe")
+	assert.True(t, objRes.CurrentCapacity == 1)
+	assert.True(t, objRes.CurrentTemperature == 1)
+	assert.True(t, objRes.MaximumCapacity == 1)
+	assert.True(t, objRes.MinimumCapacity == 1)
+	assert.True(t, objRes.MinimumTemperature == 1)
+	assert.True(t, objRes.ProductTypeId == 1)
+	assert.True(t, objRes.SectionNumber == 1)
+	assert.True(t, objRes.WarehouseId == 1)
 }
 
 func Test_GetSectionsById_fail(t *testing.T) {
@@ -200,9 +212,6 @@ func Test_UpdateSections_OK(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.True(t, objRes.ID == 1)
-	// assert.True(t, objRes.CardNumberID == "400000")
-	// assert.True(t, objRes.FirstName == "Maria")
-	// assert.True(t, objRes.LastName == "Silva")
 }
 
 func Test_UpdateSections_fail(t *testing.T) {
