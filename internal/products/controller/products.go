@@ -52,13 +52,11 @@ func (c *Controller) GetAll() gin.HandlerFunc {
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products/{id} [get]
 
-type getProductId struct {
-	Id int64 `uri:"id" binding:"required,min=1"`
-}
+
 
 func (c *Controller) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var req getProductId
+		var req domain.RequestProductId
 		if err := ctx.ShouldBindUri(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 			return
@@ -70,20 +68,6 @@ func (c *Controller) GetById() gin.HandlerFunc {
 		}
 		ctx.JSON(http.StatusOK, product)
 	}
-}
-
-type requestProducts struct {
-	Description                    string  `json:"description" binding:"required"`
-	ExpirationRate                 int     `json:"expiration_rate" binding:"required"`
-	FreezingRate                   int     `json:"freezing_rate" binding:"required"`
-	Height                         float64 `json:"height" binding:"required"`
-	Length                         float64 `json:"length" binding:"required"`
-	NetWeight                      float64 `json:"netweight" binding:"required"`
-	ProductCode                    string  `json:"product_code" binding:"required"`
-	RecommendedFreezingTemperature float64 `json:"recommended_freezing_temperature" binding:"required"`
-	Width                          float64 `json:"width" binding:"required"`
-	ProductTypeId                  int     `json:"product_type_id" binding:"required"`
-	SellerId                       int     `json:"seller_id" binding:"required"`
 }
 
 // @Summary Create product
@@ -98,7 +82,7 @@ type requestProducts struct {
 // @Router /products [post]
 func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var req requestProducts
+		var req domain.RequestProducts
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid inputs"})
 			return
@@ -139,28 +123,15 @@ func (c *Controller) CreateNewProduct() gin.HandlerFunc {
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products/{id} [patch]
-type requestProductsUpdated struct {
-	Description                    string  `json:"description"`
-	ExpirationRate                 int     `json:"expiration_rate"`
-	FreezingRate                   int     `json:"freezing_rate"`
-	Height                         float64 `json:"height"`
-	Length                         float64 `json:"length"`
-	NetWeight                      float64 `json:"netweight"`
-	ProductCode                    string  `json:"product_code"`
-	RecommendedFreezingTemperature float64 `json:"recommended_freezing_temperature"`
-	Width                          float64 `json:"width"`
-	ProductTypeId                  int     `json:"product_type_id"`
-	SellerId                       int     `json:"seller_id"`
-}
 
 func (c *Controller) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var req requestProductsUpdated
+		var req domain.RequestProductsUpdated
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid inputs"})
 			return
 		}
-		var reqId getProductId
+		var reqId domain.RequestProductId
 		if err := ctx.ShouldBindUri(&reqId); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 			return
@@ -202,7 +173,7 @@ func (c *Controller) Update() gin.HandlerFunc {
 // @Router /products/{id} [delete]
 func (c *Controller) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var req getProductId
+		var req domain.RequestProductId
 		if err := ctx.ShouldBindUri(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 			return
