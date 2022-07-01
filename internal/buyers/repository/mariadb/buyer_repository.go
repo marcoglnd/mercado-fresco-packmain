@@ -17,7 +17,7 @@ func NewMariaDBRepository(db *sql.DB) domain.BuyerRepository {
 }
 
 func (m mariadbRepository) GetAll(ctx context.Context) (*[]domain.Buyer, error) {
-	var buyers []domain.Buyer
+	var buyers []domain.Buyer = []domain.Buyer{}
 
 	rows, err := m.db.QueryContext(ctx, "SELECT * FROM buyers")
 	if err != nil {
@@ -69,7 +69,11 @@ func (m mariadbRepository) GetById(ctx context.Context, id int64) (*domain.Buyer
 }
 
 func (m mariadbRepository) Create(ctx context.Context, cardNumberId, firstName, lastName string) (*domain.Buyer, error) {
-	var newBuyer domain.Buyer
+	var newBuyer = domain.Buyer{
+		CardNumberID: cardNumberId,
+		FirstName:    firstName,
+		LastName:     lastName,
+	}
 
 	query := `INSERT INTO buyers 
 	(card_number_id, first_name, last_name) VALUES (?, ?, ?)`
@@ -77,7 +81,6 @@ func (m mariadbRepository) Create(ctx context.Context, cardNumberId, firstName, 
 	result, err := m.db.ExecContext(
 		ctx,
 		query,
-		&newBuyer.ID,
 		&newBuyer.CardNumberID,
 		&newBuyer.FirstName,
 		&newBuyer.LastName,
@@ -97,7 +100,12 @@ func (m mariadbRepository) Create(ctx context.Context, cardNumberId, firstName, 
 }
 
 func (m mariadbRepository) Update(ctx context.Context, id int64, cardNumberId, firstName, lastName string) (*domain.Buyer, error) {
-	var newBuyer domain.Buyer
+	var newBuyer = domain.Buyer{
+		ID:           id,
+		CardNumberID: cardNumberId,
+		FirstName:    firstName,
+		LastName:     lastName,
+	}
 
 	query := `UPDATE buyers SET 
 	card_number_id=?, first_name=?, last_name=? WHERE id=?`
