@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AddRoutes(superRouter *gin.RouterGroup, conn *sql.DB) {
-	productsRouter(superRouter, conn)
+func AddRoutes(superRouter *gin.RouterGroup, dbConnection *sql.DB) {
+	productsRouter(superRouter, dbConnection)
 	buyersRouter(superRouter)
 	employeesRouter(superRouter)
 	sectionsRouter(superRouter)

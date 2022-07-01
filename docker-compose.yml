@@ -7,8 +7,8 @@ services:
     hostname: mercado-fresco
     restart: unless-stopped
     volumes:
-      - ./db/:/docker-entrypoint-initdb.d
-      - ./db/.data:/var/lib/mysql
+      - db:/docker-entrypoint-initdb.d
+      - db:/var/lib/mysql
     ports:
       - ${DB_PORT}:${DB_PORT}
     environment:
@@ -20,3 +20,6 @@ services:
       retries: 3
     env_file:
       - .env
+
+volumes:
+  db:

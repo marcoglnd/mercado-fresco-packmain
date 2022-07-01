@@ -4,30 +4,25 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/marcoglnd/mercado-fresco-packmain/utils"
+	"os"
 )
 
-func InitDB() (*sql.DB) {
-	config, err := utils.LoadConfig(".")
-	if err != nil {
-		log.Fatal("cannot load config:", err)
+var dbConnection *sql.DB
+
+func GetDBConnection() *sql.DB {
+	if dbConnection != nil {
+		return dbConnection
 	}
 	dataSource := fmt.Sprintf(
-		"%v:%v@tcp(%v:%v)/mercado_fresco?parseTime=true",
-		config.DBUser,
-		config.DBPass,
-		config.DBServer,
-		config.DBPort,
+		"%s:%s@tcp(localhost:%s)/%s?parseTime=true",
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASS"),
+		os.Getenv("DB_PORT"),
+		os.Getenv("DB_NAME"),
 	)
-	conn, err := sql.Open("mysql", dataSource)
+	dbConnection, err := sql.Open("mysql", dataSource)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("failed to connect to mariadb")
 	}
-	if err = conn.Ping(); err != nil {
-		log.Fatal(err)
-	}
-	log.Println("database configured")
-	return conn
+	return dbConnection
 }

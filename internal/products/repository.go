@@ -75,21 +75,33 @@ func (r *repository) GetById(ctx context.Context, id int64) (*Product, error) {
 }
 
 func (r *repository) CreateNewProduct(ctx context.Context, product *Product) (*Product, error) {
-	newProduct := Product{}
+	newProduct := Product{
+		Description: product.Description,
+		ExpirationRate: product.ExpirationRate,
+		FreezingRate: product.FreezingRate,
+		Height: product.Height,
+		Length: product.Length,
+		NetWeight: product.NetWeight,
+		ProductCode: product.ProductCode,
+		RecommendedFreezingTemperature: product.RecommendedFreezingTemperature,
+		Width: product.Width,
+		ProductTypeId: product.ProductTypeId,
+		SellerId: product.SellerId,
+	}
 	result, err := r.db.ExecContext(
 		ctx,
 		sqlStore,
-		&product.Description,
-		&product.ExpirationRate,
-		&product.FreezingRate,
-		&product.Height,
-		&product.Length,
-		&product.NetWeight,
-		&product.ProductCode,
-		&product.RecommendedFreezingTemperature,
-		&product.Width,
-		&product.ProductTypeId,
-		&product.SellerId,
+		&newProduct.Description,
+		&newProduct.ExpirationRate,
+		&newProduct.FreezingRate,
+		&newProduct.Height,
+		&newProduct.Length,
+		&newProduct.NetWeight,
+		&newProduct.ProductCode,
+		&newProduct.RecommendedFreezingTemperature,
+		&newProduct.Width,
+		&newProduct.ProductTypeId,
+		&newProduct.SellerId,
 	)
 	if err != nil {
 		return &newProduct, err
@@ -103,23 +115,34 @@ func (r *repository) CreateNewProduct(ctx context.Context, product *Product) (*P
 }
 
 func (r *repository) Update(ctx context.Context, product *Product) (*Product, error) {
-	newProduct := Product{}
+	newProduct := Product{
+		Description: product.Description,
+		ExpirationRate: product.ExpirationRate,
+		FreezingRate: product.FreezingRate,
+		Height: product.Height,
+		Length: product.Length,
+		NetWeight: product.NetWeight,
+		ProductCode: product.ProductCode,
+		RecommendedFreezingTemperature: product.RecommendedFreezingTemperature,
+		Width: product.Width,
+		ProductTypeId: product.ProductTypeId,
+		SellerId: product.SellerId,
+	}
 
 	result, err := r.db.ExecContext(
 		ctx,
 		sqlUpdate,
-		&product.Description,
-		&product.ExpirationRate,
-		&product.FreezingRate,
-		&product.Height,
-		&product.Length,
-		&product.NetWeight,
-		&product.ProductCode,
-		&product.RecommendedFreezingTemperature,
-		&product.Width,
-		&product.ProductTypeId,
-		&product.SellerId,
-		&product.Id,
+		&newProduct.Description,
+		&newProduct.ExpirationRate,
+		&newProduct.FreezingRate,
+		&newProduct.Height,
+		&newProduct.Length,
+		&newProduct.NetWeight,
+		&newProduct.ProductCode,
+		&newProduct.RecommendedFreezingTemperature,
+		&newProduct.Width,
+		&newProduct.ProductTypeId,
+		&newProduct.SellerId,
 	)
 	if err != nil {
 		return &newProduct, err
