@@ -15,6 +15,7 @@ var (
 	queryInsert  = regexp.QuoteMeta(sqlInsert)
 	queryGetAll  = regexp.QuoteMeta(sqlGetAll)
 	queryGetById = regexp.QuoteMeta(sqlGetById)
+	queryUpdate = regexp.QuoteMeta(sqlUpdate)
 )
 
 var rowsStruct = []string{
@@ -33,7 +34,7 @@ var rowsStruct = []string{
 }
 
 func TestCreateNewProduct(t *testing.T) {
-	mockSection := utils.CreateRandomProduct()
+	mockProduct := utils.CreateRandomProduct()
 
 	t.Run("success", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
@@ -42,25 +43,25 @@ func TestCreateNewProduct(t *testing.T) {
 
 		mock.ExpectExec(queryInsert).
 			WithArgs(
-				mockSection.Description,
-				mockSection.ExpirationRate,
-				mockSection.FreezingRate,
-				mockSection.Height,
-				mockSection.Length,
-				mockSection.NetWeight,
-				mockSection.ProductCode,
-				mockSection.RecommendedFreezingTemperature,
-				mockSection.Width,
-				mockSection.ProductTypeId,
-				mockSection.SellerId,
-			).WillReturnResult(sqlmock.NewResult(1, 1)) // last id, // rows affected
+				mockProduct.Description,
+				mockProduct.ExpirationRate,
+				mockProduct.FreezingRate,
+				mockProduct.Height,
+				mockProduct.Length,
+				mockProduct.NetWeight,
+				mockProduct.ProductCode,
+				mockProduct.RecommendedFreezingTemperature,
+				mockProduct.Width,
+				mockProduct.ProductTypeId,
+				mockProduct.SellerId,
+			).WillReturnResult(sqlmock.NewResult(1, 1))
 
 		repo := NewMariaDBRepository(db)
 
-		sec, err := repo.CreateNewProduct(context.TODO(), &mockSection)
+		sec, err := repo.CreateNewProduct(context.Background(), &mockProduct)
 		assert.NoError(t, err)
 
-		assert.Equal(t, &mockSection, sec)
+		assert.Equal(t, &mockProduct, sec)
 	})
 
 	t.Run("failed to create product", func(t *testing.T) {
@@ -73,7 +74,7 @@ func TestCreateNewProduct(t *testing.T) {
 			WillReturnResult(sqlmock.NewResult(1, 1))
 
 		repo := NewMariaDBRepository(db)
-		_, err = repo.CreateNewProduct(context.TODO(), &mockSection)
+		_, err = repo.CreateNewProduct(context.Background(), &mockProduct)
 
 		assert.Error(t, err)
 	})
@@ -203,5 +204,38 @@ func TestGetById(t *testing.T) {
 
 		_, err = productsRepo.GetById(context.Background(), 0)
 		assert.Error(t, err)
+	})
+}
+
+func TestUpdateProduct(t *testing.T) {
+	mockProduct := utils.CreateRandomProduct()
+
+	t.Run("success", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mock.ExpectExec(queryUpdate).
+			WithArgs(
+				mockProduct.Description,
+				mockProduct.ExpirationRate,
+				mockProduct.FreezingRate,
+				mockProduct.Height,
+				mockProduct.Length,
+				mockProduct.NetWeight,
+				mockProduct.ProductCode,
+				mockProduct.RecommendedFreezingTemperature,
+				mockProduct.Width,
+				mockProduct.ProductTypeId,
+				mockProduct.SellerId,
+				mockProduct.Id,
+			).WillReturnResult(sqlmock.NewResult(1, 1))
+
+		repo := NewMariaDBRepository(db)
+
+		sec, err := repo.Update(context.Background(), &mockProduct)
+		assert.NoError(t, err)
+
+		assert.Equal(t, &mockProduct, sec)
 	})
 }
