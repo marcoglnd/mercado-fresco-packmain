@@ -156,7 +156,7 @@ func TestUpdate(t *testing.T) {
 			"Update",
 			mock.Anything,
 			mock.Anything,
-		).Return(nil,  errors.New("failed to retrieve product")).Once()
+		).Return(nil, errors.New("failed to retrieve product")).Once()
 
 		service := NewService(mockProductsRepo)
 		product, err := service.Update(
@@ -164,6 +164,42 @@ func TestUpdate(t *testing.T) {
 		)
 		assert.Error(t, err)
 		assert.Empty(t, product)
+
+		mockProductsRepo.AssertExpectations(t)
+	})
+}
+
+func TestDelete(t *testing.T) {
+	mockProductsRepo := mocks.NewService(t)
+
+	mockProduct := utils.CreateRandomProduct()
+
+	t.Run("Delete in case of success", func(t *testing.T) {
+		mockProductsRepo.On("Delete",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(nil).Once()
+
+		service := NewService(mockProductsRepo)
+
+		err := service.Delete(
+			context.Background(), mockProduct.Id,
+		)
+		assert.NoError(t, err)
+		mockProductsRepo.AssertExpectations(t)
+
+	})
+
+	t.Run("Delete in case of error", func(t *testing.T) {
+		mockProductsRepo.On("Delete",
+			mock.Anything, mock.AnythingOfType("int64"),
+		).Return(errors.New("product's ID not founded")).Once()
+
+		service := NewService(mockProductsRepo)
+
+		err := service.Delete(context.Background(), mockProduct.Id)
+
+		assert.Error(t, err)
 
 		mockProductsRepo.AssertExpectations(t)
 	})
