@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/marcoglnd/mercado-fresco-packmain/internal/employees"
 )
 
 type requestEmployee struct {
