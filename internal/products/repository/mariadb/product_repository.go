@@ -232,3 +232,25 @@ func (r *repository) GetProductRecords(ctx context.Context, id int64) (*domain.P
 
 	return &record, nil
 }
+
+func (r *repository) GetQtyOfRecords(ctx context.Context, id int64) (*domain.QtyOfRecords, error) {
+	row := r.db.QueryRowContext(ctx, sqlGetQtyOfRecords, id)
+
+	report := domain.QtyOfRecords{}
+
+	err := row.Scan(
+		&report.ProductId,
+		&report.Description,
+		&report.RecordsCount,
+
+	)
+	if errors.Is(err, sql.ErrNoRows) {
+		return &report, domain.ErrIDNotFound
+	}
+
+	if err != nil {
+		return &report, err
+	}
+
+	return &report, nil
+}

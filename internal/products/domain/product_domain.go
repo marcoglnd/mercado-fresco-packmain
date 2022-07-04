@@ -28,6 +28,8 @@ type Repository interface {
 
 	CreateProductRecords(ctx context.Context, record *ProductRecords) (int64, error)
 	GetProductRecords(ctx context.Context, id int64) (*ProductRecords, error)
+
+	GetQtyOfRecords(ctx context.Context, id int64) (*QtyOfRecords, error)
 }
 
 type Service interface {
@@ -39,6 +41,8 @@ type Service interface {
 
 	CreateProductRecords(ctx context.Context, record *ProductRecords) (int64, error)
 	GetProductRecords(ctx context.Context, id int64) (*ProductRecords, error)
+
+	GetQtyOfRecords(ctx context.Context, id int64) (*QtyOfRecords, error)
 }
 
 type RequestProducts struct {
@@ -74,14 +78,24 @@ type RequestProductsUpdated struct {
 }
 
 type ProductRecords struct {
-	LastUpdateDate string `json:"last_update_date"`
-	PurchasePrice float64 `json:"purchase_price"`
-	SalePrice     float64 `json:"sale_price"`
-	ProductId     int64 `json:"product_id"`
+	LastUpdateDate string  `json:"last_update_date"`
+	PurchasePrice  float64 `json:"purchase_price"`
+	SalePrice      float64 `json:"sale_price"`
+	ProductId      int64   `json:"product_id"`
 }
 
 type RequestProductRecords struct {
 	PurchasePrice float64 `json:"purchase_price"`
 	SalePrice     float64 `json:"sale_price"`
-	ProductId     int64 `json:"product_id"`
+	ProductId     int64   `json:"product_id"`
+}
+
+type RequestProductRecordId struct {
+	Id int64 `form:"id" binding:"required,min=1"`
+}
+
+type QtyOfRecords struct {
+	ProductId    int64  `json:"product_id"`
+	Description  string `json:"description"`
+	RecordsCount int64  `json:"records_count"`
 }

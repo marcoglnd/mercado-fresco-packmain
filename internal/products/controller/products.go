@@ -218,3 +218,19 @@ func (c *Controller) CreateProductRecords() gin.HandlerFunc {
 		ctx.JSON(http.StatusCreated, record)
 	}
 }
+
+func (c *Controller) GetQtyOfRecords() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req domain.RequestProductRecordId
+		if err := ctx.ShouldBindQuery(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		product, err := c.service.GetQtyOfRecords(ctx.Request.Context(), req.Id)
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "invalid id"})
+			return
+		}
+		ctx.JSON(http.StatusOK, product)
+	}
+}

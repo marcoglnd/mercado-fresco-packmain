@@ -23,5 +23,6 @@ func productsRouter(superRouter *gin.RouterGroup, conn *sql.DB) {
 		pr.POST("/", controller.CreateNewProduct())
 		pr.PATCH("/:id", controller.Update())
 		pr.DELETE("/:id", controller.Delete())
+		pr.GET("/reportRecords", controller.GetQtyOfRecords())
 	}
 }

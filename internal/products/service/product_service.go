@@ -124,3 +124,12 @@ func (s *service) GetProductRecords(ctx context.Context, id int64) (*domain.Prod
 	}
 	return newRecord, nil
 }
+
+func (s service) GetQtyOfRecords(ctx context.Context, id int64) (*domain.QtyOfRecords, error) {
+	report, err := s.repository.GetQtyOfRecords(ctx, id)
+	if err != nil {
+		return report, err
+	}
+
+	return report, nil
+}
