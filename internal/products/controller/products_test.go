@@ -245,6 +245,116 @@ func TestGetById(t *testing.T) {
 	})
 }
 
+func TestUpdate(t *testing.T) {
+	mockProduct := utils.CreateRandomProduct()
+
+	productsServiceMock := mocks.NewService(t)
+
+	t.Run("success", func(t *testing.T) {
+
+		productsServiceMock.On("Update",
+			mock.Anything,
+			mock.Anything,
+		).Return(&mockProduct, nil).Once()
+
+		payload, err := json.Marshal(mockProduct)
+		assert.NoError(t, err)
+
+		PATH := fmt.Sprintf("/api/v1/products/%v", mockProduct.Id)
+		req := httptest.NewRequest(http.MethodPatch, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		productController := Controller{service: productsServiceMock}
+
+		engine.PATCH("/api/v1/products/:id", productController.Update())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+
+		productsServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("In case of unprocessable entity", func(t *testing.T) {
+		productsServiceMock.On("Update",
+			mock.Anything,
+			mock.Anything,
+		).Return(&mockProduct, errors.New("unprocessable entity")).Maybe()
+
+		PATH := fmt.Sprintf("/api/v1/products/%v", mockProduct.Id)
+		req := httptest.NewRequest(http.MethodPatch, PATH, nil)
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		productController := Controller{service: productsServiceMock}
+
+		engine.PATCH("/api/v1/products/:id", productController.Update())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusUnprocessableEntity, rec.Code)
+
+		productsServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("In case of invalid product id", func(t *testing.T) {
+		mockProductBad := &domain.Product{}
+
+		productsServiceMock.On("Update",
+			mock.Anything,
+			mock.Anything,
+		).Return(mockProductBad, errors.New("bad request")).Maybe()
+
+		payload, err := json.Marshal(mockProductBad)
+		assert.NoError(t, err)
+
+		PATH := fmt.Sprintf("/api/v1/products/%v", "a")
+		req := httptest.NewRequest(http.MethodPatch, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		productController := Controller{service: productsServiceMock}
+
+		engine.PATCH("/api/v1/products/:id", productController.Update())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusBadRequest, rec.Code)
+
+		productsServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("In case of nonexisting product", func(t *testing.T) {
+		productsServiceMock.On("Update",
+			mock.Anything,
+			mock.Anything,
+		).Return(nil, errors.New("expected not found error")).Maybe()
+
+		payload, err := json.Marshal(mockProduct)
+		assert.NoError(t, err)
+
+		PATH := fmt.Sprintf("/api/v1/products/%v", utils.RandomInt64())
+		req := httptest.NewRequest(http.MethodPatch, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		productController := Controller{service: productsServiceMock}
+
+		engine.PATCH("/api/v1/products/:id", productController.Update())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusNotFound, rec.Code)
+
+		productsServiceMock.AssertExpectations(t)
+	})
+}
+
 func TestDelete(t *testing.T) {
 	mockProduct := utils.CreateRandomProduct()
 

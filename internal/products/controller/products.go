@@ -52,8 +52,6 @@ func (c *Controller) GetAll() gin.HandlerFunc {
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products/{id} [get]
 
-
-
 func (c *Controller) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req domain.RequestProductId
@@ -136,6 +134,7 @@ func (c *Controller) Update() gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 			return
 		}
+
 		product, err := c.service.Update(
 			ctx.Request.Context(),
 			&domain.Product{
