@@ -97,6 +97,23 @@ func (c EmployeeController) Create() gin.HandlerFunc {
 			return
 		}
 
+		if req.CardNumberId == "" {
+			ctx.JSON(http.StatusUnprocessableEntity, domain.CardNumberIdIsRequired)
+			return
+		}
+		if req.FirstName == "" {
+			ctx.JSON(http.StatusUnprocessableEntity, domain.FirstNameIsRequired)
+			return
+		}
+		if req.LastName == "" {
+			ctx.JSON(http.StatusUnprocessableEntity, domain.LastNameIsRequired)
+			return
+		}
+		if req.WarehouseId < 0 {
+			ctx.JSON(http.StatusUnprocessableEntity, domain.WarehouseIdCannotBeNegative)
+			return
+		}
+
 		employee, err := c.service.Create(ctx, &domain.Employee{
 			CardNumberId: req.CardNumberId,
 			FirstName:    req.FirstName,
@@ -135,6 +152,23 @@ func (c EmployeeController) Update() gin.HandlerFunc {
 		var req requestEmployee
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		if req.CardNumberId == "" {
+			ctx.JSON(http.StatusUnprocessableEntity, domain.CardNumberIdIsRequired)
+			return
+		}
+		if req.FirstName == "" {
+			ctx.JSON(http.StatusUnprocessableEntity, domain.FirstNameIsRequired)
+			return
+		}
+		if req.LastName == "" {
+			ctx.JSON(http.StatusUnprocessableEntity, domain.LastNameIsRequired)
+			return
+		}
+		if req.WarehouseId < 0 {
+			ctx.JSON(http.StatusUnprocessableEntity, domain.WarehouseIdCannotBeNegative)
 			return
 		}
 
