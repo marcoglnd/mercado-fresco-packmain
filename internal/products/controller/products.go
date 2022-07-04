@@ -30,7 +30,7 @@ func (c *Controller) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		data, err := c.service.GetAll(ctx.Request.Context())
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{
+			ctx.JSON(http.StatusInternalServerError, gin.H{
 				"error": err.Error(),
 			})
 			return
