@@ -88,7 +88,6 @@ func (c EmployeeController) GetById() gin.HandlerFunc {
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
 // @Router /employees [post]
-
 func (c EmployeeController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -124,7 +123,6 @@ func (c EmployeeController) Create() gin.HandlerFunc {
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /employees/{id} [patch]
-
 func (c EmployeeController) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 

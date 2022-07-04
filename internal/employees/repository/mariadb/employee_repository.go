@@ -46,7 +46,7 @@ func (m mariadbRepository) GetAll(ctx context.Context) (*[]domain.Employee, erro
 	return &employees, nil
 }
 
-func (m mariadbRepository) GetById(ctx context.Context, id int64) (*domain.Employee, error) {
+func (m mariadbRepository) GetById(ctx context.Context, id int) (*domain.Employee, error) {
 
 	row := m.db.QueryRowContext(ctx, queryGetById, id)
 
@@ -93,7 +93,7 @@ func (m mariadbRepository) Create(ctx context.Context, employee *domain.Employee
 		return &newEmployee, err
 	}
 
-	newEmployee.ID = lastId
+	newEmployee.ID = int(lastId)
 
 	return &newEmployee, nil
 }
@@ -124,7 +124,7 @@ func (m mariadbRepository) Update(ctx context.Context, employee *domain.Employee
 	return &newEmployee, nil
 }
 
-func (m mariadbRepository) Delete(ctx context.Context, id int64) error {
+func (m mariadbRepository) Delete(ctx context.Context, id int) error {
 	result, err := m.db.ExecContext(ctx, queryDelete, id)
 	if err != nil {
 		return err

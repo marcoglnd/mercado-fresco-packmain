@@ -24,7 +24,7 @@ func (e employeeService) GetAll(ctx context.Context) (*[]domain.Employee, error)
 	return employees, nil
 }
 
-func (e employeeService) GetById(ctx context.Context, id int64) (*domain.Employee, error) {
+func (e employeeService) GetById(ctx context.Context, id int) (*domain.Employee, error) {
 	employee, err := e.repository.GetById(ctx, id)
 
 	if err != nil {
@@ -54,7 +54,7 @@ func (e employeeService) Update(ctx context.Context, employee *domain.Employee) 
 	return employee, nil
 }
 
-func (e employeeService) Delete(ctx context.Context, id int64) error {
+func (e employeeService) Delete(ctx context.Context, id int) error {
 	err := e.repository.Delete(ctx, id)
 
 	if err != nil {
