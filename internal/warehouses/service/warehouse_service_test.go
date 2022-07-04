@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"testing"
 
@@ -32,6 +33,27 @@ func TestCreateOk(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, warehouse)
 	assert.Equal(t, warehouseFake, warehouse)
+}
+
+func TestCreateFail(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	repositoryMock := mock.NewMockWarehouseRepository(ctrl)
+	service := service.NewWarehouseService(repositoryMock)
+	ctx := context.TODO()
+	warehouseFake := &domain.Warehouse{
+		WarehouseCode:      "IBC",
+		Address:            "Rua Sao Paulo",
+		Telephone:          "1130304040",
+		MinimumCapacity:    3,
+		MinimumTemperature: 10,
+	}
+	repositoryMock.EXPECT().FindByWarehouseCode(ctx, "IBC").Return(nil, nil)
+	repositoryMock.EXPECT().Create(ctx, gomock.Any()).Return(nil, errors.New("repo error"))
+
+	warehouse, err := service.Create(ctx, warehouseFake)
+
+	assert.Nil(t, warehouse)
+	assert.NotNil(t, err)
 }
 
 func TestCreateConflict(t *testing.T) {
@@ -88,7 +110,7 @@ func TestFindByIdNonExistent(t *testing.T) {
 	repositoryMock := mock.NewMockWarehouseRepository(ctrl)
 	service := service.NewWarehouseService(repositoryMock)
 	ctx := context.TODO()
-	warehouseFakeId := 10
+	warehouseFakeId := int64(10)
 	repositoryMock.EXPECT().FindById(ctx, warehouseFakeId).Return(nil, nil)
 	warehouse, err := service.FindById(ctx, warehouseFakeId)
 
@@ -177,7 +199,7 @@ func TestDeleteNonExistent(t *testing.T) {
 	repositoryMock := mock.NewMockWarehouseRepository(ctrl)
 	service := service.NewWarehouseService(repositoryMock)
 	ctx := context.TODO()
-	warehouseFakeId := 10
+	warehouseFakeId := int64(10)
 	repositoryMock.EXPECT().FindById(ctx, warehouseFakeId).Return(nil, fmt.Errorf("id is inexistent"))
 	err := service.Delete(ctx, warehouseFakeId)
 

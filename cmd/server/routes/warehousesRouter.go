@@ -1,17 +1,17 @@
 package routes
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/marcoglnd/mercado-fresco-packmain/internal/db"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses/controller"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses/repository"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses/service"
 )
 
-func warehousesRouter(superRouter *gin.RouterGroup) {
-	repository := repository.NewWarehouseRepository(db.GetDBConnection())
+func warehousesRouter(superRouter *gin.RouterGroup, dbConnection *sql.DB) {
+	repository := repository.NewWarehouseRepository(dbConnection)
 	service := service.NewWarehouseService(repository)
 	warehouseController := controller.NewWarehouseController(service)
 

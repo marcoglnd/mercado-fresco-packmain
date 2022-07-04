@@ -108,7 +108,7 @@ func (wc *WarehouseController) GetAll() gin.HandlerFunc {
 // @Router /warehouses/{id} [get]
 func (wc *WarehouseController) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		warehouseId, err := strconv.Atoi(ctx.Param("id"))
+		warehouseId, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.AbortWithStatusJSON(
 				http.StatusBadRequest,
@@ -145,7 +145,7 @@ func (wc *WarehouseController) GetById() gin.HandlerFunc {
 // @Router /warehouses/{id} [patch]
 func (wc *WarehouseController) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		warehouseId, err := strconv.Atoi(ctx.Param("id"))
+		warehouseId, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.AbortWithStatusJSON(
 				http.StatusBadRequest,
@@ -172,6 +172,7 @@ func (wc *WarehouseController) Update() gin.HandlerFunc {
 		}
 
 		warehouse := domain.Warehouse{
+			ID:                 warehouseId,
 			WarehouseCode:      warehouseInput.WarehouseCode,
 			Address:            warehouseInput.Address,
 			Telephone:          warehouseInput.Telephone,
@@ -205,7 +206,7 @@ func (wc *WarehouseController) Update() gin.HandlerFunc {
 // @Router /warehouses/{id} [delete]
 func (wc *WarehouseController) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		warehouseId, err := strconv.Atoi(ctx.Param("id"))
+		warehouseId, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.AbortWithStatusJSON(
 				http.StatusBadRequest,

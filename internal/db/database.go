@@ -9,11 +9,11 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var DBConnection *sql.DB
+var dbConnection *sql.DB
 
 func GetDBConnection() *sql.DB {
-	if DBConnection != nil {
-		return DBConnection
+	if dbConnection != nil {
+		return dbConnection
 	}
 	err := godotenv.Load()
 	if err != nil {
@@ -26,9 +26,9 @@ func GetDBConnection() *sql.DB {
 		os.Getenv("DB_PORT"),
 		os.Getenv("DB_NAME"),
 	)
-	DBConnection, err := sql.Open("mysql", dataSource)
+	dbConnection, err := sql.Open("mysql", dataSource)
 	if err != nil {
 		log.Fatal("failed to connect to mariadb")
 	}
-	return DBConnection
+	return dbConnection
 }

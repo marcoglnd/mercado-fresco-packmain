@@ -42,7 +42,6 @@ func (s *warehouseService) IsWarehouseCodeAvailable(ctx context.Context, warehou
 }
 
 func (s *warehouseService) Update(ctx context.Context, updatedWarehouse *domain.Warehouse) (*domain.Warehouse, error) {
-
 	currentWarehouse, err := s.repository.FindById(ctx, updatedWarehouse.ID)
 	if err != nil {
 		return nil, err
@@ -84,7 +83,7 @@ func (s *warehouseService) Update(ctx context.Context, updatedWarehouse *domain.
 	return currentWarehouse, nil
 }
 
-func (s *warehouseService) FindById(ctx context.Context, id int) (*domain.Warehouse, error) {
+func (s *warehouseService) FindById(ctx context.Context, id int64) (*domain.Warehouse, error) {
 	foundWarehouse, err := s.repository.FindById(ctx, id)
 
 	if err != nil {
@@ -119,7 +118,7 @@ func (s *warehouseService) GetAll(ctx context.Context) (*[]domain.Warehouse, err
 	return warehouses, nil
 }
 
-func (s *warehouseService) Delete(ctx context.Context, id int) error {
+func (s *warehouseService) Delete(ctx context.Context, id int64) error {
 
 	if _, err := s.FindById(ctx, id); err != nil {
 		return err

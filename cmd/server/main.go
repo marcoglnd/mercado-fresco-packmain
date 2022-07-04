@@ -5,6 +5,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/routes"
 	"github.com/marcoglnd/mercado-fresco-packmain/docs"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/db"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
@@ -25,10 +26,11 @@ import (
 // @query.collection.format multi
 
 func main() {
+	dbConnection := db.GetDBConnection()
 	PATH := "/api/v1"
 	router := gin.Default()
 	routerGroup := router.Group(PATH)
-	routes.AddRoutes(routerGroup)
+	routes.AddRoutes(routerGroup, dbConnection)
 	docs.SwaggerInfo.BasePath = PATH
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run()

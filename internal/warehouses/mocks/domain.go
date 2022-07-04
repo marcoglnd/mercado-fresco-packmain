@@ -51,7 +51,7 @@ func (mr *MockWarehouseRepositoryMockRecorder) Create(ctx, warehouse interface{}
 }
 
 // Delete mocks base method.
-func (m *MockWarehouseRepository) Delete(ctx context.Context, id int) error {
+func (m *MockWarehouseRepository) Delete(ctx context.Context, id int64) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Delete", ctx, id)
 	ret0, _ := ret[0].(error)
@@ -65,7 +65,7 @@ func (mr *MockWarehouseRepositoryMockRecorder) Delete(ctx, id interface{}) *gomo
 }
 
 // FindById mocks base method.
-func (m *MockWarehouseRepository) FindById(ctx context.Context, id int) (*domain.Warehouse, error) {
+func (m *MockWarehouseRepository) FindById(ctx context.Context, id int64) (*domain.Warehouse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindById", ctx, id)
 	ret0, _ := ret[0].(*domain.Warehouse)
@@ -162,7 +162,7 @@ func (mr *MockWarehouseServiceMockRecorder) Create(ctx, warehouse interface{}) *
 }
 
 // Delete mocks base method.
-func (m *MockWarehouseService) Delete(ctx context.Context, id int) error {
+func (m *MockWarehouseService) Delete(ctx context.Context, id int64) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Delete", ctx, id)
 	ret0, _ := ret[0].(error)
@@ -176,7 +176,7 @@ func (mr *MockWarehouseServiceMockRecorder) Delete(ctx, id interface{}) *gomock.
 }
 
 // FindById mocks base method.
-func (m *MockWarehouseService) FindById(ctx context.Context, id int) (*domain.Warehouse, error) {
+func (m *MockWarehouseService) FindById(ctx context.Context, id int64) (*domain.Warehouse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindById", ctx, id)
 	ret0, _ := ret[0].(*domain.Warehouse)
