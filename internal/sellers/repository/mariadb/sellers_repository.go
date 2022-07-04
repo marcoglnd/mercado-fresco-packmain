@@ -19,7 +19,7 @@ func NewMariaDBRepository(db *sql.DB) domain.SellerRepository {
 func (m mariadbRepository) GetAll(ctx context.Context) (*[]domain.Seller, error) {
 	sellers := []domain.Seller{}
 
-	rows, err := m.db.QueryContext(ctx, "SELECT * FROM sellers")
+	rows, err := m.db.QueryContext(ctx, "SELECT id, cid, company_name, address, telephone FROM sellers")
 	if err != nil {
 		return &sellers, err
 	}

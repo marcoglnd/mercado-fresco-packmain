@@ -4,7 +4,7 @@ USE mercado_fresco;
 
 CREATE TABLE `sellers` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `cid` VARCHAR(255) NOT NULL,
+  `cid` VARCHAR(255) NOT NULL UNIQUE,
   `company_name` VARCHAR(255) NOT NULL,
   `address` VARCHAR(255) NOT NULL,
   `telephone` VARCHAR(255) NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE `products` (
   `height` decimal(19, 2) NOT NULL,
   `length` decimal(19, 2) NOT NULL,
   `net_weight` decimal(19, 2) NOT NULL,
-  `product_code` varchar(255) NOT NULL,
+  `product_code` varchar(255) NOT NULL UNIQUE,
   `recommended_freezing_temperature` decimal(19, 2) NOT NULL,
   `width` decimal(19, 2) NOT NULL,
   `product_type_id` int NOT NULL,
@@ -30,13 +30,15 @@ CREATE TABLE `warehouse` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `address` varchar(255) NOT NULL,
   `telephone` varchar(255) NOT NULL,
-  `warehouse_code` varchar(255) NOT NULL,
+  `warehouse_code` varchar(255) NOT NULL UNIQUE,
+  `minimum_capacity` int NOT NULL,
+  `minimum_temperature` DECIMAL(19,2) NOT NULL,
   `locality_id` INT NOT NULL
 );
 
 CREATE TABLE `sections` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `section_number` VARCHAR(255) NOT NULL,
+  `section_number` INT NOT NULL UNIQUE,
   `current_temperature` DECIMAL(19,2) NOT NULL,
   `minimum_temperature` DECIMAL(19,2) NOT NULL,
   `current_capacity` INT NOT NULL,
@@ -47,17 +49,17 @@ CREATE TABLE `sections` (
 
 CREATE TABLE `employee` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `card_number_id` int NOT NULL,
-  `first_name` int NOT NULL,
-  `last_name` int NOT NULL,
+  `card_number_id` VARCHAR(255) NOT NULL UNIQUE,
+  `first_name` VARCHAR(255) NOT NULL,
+  `last_name` VARCHAR(255) NOT NULL,
   `warehouse_id` int NOT NULL
 );
 
 CREATE TABLE `buyers` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `card_number_id` int NOT NULL,
-  `first_name` int NOT NULL,
-  `last_name` int NOT NULL
+  `card_number_id` int NOT NULL UNIQUE,
+  `first_name` VARCHAR(255) NOT NULL,
+  `last_name` VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE `localities` (
@@ -113,7 +115,7 @@ CREATE TABLE `order_status` (
 
 CREATE TABLE `carriers` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
-    `cid` VARCHAR(255) NOT NULL,
+    `cid` VARCHAR(255) NOT NULL UNIQUE,
     `company_name` VARCHAR(255) NOT NULL,
     `address` VARCHAR(255) NOT NULL,
     `telephone` VARCHAR(255) NOT NULL,
@@ -131,11 +133,11 @@ CREATE TABLE `inbound_orders` (
 
 CREATE TABLE `product_batches` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
-    `batch_number` VARCHAR(255) NOT NULL,
+    `batch_number` VARCHAR(255) NOT NULL UNIQUE,
     `current_quantity` INT,
     `current_temperature` DECIMAL(19,2),
     `due_date` DATETIME(6),
-    `initial_quantity` INT NOT NULL, 
+    `initial_quantity` INT NOT NULL,
     `manufacturing_date` DATETIME(6),
     `manufacturing_hour` DATETIME(6),
     `minimum_temperature` DECIMAL(19,2),
@@ -169,18 +171,6 @@ CREATE TABLE `order_details` (
     FOREIGN KEY (`product_record_id`) REFERENCES `product_records`(`id`),
     FOREIGN KEY (`purchase_order_id`) REFERENCES `purchase_orders`(`id`)
 );
-
-CREATE INDEX `sellers_index_0` ON `sellers` (`cid`);
-
-CREATE INDEX `products_index_1` ON `products` (`product_code`);
-
-CREATE INDEX `warehouse_index_2` ON `warehouse` (`warehouse_code`);
-
-CREATE INDEX `sections_index_3` ON `sections` (`section_number`);
-
-CREATE INDEX `employee_index_4` ON `employee` (`card_number_id`);
-
-CREATE INDEX `buyers_index_5` ON `buyers` (`card_number_id`);
 
 ALTER TABLE `products` ADD FOREIGN KEY (`seller_id`) REFERENCES `sellers` (`id`);
 

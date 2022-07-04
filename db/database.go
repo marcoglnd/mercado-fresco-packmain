@@ -13,10 +13,6 @@ func GetDBConnection() *sql.DB {
 	if dbConnection != nil {
 		return dbConnection
 	}
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 	dataSource := fmt.Sprintf(
 		"%s:%s@tcp(localhost:%s)/%s?parseTime=true",
 		os.Getenv("DB_USER"),
@@ -26,7 +22,7 @@ func GetDBConnection() *sql.DB {
 	)
 	dbConnection, err := sql.Open("mysql", dataSource)
 	if err != nil {
-		log.Fatal("failed to connect to mariadb")
+		log.Fatal(err)
 	}
 	return dbConnection
 }
