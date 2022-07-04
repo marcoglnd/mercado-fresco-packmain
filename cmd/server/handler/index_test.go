@@ -19,7 +19,7 @@ func createServer() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	router := gin.Default()
 	routerGroup := router.Group(getPathUrl(""))
-	routes.AddRoutes(routerGroup)
+	routes.AddRoutes(routerGroup, nil)
 
 	return router
 }

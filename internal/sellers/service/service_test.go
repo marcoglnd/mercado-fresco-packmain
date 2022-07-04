@@ -1,17 +1,17 @@
-package sellers_test
+package service
 
 import (
 	"errors"
 	"testing"
 
-	. "github.com/marcoglnd/mercado-fresco-packmain/internal/sellers"
-	"github.com/marcoglnd/mercado-fresco-packmain/internal/sellers/mocks"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/sellers/domain"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/sellers/domain/mocks"
 	"github.com/marcoglnd/mercado-fresco-packmain/utils"
 	"github.com/stretchr/testify/assert"
 )
 
-func createRandomSeller() (seller Seller) {
-	seller = Seller{
+func createRandomSeller() (seller domain.Seller) {
+	seller = domain.Seller{
 		ID:           1,
 		Cid:          utils.RandomCode(),
 		Company_name: utils.RandomCategory(),
@@ -21,7 +21,7 @@ func createRandomSeller() (seller Seller) {
 	return
 }
 
-func createRandomListSeller() (listOfSellers []Seller) {
+func createRandomListSeller() (listOfSellers []domain.Seller) {
 
 	for i := 1; i <= 5; i++ {
 		seller := createRandomSeller()
@@ -97,7 +97,7 @@ func TestGetById(t *testing.T) {
 	})
 
 	t.Run("GetById in case of error", func(t *testing.T) {
-		mock.On("GetById", 185).Return(Seller{}, errors.New("failed to retrieve seller")).Once()
+		mock.On("GetById", 185).Return(domain.Seller{}, errors.New("failed to retrieve seller")).Once()
 
 		service := NewService(mock)
 
@@ -123,7 +123,7 @@ func TestCreate(t *testing.T) {
 
 		service := NewService(mock)
 
-		var list []Seller
+		var list []domain.Seller
 
 		for _, sellerArg := range sellersArg {
 			newSeller, err := service.Create(sellerArg.Cid, sellerArg.Company_name, sellerArg.Address, sellerArg.Telephone)
@@ -156,7 +156,7 @@ func TestCreate(t *testing.T) {
 		).Return(seller1, nil).Once()
 		mock.On("Create",
 			seller2.Cid, seller2.Company_name, seller2.Address, seller2.Telephone,
-		).Return(Seller{}, expectedError).Once()
+		).Return(domain.Seller{}, expectedError).Once()
 
 		s := NewService(mock)
 		newSeller1, err := s.Create(seller1.Cid, seller1.Company_name, seller1.Address, seller1.Telephone)
@@ -214,7 +214,7 @@ func TestUpdate(t *testing.T) {
 	t.Run("Update throw an error in case of an nonexistent ID", func(t *testing.T) {
 		seller := createRandomSeller()
 
-		mock.On("Update", seller.ID, seller.Cid, seller.Company_name, seller.Address, seller.Telephone).Return(Seller{}, errors.New("failed to retrieve seller")).Once()
+		mock.On("Update", seller.ID, seller.Cid, seller.Company_name, seller.Address, seller.Telephone).Return(domain.Seller{}, errors.New("failed to retrieve seller")).Once()
 
 		service := NewService(mock)
 
@@ -234,9 +234,9 @@ func TestDelete(t *testing.T) {
 
 	t.Run("Delete in case of success", func(t *testing.T) {
 		mock.On("Create", sellerArg.Cid, sellerArg.Company_name, sellerArg.Address, sellerArg.Telephone).Return(sellerArg, nil).Once()
-		mock.On("GetAll").Return([]Seller{sellerArg}, nil).Once()
+		mock.On("GetAll").Return([]domain.Seller{sellerArg}, nil).Once()
 		mock.On("Delete", sellerArg.ID).Return(nil).Once()
-		mock.On("GetAll").Return([]Seller{}, nil).Once()
+		mock.On("GetAll").Return([]domain.Seller{}, nil).Once()
 
 		service := NewService(mock)
 

@@ -7,15 +7,18 @@ services:
     hostname: mercado-fresco
     restart: unless-stopped
     volumes:
-      - ./db/:/docker-entrypoint-initdb.d
-      - ./db/.data:/var/lib/mysql
+      - db:/docker-entrypoint-initdb.d
+      - db:/var/lib/mysql
     ports:
       - ${DB_PORT}:${DB_PORT}
     environment:
       - MARIADB_ROOT_PASSWORD=${DB_PASS}
     healthcheck:
-      test: ["CMD", "mysqladmin", "-u$DB_USER", "-p$DB_PASS", "ping", "-h", "localhost"]
+      test: [“CMD”, “mysqladmin”, “-u$DB_USER”, “-p$DB_PASS”, “ping”, “-h”, “localhost”]
       interval: 20s
       timeout: 30s
       retries: 3
-    env_file: .env
+      env_file:
+      - .env
+volumes:
+  db: 

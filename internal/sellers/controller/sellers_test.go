@@ -1,4 +1,4 @@
-package controllers_test
+package controller_test
 
 import (
 	"encoding/json"
@@ -7,8 +7,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
-	"github.com/marcoglnd/mercado-fresco-packmain/internal/sellers"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/sellers/domain"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/sellers/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -80,7 +79,7 @@ func Test_GetAllSellers_OK(t *testing.T) {
 
 	objRes := struct {
 		Code int
-		Data []sellers.Seller
+		Data []domain.Seller
 	}{}
 
 	err := json.Unmarshal(rr.Body.Bytes(), &objRes)
@@ -90,7 +89,7 @@ func Test_GetAllSellers_OK(t *testing.T) {
 }
 
 func Test_GetSellerById_existent(t *testing.T) {
-	seller := &sellers.Seller{
+	seller := &domain.Seller{
 		ID:           1,
 		Cid:          402323,
 		Company_name: "Jhon",
@@ -102,7 +101,7 @@ func Test_GetSellerById_existent(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 	ctx, engine := gin.CreateTestContext(rr)
-	ns := controllers.NewSeller(mockService)
+	ns := controller.NewSeller(mockService)
 
 	engine.GET("/api/v1/sellers/:id", ns.GetById())
 	request, err := http.NewRequest(http.MethodGet, "/api/v1/sellers/1", nil)
@@ -112,7 +111,7 @@ func Test_GetSellerById_existent(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, rr.Code)
 
-	var objRes sellers.Seller
+	var objRes domain.Seller
 
 	err = json.Unmarshal(rr.Body.Bytes(), &objRes)
 
@@ -161,7 +160,7 @@ func Test_UpdateSeller_OK(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, patch_rr.Code)
 
-	var objRes sellers.Seller
+	var objRes domain.Seller
 
 	err := json.Unmarshal(patch_rr.Body.Bytes(), &objRes)
 
@@ -207,7 +206,7 @@ func Test_DeleteSeller_OK(t *testing.T) {
 
 	objRes := struct {
 		Code int
-		Data []sellers.Seller
+		Data []domain.Seller
 	}{}
 
 	err := json.Unmarshal(get_rr.Body.Bytes(), &objRes)
@@ -230,7 +229,7 @@ func Test_DeleteSeller_OK(t *testing.T) {
 
 	secondObjRes := struct {
 		Code int
-		Data []sellers.Seller
+		Data []domain.Seller
 	}{}
 
 	json.Unmarshal(secondGet_rr.Body.Bytes(), &secondObjRes)

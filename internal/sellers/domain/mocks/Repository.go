@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	sellers "github.com/marcoglnd/mercado-fresco-packmain/internal/sellers"
+	sellers "github.com/marcoglnd/mercado-fresco-packmain/internal/sellers/domain"
 	mock "github.com/stretchr/testify/mock"
 )
 
