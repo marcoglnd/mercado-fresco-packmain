@@ -108,3 +108,11 @@ func (s service) Delete(ctx context.Context, id int64) error {
 
 	return nil
 }
+
+func (s *service) CreateProductRecords(ctx context.Context, record *domain.ProductRecords) (*domain.ProductRecords, error) {
+	newRecord, err := s.repository.CreateProductRecords(ctx, record)
+	if err != nil {
+		return newRecord, err
+	}
+	return newRecord, nil
+}

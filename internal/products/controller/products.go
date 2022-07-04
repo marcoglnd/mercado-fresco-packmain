@@ -187,3 +187,26 @@ func (c *Controller) Delete() gin.HandlerFunc {
 		ctx.JSON(http.StatusNoContent, gin.H{"data": fmt.Sprintf("product %d removed", req.Id)})
 	}
 }
+
+func (c *Controller) CreateProductRecords() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req domain.RequestProductRecords
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid inputs"})
+			return
+		}
+		product, err := c.service.CreateProductRecords(
+			ctx.Request.Context(),
+			&domain.ProductRecords{
+				PurchasePrice: req.PurchasePrice,
+				SalePrice: req.SalePrice,
+				ProductId: req.ProductId,
+			},
+		)
+		if err != nil {
+			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(http.StatusCreated, product)
+	}
+}

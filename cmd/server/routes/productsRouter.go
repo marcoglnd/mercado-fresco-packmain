@@ -5,14 +5,16 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/products/controller"
-	"github.com/marcoglnd/mercado-fresco-packmain/internal/products/service"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/products/repository/mariadb"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/products/service"
 )
 
 func productsRouter(superRouter *gin.RouterGroup, conn *sql.DB) {
 	repo := mariadb.NewMariaDBRepository(conn)
 	service := service.NewService(repo)
 	controller := controller.NewProduct(service)
+
+	superRouter.POST("/productRecords", controller.CreateProductRecords())
 
 	pr := superRouter.Group("/products")
 	{

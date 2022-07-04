@@ -10,6 +10,10 @@ import (
 
 type repository struct{ db *sql.DB }
 
+func NewMariaDBRepository(db *sql.DB) domain.Repository {
+	return &repository{db: db}
+}
+
 func (r *repository) GetAll(ctx context.Context) (*[]domain.Product, error) {
 	products := []domain.Product{}
 
@@ -118,7 +122,7 @@ func (r *repository) CreateNewProduct(ctx context.Context, product *domain.Produ
 
 func (r *repository) Update(ctx context.Context, product *domain.Product) (*domain.Product, error) {
 	newProduct := domain.Product{
-		Id: product.Id,
+		Id:                             product.Id,
 		Description:                    product.Description,
 		ExpirationRate:                 product.ExpirationRate,
 		FreezingRate:                   product.FreezingRate,
@@ -183,6 +187,35 @@ func (r *repository) Delete(ctx context.Context, id int64) error {
 	return nil
 }
 
-func NewMariaDBRepository(db *sql.DB) domain.Repository {
-	return &repository{db: db}
+func (r *repository) CreateProductRecords(ctx context.Context, record *domain.ProductRecords) (*domain.ProductRecords, error) {
+	// newRecord := domain.ProductRecords{
+	// 	PurchasePrice: record.PurchasePrice,
+	// 	SalePrice:     record.SalePrice,
+	// 	ProductId:     record.ProductId,
+	// }
+	// result, err := r.db.ExecContext(
+	// 	ctx,
+	// 	sqlCreateRecord,
+	// 	&newRecord.PurchasePrice,
+	// 	&newRecord.SalePrice,
+	// 	&newRecord.ProductId,
+	// )
+	// if err != nil {
+	// 	return &newRecord, err
+	// }
+	// insertedId, err := result.LastInsertId()
+	// if err != nil {
+	// 	return &newRecord, err
+	// }
+	// newRecordId := insertedId
+	// result, err = r.db.ExecContext(
+	// 	ctx,
+	// 	sqlGetRecord,
+	// 	newRecordId,
+	// )
+	// if err != nil {
+	// 	return &newRecord, err
+	// }
+	// return &newRecord, nil
+	return record, nil
 }

@@ -154,10 +154,10 @@ CREATE TABLE `products_types` (
 
 CREATE TABLE `product_records` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
-    `last_update_date` DATETIME(6),
-    `purchase_price` DECIMAL(19,2),
-    `sale_price` DECIMAL(19,2),
-    `product_id` INT NOT NULL,
+    `last_update_date` DATETIME(6) NOT NULL DEFAULT GETDATE(),
+    `purchase_price` DECIMAL(19,2) NOT NULL,
+    `sale_price` DECIMAL(19,2) NOT NULL,
+    `product_id` INT NOT NULL UNIQUE,
     FOREIGN KEY (`product_id`) REFERENCES `products`(`id`)
 );
 
