@@ -99,3 +99,60 @@ func TestCreateNewProduct(t *testing.T) {
 		productsServiceMock.AssertExpectations(t)
 	})
 }
+
+func TestGetAll(t *testing.T) {
+	mockProduct := utils.CreateRandomListProduct()
+
+	productsServiceMock := mocks.NewService(t)
+
+	t.Run("success", func(t *testing.T) {
+
+		productsServiceMock.On("GetAll",
+			mock.Anything,
+		).Return(&mockProduct, nil).Once()
+
+		payload, err := json.Marshal(mockProduct)
+		assert.NoError(t, err)
+
+		req := httptest.NewRequest(http.MethodGet, "/api/v1/products", bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		productController := Controller{service: productsServiceMock}
+
+		engine.GET("/api/v1/products", productController.GetAll())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+
+		productsServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("fail with unprocessable entity", func(t *testing.T) {
+		mockProductBad := &[]domain.Product{}
+
+		productsServiceMock.On("GetAll",
+			mock.Anything,
+		).Return(mockProductBad, errors.New("not found")).Maybe()
+
+		payload, err := json.Marshal(mockProductBad)
+		assert.NoError(t, err)
+
+		req := httptest.NewRequest(http.MethodGet, "/api/v1/products", bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		productController := Controller{service: productsServiceMock}
+
+		engine.GET("/api/v1/products", productController.GetAll())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusNotFound, rec.Code)
+
+		productsServiceMock.AssertExpectations(t)
+	})
+}
