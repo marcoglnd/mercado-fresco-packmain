@@ -10,7 +10,7 @@ type employeeService struct {
 	repository domain.EmployeeRepository
 }
 
-func NewEmployee(er domain.EmployeeRepository) domain.EmployeeService {
+func NewEmployeeService(er domain.EmployeeRepository) domain.EmployeeService {
 	return &employeeService{repository: er}
 }
 

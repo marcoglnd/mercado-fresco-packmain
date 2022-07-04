@@ -1,29 +1,25 @@
 package routes
 
 import (
-	"net/http"
+	"database/sql"
 
 	"github.com/gin-gonic/gin"
-	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
-	"github.com/marcoglnd/mercado-fresco-packmain/internal/employees"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/employees/controller"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/employees/repository/mariadb"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/employees/service"
 )
 
-func employeesRouter(superRouter *gin.RouterGroup) {
-	repository := employees.NewRepository()
-	service := employees.NewService(repository)
-	e := controllers.NewEmployee(service)
+func employeesRouter(superRouter *gin.RouterGroup, conn *sql.DB) {
+	repository := mariadb.NewMariaDBRepository(conn)
+	service := service.NewEmployeeService(repository)
+	controller, _ := controller.NewEmployeeController(service)
 
 	pr := superRouter.Group("/employees")
 	{
-		pr.GET("/debug", func(ctx *gin.Context) {
-			ctx.JSON(http.StatusTeapot, gin.H{
-				"debug": "is running",
-			})
-		})
-		pr.GET("/", e.GetAll())
-		pr.GET("/:id", e.GetById())
-		pr.POST("/", e.Create())
-		pr.PATCH("/:id", e.Update())
-		pr.DELETE("/:id", e.Delete())
+		pr.GET("/", controller.GetAll())
+		pr.GET("/:id", controller.GetById())
+		pr.POST("/", controller.Create())
+		pr.PATCH("/:id", controller.Update())
+		pr.DELETE("/:id", controller.Delete())
 	}
 }
