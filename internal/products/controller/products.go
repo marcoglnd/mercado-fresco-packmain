@@ -212,10 +212,10 @@ func (c *Controller) CreateProductRecords() gin.HandlerFunc {
 			recordId,
 		)
 		if err != nil {
-			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusCreated, record)
+		ctx.JSON(http.StatusOK, record)
 	}
 }
 
