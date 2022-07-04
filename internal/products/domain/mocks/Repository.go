@@ -37,6 +37,27 @@ func (_m *Repository) CreateNewProduct(ctx context.Context, product *domain.Prod
 	return r0, r1
 }
 
+// CreateProductRecords provides a mock function with given fields: ctx, record
+func (_m *Repository) CreateProductRecords(ctx context.Context, record *domain.ProductRecords) (int64, error) {
+	ret := _m.Called(ctx, record)
+
+	var r0 int64
+	if rf, ok := ret.Get(0).(func(context.Context, *domain.ProductRecords) int64); ok {
+		r0 = rf(ctx, record)
+	} else {
+		r0 = ret.Get(0).(int64)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *domain.ProductRecords) error); ok {
+		r1 = rf(ctx, record)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Delete provides a mock function with given fields: ctx, id
 func (_m *Repository) Delete(ctx context.Context, id int64) error {
 	ret := _m.Called(ctx, id)
@@ -84,6 +105,29 @@ func (_m *Repository) GetById(ctx context.Context, id int64) (*domain.Product, e
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*domain.Product)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetProductRecords provides a mock function with given fields: ctx, id
+func (_m *Repository) GetProductRecords(ctx context.Context, id int64) (*domain.ProductRecords, error) {
+	ret := _m.Called(ctx, id)
+
+	var r0 *domain.ProductRecords
+	if rf, ok := ret.Get(0).(func(context.Context, int64) *domain.ProductRecords); ok {
+		r0 = rf(ctx, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*domain.ProductRecords)
 		}
 	}
 

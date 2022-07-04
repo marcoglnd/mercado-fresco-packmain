@@ -25,7 +25,9 @@ type Repository interface {
 	CreateNewProduct(ctx context.Context, product *Product) (*Product, error)
 	Update(ctx context.Context, product *Product) (*Product, error)
 	Delete(ctx context.Context, id int64) error
-	CreateProductRecords(ctx context.Context, product *ProductRecords) (*ProductRecords, error)
+
+	CreateProductRecords(ctx context.Context, record *ProductRecords) (int64, error)
+	GetProductRecords(ctx context.Context, id int64) (*ProductRecords, error)
 }
 
 type Service interface {
@@ -34,7 +36,9 @@ type Service interface {
 	CreateNewProduct(ctx context.Context, product *Product) (*Product, error)
 	Update(ctx context.Context, product *Product) (*Product, error)
 	Delete(ctx context.Context, id int64) error
-	CreateProductRecords(ctx context.Context, product *ProductRecords) (*ProductRecords, error)
+
+	CreateProductRecords(ctx context.Context, record *ProductRecords) (int64, error)
+	GetProductRecords(ctx context.Context, id int64) (*ProductRecords, error)
 }
 
 type RequestProducts struct {
@@ -71,13 +75,13 @@ type RequestProductsUpdated struct {
 
 type ProductRecords struct {
 	LastUpdateDate string `json:"last_update_date"`
-	PurchasePrice int64 `json:"purchase_price"`
-	SalePrice     int64 `json:"sale_price"`
+	PurchasePrice float64 `json:"purchase_price"`
+	SalePrice     float64 `json:"sale_price"`
 	ProductId     int64 `json:"product_id"`
 }
 
 type RequestProductRecords struct {
-	PurchasePrice int64 `json:"purchase_price"`
-	SalePrice     int64 `json:"sale_price"`
+	PurchasePrice float64 `json:"purchase_price"`
+	SalePrice     float64 `json:"sale_price"`
 	ProductId     int64 `json:"product_id"`
 }

@@ -195,7 +195,7 @@ func (c *Controller) CreateProductRecords() gin.HandlerFunc {
 			ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid inputs"})
 			return
 		}
-		product, err := c.service.CreateProductRecords(
+		recordId, err := c.service.CreateProductRecords(
 			ctx.Request.Context(),
 			&domain.ProductRecords{
 				PurchasePrice: req.PurchasePrice,
@@ -207,6 +207,14 @@ func (c *Controller) CreateProductRecords() gin.HandlerFunc {
 			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusCreated, product)
+		record, err := c.service.GetProductRecords(
+			ctx.Request.Context(),
+			recordId,
+		)
+		if err != nil {
+			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(http.StatusCreated, record)
 	}
 }

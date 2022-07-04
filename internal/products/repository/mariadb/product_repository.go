@@ -187,35 +187,48 @@ func (r *repository) Delete(ctx context.Context, id int64) error {
 	return nil
 }
 
-func (r *repository) CreateProductRecords(ctx context.Context, record *domain.ProductRecords) (*domain.ProductRecords, error) {
-	// newRecord := domain.ProductRecords{
-	// 	PurchasePrice: record.PurchasePrice,
-	// 	SalePrice:     record.SalePrice,
-	// 	ProductId:     record.ProductId,
-	// }
-	// result, err := r.db.ExecContext(
-	// 	ctx,
-	// 	sqlCreateRecord,
-	// 	&newRecord.PurchasePrice,
-	// 	&newRecord.SalePrice,
-	// 	&newRecord.ProductId,
-	// )
-	// if err != nil {
-	// 	return &newRecord, err
-	// }
-	// insertedId, err := result.LastInsertId()
-	// if err != nil {
-	// 	return &newRecord, err
-	// }
-	// newRecordId := insertedId
-	// result, err = r.db.ExecContext(
-	// 	ctx,
-	// 	sqlGetRecord,
-	// 	newRecordId,
-	// )
-	// if err != nil {
-	// 	return &newRecord, err
-	// }
-	// return &newRecord, nil
-	return record, nil
+func (r *repository) CreateProductRecords(ctx context.Context, record *domain.ProductRecords) (int64, error) {
+	newRecord := domain.ProductRecords{
+		PurchasePrice: record.PurchasePrice,
+		SalePrice:     record.SalePrice,
+		ProductId:     record.ProductId,
+	}
+	result, err := r.db.ExecContext(
+		ctx,
+		sqlCreateRecord,
+		&newRecord.PurchasePrice,
+		&newRecord.SalePrice,
+		&newRecord.ProductId,
+	)
+	if err != nil {
+		return 0, err
+	}
+	insertedId, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+	return insertedId, nil
+}
+
+
+func (r *repository) GetProductRecords(ctx context.Context, id int64) (*domain.ProductRecords, error) {
+	row := r.db.QueryRowContext(ctx, sqlGetRecord, id)
+
+	record := domain.ProductRecords{}
+
+	err := row.Scan(
+		&record.LastUpdateDate,
+		&record.PurchasePrice,
+		&record.SalePrice,
+		&record.ProductId,
+	)
+	if errors.Is(err, sql.ErrNoRows) {
+		return &record, domain.ErrIDNotFound
+	}
+
+	if err != nil {
+		return &record, err
+	}
+
+	return &record, nil
 }
