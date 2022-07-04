@@ -1,28 +1,32 @@
-package controllers
+package controller
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/employees/domain"
 )
 
 type requestEmployee struct {
-	CardNumberId string `json:"card_number_id"`
-	FirstName    string `json:"first_name"`
-	LastName     string `json:"last_name"`
-	WarehouseId  int    `json:"warehouse_id"`
+	CardNumberId string `json:"card_number_id" binding:"required"`
+	FirstName    string `json:"first_name" binding:"required"`
+	LastName     string `json:"last_name" binding:"required"`
+	WarehouseId  int    `json:"warehouse_id" binding:"required"`
 }
 
-type Employee struct {
-	service employees.Service
+type EmployeeController struct {
+	service domain.EmployeeService
 }
 
-func NewEmployee(e employees.Service) *Employee {
-	return &Employee{
-		service: e,
+func NewEmployeeController(service domain.EmployeeService) (*EmployeeController, error) {
+	if service == nil {
+		return nil, domain.ErrInvalidService
 	}
+
+	return &EmployeeController{
+		service: service,
+	}, nil
 }
 
 // @Summary List employees
@@ -33,13 +37,15 @@ func NewEmployee(e employees.Service) *Employee {
 // @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Employee}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /employees [get]
-func (c *Employee) GetAll() gin.HandlerFunc {
+func (c EmployeeController) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		employees, err := c.service.GetAll()
+
+		employees, err := c.service.GetAll(ctx)
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
+
 		ctx.JSON(http.StatusOK, gin.H{"data": employees})
 	}
 }
@@ -54,17 +60,18 @@ func (c *Employee) GetAll() gin.HandlerFunc {
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /employees/{id} [get]
-func (c *Employee) GetById() gin.HandlerFunc {
+func (c EmployeeController) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		id := ctx.Param("id")
-		intId, err := strconv.Atoi(id)
+
+		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		employee, err := c.service.GetById(intId)
+
+		employee, err := c.service.GetById(ctx, id)
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
 		ctx.JSON(http.StatusOK, employee)
@@ -81,38 +88,27 @@ func (c *Employee) GetById() gin.HandlerFunc {
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
 // @Router /employees [post]
-func (c *Employee) Create() gin.HandlerFunc {
+
+func (c EmployeeController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		var req requestEmployee
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+			ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 			return
 		}
 
-		if req.CardNumberId == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "card_number_id is required"})
-			return
-		}
-		if req.FirstName == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "first_name is required"})
-			return
-		}
-		if req.LastName == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "last_name is required"})
-			return
-		}
-		if req.WarehouseId < 0 {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "warehouse_id cannot be negative"})
-			return
-		}
-
-		employee, err := c.service.Create(req.CardNumberId, req.FirstName, req.LastName, req.WarehouseId)
-
+		employee, err := c.service.Create(ctx, &domain.Employee{
+			CardNumberId: req.CardNumberId,
+			FirstName:    req.FirstName,
+			LastName:     req.LastName,
+			WarehouseId:  req.WarehouseId,
+		})
 		if err != nil {
-			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+			ctx.AbortWithStatusJSON(http.StatusConflict, gin.H{"error": err.Error()})
 			return
 		}
+
 		ctx.JSON(http.StatusCreated, employee)
 	}
 }
@@ -128,43 +124,34 @@ func (c *Employee) Create() gin.HandlerFunc {
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /employees/{id} [patch]
-func (c *Employee) Update() gin.HandlerFunc {
+
+func (c EmployeeController) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
 		}
 
 		var req requestEmployee
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		if req.CardNumberId == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "card_number_id is required"})
-			return
-		}
-		if req.FirstName == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "first_name is required"})
-			return
-		}
-		if req.LastName == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "last_name is required"})
-			return
-		}
-		if req.WarehouseId < 0 {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "warehouse_id cannot be negative"})
-			return
-		}
-
-		employee, err := c.service.Update(int(id), req.CardNumberId, req.FirstName, req.LastName, req.WarehouseId)
-
+		employee, err := c.service.Update(ctx, &domain.Employee{
+			ID:           id,
+			CardNumberId: req.CardNumberId,
+			FirstName:    req.FirstName,
+			LastName:     req.LastName,
+			WarehouseId:  req.WarehouseId,
+		})
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
+
 		ctx.JSON(http.StatusOK, employee)
 	}
 }
@@ -179,19 +166,21 @@ func (c *Employee) Update() gin.HandlerFunc {
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /employees/{id} [delete]
-func (c *Employee) Delete() gin.HandlerFunc {
+func (c EmployeeController) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		err = c.service.Delete(int(id))
+
+		err = c.service.Delete(ctx, id)
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusNoContent, gin.H{"data": fmt.Sprintf("Employee %d was deleted", id)})
+
+		ctx.JSON(http.StatusNoContent, nil)
 	}
 }
