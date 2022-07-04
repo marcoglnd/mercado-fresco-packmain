@@ -24,7 +24,7 @@ func (e employeeService) GetAll(ctx context.Context) (*[]domain.Employee, error)
 	return employees, nil
 }
 
-func (e employeeService) GetById(ctx context.Context, id int) (*domain.Employee, error) {
+func (e employeeService) GetById(ctx context.Context, id int64) (*domain.Employee, error) {
 	employee, err := e.repository.GetById(ctx, id)
 
 	if err != nil {
@@ -45,8 +45,29 @@ func (e employeeService) Create(ctx context.Context, employee *domain.Employee) 
 }
 
 func (e employeeService) Update(ctx context.Context, employee *domain.Employee) (*domain.Employee, error) {
-	employee, err := e.repository.Update(ctx, employee)
+	current, err := e.GetById(ctx, employee.ID)
 
+	if err != nil {
+		return employee, err
+	}
+
+	if employee.CardNumberId != "" {
+		current.CardNumberId = employee.CardNumberId
+	}
+
+	if employee.FirstName != "" {
+		current.FirstName = employee.FirstName
+	}
+
+	if employee.LastName != "" {
+		current.LastName = employee.LastName
+	}
+
+	if employee.WarehouseId > 0 {
+		current.WarehouseId = employee.WarehouseId
+	}
+
+	employee, err = e.repository.Update(ctx, current)
 	if err != nil {
 		return employee, err
 	}
@@ -54,7 +75,7 @@ func (e employeeService) Update(ctx context.Context, employee *domain.Employee) 
 	return employee, nil
 }
 
-func (e employeeService) Delete(ctx context.Context, id int) error {
+func (e employeeService) Delete(ctx context.Context, id int64) error {
 	err := e.repository.Delete(ctx, id)
 
 	if err != nil {

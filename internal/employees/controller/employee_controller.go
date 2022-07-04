@@ -12,7 +12,7 @@ type requestEmployee struct {
 	CardNumberId string `json:"card_number_id" binding:"required"`
 	FirstName    string `json:"first_name" binding:"required"`
 	LastName     string `json:"last_name" binding:"required"`
-	WarehouseId  int    `json:"warehouse_id" binding:"required"`
+	WarehouseId  int64  `json:"warehouse_id" binding:"required"`
 }
 
 type EmployeeController struct {
@@ -40,7 +40,7 @@ func NewEmployeeController(service domain.EmployeeService) (*EmployeeController,
 func (c EmployeeController) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		employees, err := c.service.GetAll(ctx)
+		employees, err := c.service.GetAll(ctx.Request.Context())
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
@@ -63,7 +63,7 @@ func (c EmployeeController) GetAll() gin.HandlerFunc {
 func (c EmployeeController) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		id, err := strconv.Atoi(ctx.Param("id"))
+		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
@@ -97,23 +97,6 @@ func (c EmployeeController) Create() gin.HandlerFunc {
 			return
 		}
 
-		if req.CardNumberId == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, domain.CardNumberIdIsRequired)
-			return
-		}
-		if req.FirstName == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, domain.FirstNameIsRequired)
-			return
-		}
-		if req.LastName == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, domain.LastNameIsRequired)
-			return
-		}
-		if req.WarehouseId < 0 {
-			ctx.JSON(http.StatusUnprocessableEntity, domain.WarehouseIdCannotBeNegative)
-			return
-		}
-
 		employee, err := c.service.Create(ctx, &domain.Employee{
 			CardNumberId: req.CardNumberId,
 			FirstName:    req.FirstName,
@@ -143,7 +126,7 @@ func (c EmployeeController) Create() gin.HandlerFunc {
 func (c EmployeeController) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		id, err := strconv.Atoi(ctx.Param("id"))
+		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
@@ -152,23 +135,6 @@ func (c EmployeeController) Update() gin.HandlerFunc {
 		var req requestEmployee
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		if req.CardNumberId == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, domain.CardNumberIdIsRequired)
-			return
-		}
-		if req.FirstName == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, domain.FirstNameIsRequired)
-			return
-		}
-		if req.LastName == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, domain.LastNameIsRequired)
-			return
-		}
-		if req.WarehouseId < 0 {
-			ctx.JSON(http.StatusUnprocessableEntity, domain.WarehouseIdCannotBeNegative)
 			return
 		}
 
@@ -201,7 +167,7 @@ func (c EmployeeController) Update() gin.HandlerFunc {
 func (c EmployeeController) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		id, err := strconv.Atoi(ctx.Param("id"))
+		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return

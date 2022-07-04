@@ -1,13 +1,13 @@
 package mariadb
 
 const (
-	sqlGetAll = `SELECT * FROM employees`
+	sqlGetAll = `SELECT * FROM mercado_fresco.employees;`
 
-	sqlGetById = `SELECT * FROM employees WHERE ID = ?`
+	sqlGetById = `SELECT * FROM mercado_fresco.employees WHERE ID = ?;`
 
-	sqlInsert = `INSERT INTO employees (card_number_id, first_name, last_name, warehouse_id) VALUES (?, ?, ?, ?)`
+	sqlInsert = "INSERT INTO mercado_fresco.employees (`card_number_id`, `first_name`, `last_name`, `warehouse_id`) VALUES (?, ?, ?, ?);"
 
-	sqlUpdate = `UPDATE employees SET card_number_id = ?, first_name = ?, last_name = ?, warehouse_id = ? WHERE ID = ?`
+	sqlUpdate = `UPDATE mercado_fresco.employees SET card_number_id = ?, first_name = ?, last_name = ?, warehouse_id = ? WHERE ID = ?;`
 
-	sqlDelete = `DELETE FROM employees WHERE id=?`
+	sqlDelete = `DELETE FROM mercado_fresco.employees WHERE id = ?;`
 )

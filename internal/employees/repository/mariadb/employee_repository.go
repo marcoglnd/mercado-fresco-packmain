@@ -17,15 +17,14 @@ func NewMariaDBRepository(db *sql.DB) domain.EmployeeRepository {
 }
 
 func (m mariadbRepository) GetAll(ctx context.Context) (*[]domain.Employee, error) {
-	rows, err := m.db.QueryContext(ctx, sqlGetAll)
+	var employees []domain.Employee
 
+	rows, err := m.db.QueryContext(ctx, sqlGetAll)
 	if err != nil {
-		return &[]domain.Employee{}, err
+		return &employees, err
 	}
 
 	defer rows.Close()
-
-	var employees []domain.Employee
 
 	for rows.Next() {
 		var employee domain.Employee
@@ -37,7 +36,7 @@ func (m mariadbRepository) GetAll(ctx context.Context) (*[]domain.Employee, erro
 			&employee.LastName,
 			&employee.WarehouseId,
 		); err != nil {
-			return &[]domain.Employee{}, err
+			return &employees, err
 		}
 
 		employees = append(employees, employee)
@@ -46,11 +45,11 @@ func (m mariadbRepository) GetAll(ctx context.Context) (*[]domain.Employee, erro
 	return &employees, nil
 }
 
-func (m mariadbRepository) GetById(ctx context.Context, id int) (*domain.Employee, error) {
+func (m mariadbRepository) GetById(ctx context.Context, id int64) (*domain.Employee, error) {
 
 	row := m.db.QueryRowContext(ctx, sqlGetById, id)
 
-	var employee domain.Employee
+	employee := domain.Employee{}
 
 	err := row.Scan(
 		&employee.ID,
@@ -74,7 +73,7 @@ func (m mariadbRepository) GetById(ctx context.Context, id int) (*domain.Employe
 }
 
 func (m mariadbRepository) Create(ctx context.Context, employee *domain.Employee) (*domain.Employee, error) {
-	var newEmployee domain.Employee
+	newEmployee := domain.Employee{}
 
 	result, err := m.db.ExecContext(ctx, sqlInsert,
 		&newEmployee.CardNumberId,
@@ -93,13 +92,13 @@ func (m mariadbRepository) Create(ctx context.Context, employee *domain.Employee
 		return &newEmployee, err
 	}
 
-	newEmployee.ID = int(lastId)
+	employee.ID = lastId
 
-	return &newEmployee, nil
+	return employee, nil
 }
 
 func (m mariadbRepository) Update(ctx context.Context, employee *domain.Employee) (*domain.Employee, error) {
-	var newEmployee domain.Employee
+	newEmployee := domain.Employee{}
 
 	result, err := m.db.ExecContext(ctx, sqlUpdate,
 		&newEmployee.CardNumberId,
@@ -108,6 +107,9 @@ func (m mariadbRepository) Update(ctx context.Context, employee *domain.Employee
 		&newEmployee.WarehouseId,
 		&newEmployee.ID,
 	)
+	if err != nil {
+		return &newEmployee, err
+	}
 
 	affectedRows, err := result.RowsAffected()
 
@@ -121,10 +123,10 @@ func (m mariadbRepository) Update(ctx context.Context, employee *domain.Employee
 		return &newEmployee, err
 	}
 
-	return &newEmployee, nil
+	return employee, nil
 }
 
-func (m mariadbRepository) Delete(ctx context.Context, id int) error {
+func (m mariadbRepository) Delete(ctx context.Context, id int64) error {
 	result, err := m.db.ExecContext(ctx, sqlDelete, id)
 	if err != nil {
 		return err
