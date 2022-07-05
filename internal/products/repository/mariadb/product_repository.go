@@ -232,8 +232,8 @@ func (r *repository) GetProductRecordsById(ctx context.Context, id int64) (*doma
 	return &record, nil
 }
 
-func (r *repository) GetQtyOfRecords(ctx context.Context, id int64) (*domain.QtyOfRecords, error) {
-	row := r.db.QueryRowContext(ctx, sqlGetQtyOfRecords, id)
+func (r *repository) GetQtyOfRecordsById(ctx context.Context, id int64) (*domain.QtyOfRecords, error) {
+	row := r.db.QueryRowContext(ctx, sqlGetQtyOfRecordsById, id)
 
 	report := domain.QtyOfRecords{}
 

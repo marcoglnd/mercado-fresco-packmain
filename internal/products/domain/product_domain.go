@@ -11,7 +11,7 @@ type Product struct {
 	FreezingRate                   int64   `json:"freezing_rate"`
 	Height                         float64 `json:"height"`
 	Length                         float64 `json:"length"`
-	NetWeight                      float64 `json:"netweight"`
+	NetWeight                      float64 `json:"net_weight"`
 	ProductCode                    string  `json:"product_code"`
 	RecommendedFreezingTemperature float64 `json:"recommended_freezing_temperature"`
 	Width                          float64 `json:"width"`
@@ -29,7 +29,7 @@ type Repository interface {
 	CreateProductRecords(ctx context.Context, record *ProductRecords) (int64, error)
 	GetProductRecordsById(ctx context.Context, id int64) (*ProductRecords, error)
 
-	GetQtyOfRecords(ctx context.Context, id int64) (*QtyOfRecords, error)
+	GetQtyOfRecordsById(ctx context.Context, id int64) (*QtyOfRecords, error)
 }
 
 type Service interface {
@@ -42,7 +42,7 @@ type Service interface {
 	CreateProductRecords(ctx context.Context, record *ProductRecords) (int64, error)
 	GetProductRecordsById(ctx context.Context, id int64) (*ProductRecords, error)
 
-	GetQtyOfRecords(ctx context.Context, id int64) (*QtyOfRecords, error)
+	GetQtyOfRecordsById(ctx context.Context, id int64) (*QtyOfRecords, error)
 }
 
 type RequestProducts struct {
@@ -51,7 +51,7 @@ type RequestProducts struct {
 	FreezingRate                   int64   `json:"freezing_rate" binding:"required"`
 	Height                         float64 `json:"height" binding:"required"`
 	Length                         float64 `json:"length" binding:"required"`
-	NetWeight                      float64 `json:"netweight" binding:"required"`
+	NetWeight                      float64 `json:"net_weight" binding:"required"`
 	ProductCode                    string  `json:"product_code" binding:"required"`
 	RecommendedFreezingTemperature float64 `json:"recommended_freezing_temperature" binding:"required"`
 	Width                          float64 `json:"width" binding:"required"`
@@ -69,7 +69,7 @@ type RequestProductsUpdated struct {
 	FreezingRate                   int64   `json:"freezing_rate"`
 	Height                         float64 `json:"height"`
 	Length                         float64 `json:"length"`
-	NetWeight                      float64 `json:"netweight"`
+	NetWeight                      float64 `json:"net_weight"`
 	ProductCode                    string  `json:"product_code"`
 	RecommendedFreezingTemperature float64 `json:"recommended_freezing_temperature"`
 	Width                          float64 `json:"width"`

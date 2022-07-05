@@ -14,13 +14,14 @@ import (
 )
 
 var (
-	queryInsertProduct  = regexp.QuoteMeta(sqlInsertProduct)
-	queryGetAllProducts = regexp.QuoteMeta(sqlGetAllProducts)
-	queryGetProductById = regexp.QuoteMeta(sqlGetProductById)
-	queryUpdateProduct  = regexp.QuoteMeta(sqlUpdateProduct)
-	queryDeleteProduct  = regexp.QuoteMeta(sqlDeleteProduct)
-	queryInsertRecord   = regexp.QuoteMeta(sqlCreateRecord)
-	queryGetRecordsById   = regexp.QuoteMeta(sqlGetRecord)
+	queryInsertProduct       = regexp.QuoteMeta(sqlInsertProduct)
+	queryGetAllProducts      = regexp.QuoteMeta(sqlGetAllProducts)
+	queryGetProductById      = regexp.QuoteMeta(sqlGetProductById)
+	queryUpdateProduct       = regexp.QuoteMeta(sqlUpdateProduct)
+	queryDeleteProduct       = regexp.QuoteMeta(sqlDeleteProduct)
+	queryInsertRecord        = regexp.QuoteMeta(sqlCreateRecord)
+	queryGetRecordsById      = regexp.QuoteMeta(sqlGetRecord)
+	queryGetQtyOfRecordsById = regexp.QuoteMeta(sqlGetQtyOfRecordsById)
 )
 
 var rowsProductStruct = []string{
@@ -43,6 +44,12 @@ var rowsProductRecordStruct = []string{
 	"purchase_price",
 	"sale_price",
 	"product_id",
+}
+
+var rowsQtyOfRecordsStruct = []string{
+	"id",
+	"description",
+	"records_count",
 }
 
 func TestCreateNewProduct(t *testing.T) {
@@ -407,7 +414,7 @@ func TestGetProductRecordsById(t *testing.T) {
 		assert.Equal(t, result, &mockProductRecords)
 	})
 
-	t.Run("fail to scan product", func(t *testing.T) {
+	t.Run("fail to scan product records", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
 		assert.NoError(t, err)
 		defer db.Close()
@@ -422,7 +429,7 @@ func TestGetProductRecordsById(t *testing.T) {
 		assert.Error(t, err)
 	})
 
-	t.Run("fail to select product", func(t *testing.T) {
+	t.Run("fail to select product records", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
 		assert.NoError(t, err)
 		defer db.Close()
@@ -432,6 +439,60 @@ func TestGetProductRecordsById(t *testing.T) {
 		productsRepo := NewMariaDBRepository(db)
 
 		_, err = productsRepo.GetProductRecordsById(context.Background(), 0)
+		assert.Error(t, err)
+	})
+}
+
+
+func TestGetQtyOfRecordsById(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mockQtyOfRecords := utils.CreateRandomQtyOfRecords()
+
+		rows := sqlmock.NewRows(rowsQtyOfRecordsStruct).AddRow(
+			mockQtyOfRecords.ProductId,
+			mockQtyOfRecords.Description,
+			mockQtyOfRecords.RecordsCount,
+		)
+
+		mock.ExpectQuery(queryGetQtyOfRecordsById).WillReturnRows(rows)
+
+		productsRepo := NewMariaDBRepository(db)
+
+		result, err := productsRepo.GetQtyOfRecordsById(context.Background(), 0)
+		assert.NoError(t, err)
+
+		assert.Equal(t, result, &mockQtyOfRecords)
+	})
+
+	t.Run("fail to scan qty Of records", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		rows := sqlmock.NewRows(rowsQtyOfRecordsStruct).AddRow("", "", "")
+
+		mock.ExpectQuery(queryGetQtyOfRecordsById).WillReturnRows(rows)
+
+		productsRepo := NewMariaDBRepository(db)
+
+		_, err = productsRepo.GetQtyOfRecordsById(context.Background(), 1)
+		assert.Error(t, err)
+	})
+
+	t.Run("fail to select qty Of records", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mock.ExpectQuery(queryGetQtyOfRecordsById).WillReturnError(sql.ErrNoRows)
+
+		productsRepo := NewMariaDBRepository(db)
+
+		_, err = productsRepo.GetQtyOfRecordsById(context.Background(), 0)
 		assert.Error(t, err)
 	})
 }

@@ -237,14 +237,14 @@ func (c *Controller) CreateProductRecords() gin.HandlerFunc {
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products/reportRecords [get]
-func (c *Controller) GetQtyOfRecords() gin.HandlerFunc {
+func (c *Controller) GetQtyOfRecordsById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req domain.RequestProductRecordId
 		if err := ctx.ShouldBindQuery(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		product, err := c.service.GetQtyOfRecords(ctx.Request.Context(), req.Id)
+		product, err := c.service.GetQtyOfRecordsById(ctx.Request.Context(), req.Id)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": "invalid id"})
 			return
