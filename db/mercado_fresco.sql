@@ -1,3 +1,4 @@
+-- Active: 1657024936523@@127.0.0.1@3306@mercado_fresco
 DROP SCHEMA IF EXISTS mercado_fresco;
 CREATE SCHEMA mercado_fresco;
 USE mercado_fresco;
@@ -47,7 +48,7 @@ CREATE TABLE `sections` (
   `product_type_id` int NOT NULL
 );
 
-CREATE TABLE `employee` (
+CREATE TABLE `employees` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `card_number_id` VARCHAR(255) NOT NULL UNIQUE,
   `first_name` VARCHAR(255) NOT NULL,
@@ -180,7 +181,7 @@ ALTER TABLE `sections` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouse` (
 
 ALTER TABLE `sections` ADD FOREIGN KEY (`product_type_id`) REFERENCES `products_types` (`id`);
 
-ALTER TABLE `employee` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouse` (`id`);
+ALTER TABLE `employees` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouse` (`id`);
 
 ALTER TABLE `warehouse` ADD FOREIGN KEY (`locality_id`) REFERENCES `localities` (`id`);
 
@@ -204,7 +205,7 @@ ALTER TABLE `purchase_orders` ADD FOREIGN KEY (`wareHouse_id`) REFERENCES `wareh
 
 ALTER TABLE `carriers` ADD FOREIGN KEY (`locality_id`) REFERENCES `localities` (`id`);
 
-ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`employe_id`) REFERENCES `employee` (`id`);
+ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`employe_id`) REFERENCES `employees` (`id`);
 
 ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`product_batch_id`) REFERENCES `product_batches` (`id`);
 
@@ -221,7 +222,7 @@ INSERT INTO `mercado_fresco`.`warehouse` (`id`, `address`, `telephone`, `warehou
 INSERT INTO `mercado_fresco`.`sections` (`id`, `section_number`, `current_temperature`, `minimum_temperature`, `current_capacity`, `maximum_capacity`, `warehouse_id`, `product_type_id`) VALUES (1, 1, 1, 1, 1, 1, 1, 1);
 INSERT INTO `mercado_fresco`.`product_batches` (`id`, `batch_number`, `current_quantity`, `current_temperature`, `due_date`, `initial_quantity`, `manufacturing_date`, `manufacturing_hour`, `minimum_temperature`, `product_id`, `section_id`) VALUES (1, '1', 1, 1, '2004-05-23T14:25:10', 1, '2004-05-23T14:25:10', '2004-05-23T14:25:10', 1, 1, 1);
 INSERT INTO `mercado_fresco`.`product_records` (`id`, `last_update_date`, `purchase_price`, `sale_price`, `product_id`) VALUES (1, '2004-05-23T14:25:10', 1, 1, 1);
-INSERT INTO `mercado_fresco`.`employee` (`id`, `card_number_id`, `first_name`, `last_name`, `warehouse_id`) VALUES (1, 'a', 'a', 'a', 1);
+INSERT INTO `mercado_fresco`.`employees` (`id`, `card_number_id`, `first_name`, `last_name`, `warehouse_id`) VALUES (1, 'a', 'a', 'a', 1);
 INSERT INTO `mercado_fresco`.`carriers` (`id`, `cid`, `company_name`, `address`, `telephone`, `locality_id`) VALUES (1, 'a', 'a', 'a', 'a', 1);
 INSERT INTO `mercado_fresco`.`order_status` (`id`, `description`) VALUES (1, 'a');
 INSERT INTO `mercado_fresco`.`buyers` (`id`, `card_number_id`, `first_name`, `last_name`) VALUES (1, 1, 'a', 'a');
