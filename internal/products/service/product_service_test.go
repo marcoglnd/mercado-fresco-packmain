@@ -13,10 +13,10 @@ import (
 )
 
 func TestCreateNewProduct(t *testing.T) {
-	mockProductsRepo := mocks.NewService(t)
-	mockProduct := utils.CreateRandomProduct()
-
 	t.Run("In case of success", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockProduct := utils.CreateRandomProduct()
+
 		mockProductsRepo.On("CreateNewProduct",
 			mock.Anything,
 			mock.Anything,
@@ -33,6 +33,9 @@ func TestCreateNewProduct(t *testing.T) {
 	})
 
 	t.Run("In case of error", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockProduct := utils.CreateRandomProduct()
+
 		mockProductsRepo.On("CreateNewProduct",
 			mock.Anything,
 			mock.Anything,
@@ -49,11 +52,10 @@ func TestCreateNewProduct(t *testing.T) {
 }
 
 func TestGetAll(t *testing.T) {
-	mockProductsRepo := mocks.NewService(t)
-
-	mockProducts := utils.CreateRandomListProduct()
-
 	t.Run("In case of success", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockProducts := utils.CreateRandomListProduct()
+
 		mockProductsRepo.On("GetAll", mock.Anything).
 			Return(&mockProducts, nil).Once()
 
@@ -68,6 +70,8 @@ func TestGetAll(t *testing.T) {
 	})
 
 	t.Run("In case of error", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+
 		mockProductsRepo.On("GetAll", mock.Anything).
 			Return(nil, errors.New("failed to retrieve products")).
 			Once()
@@ -82,11 +86,10 @@ func TestGetAll(t *testing.T) {
 }
 
 func TestGetById(t *testing.T) {
-	mockProductsRepo := mocks.NewService(t)
-
-	mockProduct := utils.CreateRandomProduct()
-
 	t.Run("In case of success", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockProduct := utils.CreateRandomProduct()
+
 		mockProductsRepo.On("GetById", mock.Anything, mock.AnythingOfType("int64")).Return(&mockProduct, nil).Once()
 
 		service := NewService(mockProductsRepo)
@@ -103,6 +106,9 @@ func TestGetById(t *testing.T) {
 	})
 
 	t.Run("In case of error", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockProduct := utils.CreateRandomProduct()
+
 		mockProductsRepo.On("GetById", mock.Anything, mock.AnythingOfType("int64")).
 			Return(nil, errors.New("failed to retrieve product")).Once()
 
@@ -118,11 +124,10 @@ func TestGetById(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	mockProductsRepo := mocks.NewService(t)
-
-	mockProduct := utils.CreateRandomProduct()
-
 	t.Run("In case of success", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockProduct := utils.CreateRandomProduct()
+
 		mockProductsRepo.On(
 			"GetById",
 			mock.Anything,
@@ -147,6 +152,9 @@ func TestUpdate(t *testing.T) {
 	})
 
 	t.Run("In case of error", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockProduct := utils.CreateRandomProduct()
+
 		mockProductsRepo.On(
 			"GetById",
 			mock.Anything,
@@ -170,11 +178,10 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	mockProductsRepo := mocks.NewService(t)
-
-	mockProduct := utils.CreateRandomProduct()
-
 	t.Run("Delete in case of success", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockProduct := utils.CreateRandomProduct()
+
 		mockProductsRepo.On("Delete",
 			mock.Anything,
 			mock.AnythingOfType("int64"),
@@ -191,6 +198,9 @@ func TestDelete(t *testing.T) {
 	})
 
 	t.Run("Delete in case of error", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockProduct := utils.CreateRandomProduct()
+
 		mockProductsRepo.On("Delete",
 			mock.Anything, mock.AnythingOfType("int64"),
 		).Return(errors.New("product's ID not founded")).Once()
@@ -206,11 +216,11 @@ func TestDelete(t *testing.T) {
 }
 
 func TestCreateProductRecords(t *testing.T) {
-	mockProductsRepo := mocks.NewService(t)
-	mockProductRecords := utils.CreateRandomProductRecords()
-	mockProductRecordsId := utils.RandomInt64()
-
 	t.Run("In case of success", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockProductRecords := utils.CreateRandomProductRecords()
+		mockProductRecordsId := utils.RandomInt64()
+
 		mockProductsRepo.On("CreateProductRecords",
 			mock.Anything,
 			mock.Anything,
@@ -227,6 +237,9 @@ func TestCreateProductRecords(t *testing.T) {
 	})
 
 	t.Run("In case of error", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockProductRecords := utils.CreateRandomProductRecords()
+
 		mockProductsRepo.On("CreateProductRecords",
 			mock.Anything,
 			mock.Anything,
@@ -243,14 +256,13 @@ func TestCreateProductRecords(t *testing.T) {
 }
 
 func TestGetProductRecordsById(t *testing.T) {
-	mockProductsRepo := mocks.NewService(t)
-
-	mockProductRecords := utils.CreateRandomProductRecords()
-	mockProductRecordsId := utils.RandomInt64()
-
 	t.Run("In case of success", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockProductRecords := utils.CreateRandomProductRecords()
+		mockProductRecordsId := utils.RandomInt64()
+
 		mockProductsRepo.On("GetProductRecordsById", mock.Anything, mock.AnythingOfType("int64")).
-		Return(&mockProductRecords, nil).Once()
+			Return(&mockProductRecords, nil).Once()
 
 		service := NewService(mockProductsRepo)
 
@@ -266,6 +278,9 @@ func TestGetProductRecordsById(t *testing.T) {
 	})
 
 	t.Run("In case of error", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockProductRecordsId := utils.RandomInt64()
+
 		mockProductsRepo.On("GetProductRecordsById", mock.Anything, mock.AnythingOfType("int64")).
 			Return(nil, errors.New("failed to retrieve product records")).Once()
 
@@ -281,14 +296,13 @@ func TestGetProductRecordsById(t *testing.T) {
 }
 
 func TestGetQtyOfRecordsById(t *testing.T) {
-	mockProductsRepo := mocks.NewService(t)
-
-	mockQtyOfRecords := utils.CreateRandomQtyOfRecords()
-	mockQtyOfRecordsId := utils.RandomInt64()
-
 	t.Run("In case of success", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockQtyOfRecords := utils.CreateRandomQtyOfRecords()
+		mockQtyOfRecordsId := utils.RandomInt64()
+
 		mockProductsRepo.On("GetQtyOfRecordsById", mock.Anything, mock.AnythingOfType("int64")).
-		Return(&mockQtyOfRecords, nil).Once()
+			Return(&mockQtyOfRecords, nil).Once()
 
 		service := NewService(mockProductsRepo)
 
@@ -304,6 +318,9 @@ func TestGetQtyOfRecordsById(t *testing.T) {
 	})
 
 	t.Run("In case of error", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockQtyOfRecordsId := utils.RandomInt64()
+
 		mockProductsRepo.On("GetQtyOfRecordsById", mock.Anything, mock.AnythingOfType("int64")).
 			Return(nil, errors.New("failed to retrieve qty of product records")).Once()
 

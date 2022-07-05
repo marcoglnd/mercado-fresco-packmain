@@ -18,11 +18,10 @@ import (
 )
 
 func TestCreateNewProduct(t *testing.T) {
-	mockProduct := utils.CreateRandomProduct()
-
-	productsServiceMock := mocks.NewService(t)
 
 	t.Run("success", func(t *testing.T) {
+		mockProduct := utils.CreateRandomProduct()
+		productsServiceMock := mocks.NewService(t)
 
 		productsServiceMock.On("CreateNewProduct",
 			mock.Anything,
@@ -49,6 +48,7 @@ func TestCreateNewProduct(t *testing.T) {
 	})
 
 	t.Run("fail with unprocessable entity", func(t *testing.T) {
+		productsServiceMock := mocks.NewService(t)
 		mockProductBad := &domain.Product{}
 
 		productsServiceMock.On("CreateNewProduct",
@@ -76,6 +76,9 @@ func TestCreateNewProduct(t *testing.T) {
 	})
 
 	t.Run("fail with status conflict", func(t *testing.T) {
+		mockProduct := utils.CreateRandomProduct()
+		productsServiceMock := mocks.NewService(t)
+
 		productsServiceMock.On("CreateNewProduct",
 			mock.Anything,
 			mock.Anything,
@@ -102,11 +105,9 @@ func TestCreateNewProduct(t *testing.T) {
 }
 
 func TestGetAll(t *testing.T) {
-	mockProduct := utils.CreateRandomListProduct()
-
-	productsServiceMock := mocks.NewService(t)
-
 	t.Run("success", func(t *testing.T) {
+		mockProduct := utils.CreateRandomListProduct()
+		productsServiceMock := mocks.NewService(t)
 
 		productsServiceMock.On("GetAll",
 			mock.Anything,
@@ -132,6 +133,7 @@ func TestGetAll(t *testing.T) {
 	})
 
 	t.Run("In case of internal server error", func(t *testing.T) {
+		productsServiceMock := mocks.NewService(t)
 		mockProductBad := &[]domain.Product{}
 
 		productsServiceMock.On("GetAll",
@@ -159,11 +161,9 @@ func TestGetAll(t *testing.T) {
 }
 
 func TestGetById(t *testing.T) {
-	mockProduct := utils.CreateRandomProduct()
-
-	productsServiceMock := mocks.NewService(t)
-
 	t.Run("success", func(t *testing.T) {
+		mockProduct := utils.CreateRandomProduct()
+		productsServiceMock := mocks.NewService(t)
 
 		productsServiceMock.On("GetById",
 			mock.Anything,
@@ -191,6 +191,7 @@ func TestGetById(t *testing.T) {
 	})
 
 	t.Run("In case of invalid product id", func(t *testing.T) {
+		productsServiceMock := mocks.NewService(t)
 		mockProductBad := &domain.Product{}
 
 		productsServiceMock.On("GetById",
@@ -219,6 +220,9 @@ func TestGetById(t *testing.T) {
 	})
 
 	t.Run("In case of nonexisting product", func(t *testing.T) {
+		mockProduct := utils.CreateRandomProduct()
+		productsServiceMock := mocks.NewService(t)
+
 		productsServiceMock.On("GetById",
 			mock.Anything,
 			mock.AnythingOfType("int64"),
@@ -246,11 +250,10 @@ func TestGetById(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	mockProduct := utils.CreateRandomProduct()
-
-	productsServiceMock := mocks.NewService(t)
 
 	t.Run("success", func(t *testing.T) {
+		mockProduct := utils.CreateRandomProduct()
+		productsServiceMock := mocks.NewService(t)
 
 		productsServiceMock.On("Update",
 			mock.Anything,
@@ -278,6 +281,9 @@ func TestUpdate(t *testing.T) {
 	})
 
 	t.Run("In case of unprocessable entity", func(t *testing.T) {
+		mockProduct := utils.CreateRandomProduct()
+		productsServiceMock := mocks.NewService(t)
+
 		productsServiceMock.On("Update",
 			mock.Anything,
 			mock.Anything,
@@ -301,6 +307,7 @@ func TestUpdate(t *testing.T) {
 	})
 
 	t.Run("In case of invalid product id", func(t *testing.T) {
+		productsServiceMock := mocks.NewService(t)
 		mockProductBad := &domain.Product{}
 
 		productsServiceMock.On("Update",
@@ -329,6 +336,9 @@ func TestUpdate(t *testing.T) {
 	})
 
 	t.Run("In case of nonexisting product", func(t *testing.T) {
+		mockProduct := utils.CreateRandomProduct()
+		productsServiceMock := mocks.NewService(t)
+
 		productsServiceMock.On("Update",
 			mock.Anything,
 			mock.Anything,
@@ -356,11 +366,10 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	mockProduct := utils.CreateRandomProduct()
-
-	productsServiceMock := mocks.NewService(t)
-
 	t.Run("success", func(t *testing.T) {
+		mockProduct := utils.CreateRandomProduct()
+		productsServiceMock := mocks.NewService(t)
+
 		productsServiceMock.On("Delete",
 			mock.Anything,
 			mock.AnythingOfType("int64"),
@@ -384,6 +393,8 @@ func TestDelete(t *testing.T) {
 	})
 
 	t.Run("In case of invalid product id", func(t *testing.T) {
+		productsServiceMock := mocks.NewService(t)
+
 		productsServiceMock.On("Delete",
 			mock.Anything,
 			mock.AnythingOfType("string"),
@@ -407,6 +418,8 @@ func TestDelete(t *testing.T) {
 	})
 
 	t.Run("In case of nonexisting product", func(t *testing.T) {
+		productsServiceMock := mocks.NewService(t)
+
 		productsServiceMock.On("Delete",
 			mock.Anything,
 			mock.AnythingOfType("int64"),
@@ -431,12 +444,10 @@ func TestDelete(t *testing.T) {
 }
 
 func TestCreateProductRecords(t *testing.T) {
-	mockProductRecords := utils.CreateRandomProductRecords()
-	mockProductRecordsId := utils.RandomInt64()
-
-	productsServiceMock := mocks.NewService(t)
-
 	t.Run("success", func(t *testing.T) {
+		productsServiceMock := mocks.NewService(t)
+		mockProductRecords := utils.CreateRandomProductRecords()
+		mockProductRecordsId := utils.RandomInt64()
 
 		productsServiceMock.On("CreateProductRecords",
 			mock.Anything,
@@ -466,19 +477,22 @@ func TestCreateProductRecords(t *testing.T) {
 		productsServiceMock.AssertExpectations(t)
 	})
 
-	t.Run("fail with status conflict", func(t *testing.T) {
+	t.Run("fail with status internal server error", func(t *testing.T) {
+		productsServiceMock := mocks.NewService(t)
+		mockProductRecords := utils.CreateRandomProductRecords()
+		mockProductRecordsId := utils.RandomInt64()
 		mockProductRecordsBad := &domain.ProductRecords{}
 
 		productsServiceMock.On("CreateProductRecords",
 			mock.Anything,
 			mock.Anything,
-		).Return(int64(0), errors.New("bad request")).Maybe().
+		).Return(mockProductRecordsId, nil).
 			On("GetProductRecordsById",
 				mock.Anything,
 				mock.AnythingOfType("int64"),
 			).Return(mockProductRecordsBad, errors.New("bad request")).Maybe()
 
-		payload, err := json.Marshal(mockProductRecordsBad)
+		payload, err := json.Marshal(mockProductRecords)
 		assert.NoError(t, err)
 
 		req := httptest.NewRequest(http.MethodPost, "/api/v1/productRecords", bytes.NewBuffer(payload))
@@ -492,12 +506,13 @@ func TestCreateProductRecords(t *testing.T) {
 
 		engine.ServeHTTP(rec, req)
 
-		assert.Equal(t, http.StatusConflict, rec.Code)
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 
 		productsServiceMock.AssertExpectations(t)
 	})
 
 	t.Run("fail with status unprocessable entity", func(t *testing.T) {
+		productsServiceMock := mocks.NewService(t)
 		mockProductRecordsBad := &domain.ProductRecords{}
 		mockProductRecordsId := utils.RandomInt64()
 
@@ -525,15 +540,46 @@ func TestCreateProductRecords(t *testing.T) {
 
 		productsServiceMock.AssertExpectations(t)
 	})
+
+	t.Run("fail with status conflict", func(t *testing.T) {
+		productsServiceMock := mocks.NewService(t)
+		mockProductRecordsBad := &domain.ProductRecords{}
+		mockProductRecords := utils.CreateRandomProductRecords()
+
+		productsServiceMock.On("CreateProductRecords",
+			mock.Anything,
+			mock.Anything,
+		).Return(int64(0), errors.New("bad request")).
+			On("GetProductRecordsById",
+				mock.Anything,
+				mock.AnythingOfType("int64"),
+			).Return(mockProductRecordsBad, errors.New("bad request")).Maybe()
+
+		payload, err := json.Marshal(mockProductRecords)
+		assert.NoError(t, err)
+
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/productRecords", bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		productController := Controller{service: productsServiceMock}
+
+		engine.POST("/api/v1/productRecords", productController.CreateProductRecords())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusConflict, rec.Code)
+
+		productsServiceMock.AssertExpectations(t)
+	})
 }
 
 func TestGetQtyOfRecordsById(t *testing.T) {
-	mockQtyOfRecords := utils.CreateRandomQtyOfRecords()
-	mockQtyOfRecordsId := utils.RandomInt64()
-
-	productsServiceMock := mocks.NewService(t)
-
 	t.Run("success", func(t *testing.T) {
+		mockQtyOfRecords := utils.CreateRandomQtyOfRecords()
+		mockQtyOfRecordsId := utils.RandomInt64()
+		productsServiceMock := mocks.NewService(t)
 
 		productsServiceMock.On("GetQtyOfRecordsById",
 			mock.Anything,
@@ -561,6 +607,7 @@ func TestGetQtyOfRecordsById(t *testing.T) {
 	})
 
 	t.Run("In case of invalid qty of records id", func(t *testing.T) {
+		productsServiceMock := mocks.NewService(t)
 		mockQtyOfRecordsBad := &domain.QtyOfRecords{}
 
 		productsServiceMock.On("GetQtyOfRecordsById",
@@ -589,6 +636,10 @@ func TestGetQtyOfRecordsById(t *testing.T) {
 	})
 
 	t.Run("In case of nonexisting qty of records", func(t *testing.T) {
+		mockQtyOfRecords := utils.CreateRandomQtyOfRecords()
+		mockQtyOfRecordsId := utils.RandomInt64()
+		productsServiceMock := mocks.NewService(t)
+
 		productsServiceMock.On("GetQtyOfRecordsById",
 			mock.Anything,
 			mock.AnythingOfType("int64"),
