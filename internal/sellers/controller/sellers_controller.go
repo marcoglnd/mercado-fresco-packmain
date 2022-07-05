@@ -85,10 +85,10 @@ func (c SellerController) GetByID() gin.HandlerFunc {
 }
 
 type requestCreate struct {
-	Cid          int64  `json:"cid"`
-	Company_name string `json:"company_name"`
-	Address      string `json:"address"`
-	Telephone    string `json:"telephone"`
+	Cid          int64  `json:"cid" binding:"required"`
+	Company_name string `json:"company_name" binding:"required"`
+	Address      string `json:"address" binding:"required"`
+	Telephone    string `json:"telephone" binding:"required"`
 }
 
 // @Summary Create seller
@@ -104,7 +104,9 @@ type requestCreate struct {
 // @Router /sellers [post]
 func (c SellerController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+
 		var req requestCreate
+
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"message": err.Error(),
@@ -127,28 +129,26 @@ func (c SellerController) Create() gin.HandlerFunc {
 
 		ctx.JSON(http.StatusCreated, seller)
 
-		// if err != nil {
-		// 	ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
-		// 	return
-		// }
-
-		// if req.Cid == 0 {
-		// 	ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "A identificação da empresa (cid) é obrigatória"})
-		// 	return
-		// }
-		// if req.Company_name == "" {
-		// 	ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O nome da empresa é obrigatório"})
-		// 	return
-		// }
-		// if req.Address == "" {
-		// 	ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O endereço da empresa é obrigatório"})
-		// 	return
-		// }
-		// if req.Telephone == "" {
-		// 	ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O telefone da empresa é obrigatório"})
-		// 	return
-		// }
-
+		if err != nil {
+			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+			return
+		}
+		if req.Cid == 0 {
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "A identificação da empresa (cid) é obrigatória"})
+			return
+		}
+		if req.Company_name == "" {
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O nome da empresa é obrigatório"})
+			return
+		}
+		if req.Address == "" {
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O endereço da empresa é obrigatório"})
+			return
+		}
+		if req.Telephone == "" {
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O telefone da empresa é obrigatório"})
+			return
+		}
 	}
 }
 
@@ -183,6 +183,7 @@ func (c *SellerController) Update() gin.HandlerFunc {
 		}
 
 		var req requestUpdate
+
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
@@ -205,29 +206,28 @@ func (c *SellerController) Update() gin.HandlerFunc {
 		}
 		ctx.JSON(http.StatusOK, seller)
 
-		// var req requestSellers
-		// if err := ctx.ShouldBindJSON(&req); err != nil {
-		// 	ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
-		// 	return
-		// }
-
-		// if req.Cid == 0 {
-		// 	ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "A identificação da empresa (cid) é obrigatória"})
-		// 	return
-		// }
-		// if req.Company_name == "" {
-		// 	ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O nome da empresa é obrigatório"})
-		// 	return
-		// }
-		// if req.Address == "" {
-		// 	ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O endereço da empresa é obrigatório"})
-		// 	return
-		// }
-		// if req.Telephone == "" {
-		// 	ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O telefone da empresa é obrigatório"})
-		// 	return
-		// }
-
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		if req.Cid == 0 {
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "A identificação da empresa (cid) é obrigatória"})
+			return
+		}
+		if req.Company_name == "" {
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O nome da empresa é obrigatório"})
+			return
+		}
+		if req.Address == "" {
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O endereço da empresa é obrigatório"})
+			return
+		}
+		if req.Telephone == "" {
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O telefone da empresa é obrigatório"})
+			return
+		}
 	}
 }
 

@@ -47,7 +47,7 @@ func (m mariadbRepository) GetAll(ctx context.Context) (*[]domain.Seller, error)
 }
 
 func (m mariadbRepository) GetByID(ctx context.Context, id int64) (*domain.Seller, error) {
-	row := m.db.QueryRowContext(ctx, "SELECT * FROM sellers WHERE ID = ?", id)
+	row := m.db.QueryRowContext(ctx, "SELECT id, cid, company_name, address, telephone FROM sellers WHERE ID = ?", id)
 
 	seller := domain.Seller{}
 
