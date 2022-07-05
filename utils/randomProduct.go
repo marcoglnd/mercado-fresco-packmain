@@ -29,3 +29,13 @@ func CreateRandomListProduct() []domain.Product {
 	}
 	return listOfProducts
 }
+
+func CreateRandomProductRecords() domain.ProductRecords {
+	records := domain.ProductRecords{
+		LastUpdateDate: RandomString(10),
+		PurchasePrice: RandomFloat64(),
+		SalePrice:     RandomFloat64(),
+		ProductId:     RandomInt64(),
+	}
+	return records
+}

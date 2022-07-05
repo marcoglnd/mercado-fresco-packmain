@@ -3,6 +3,7 @@ package mariadb
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"regexp"
 	"testing"
 
@@ -14,10 +15,11 @@ import (
 
 var (
 	queryInsertProduct  = regexp.QuoteMeta(sqlInsertProduct)
-	queryGetAllProducts  = regexp.QuoteMeta(sqlGetAllProducts)
+	queryGetAllProducts = regexp.QuoteMeta(sqlGetAllProducts)
 	queryGetProductById = regexp.QuoteMeta(sqlGetProductById)
 	queryUpdateProduct  = regexp.QuoteMeta(sqlUpdateProduct)
 	queryDeleteProduct  = regexp.QuoteMeta(sqlDeleteProduct)
+	queryInsertRecord   = regexp.QuoteMeta(sqlCreateRecord)
 )
 
 var rowsStruct = []string{
@@ -60,10 +62,10 @@ func TestCreateNewProduct(t *testing.T) {
 
 		repo := NewMariaDBRepository(db)
 
-		sec, err := repo.CreateNewProduct(context.Background(), &mockProduct)
+		product, err := repo.CreateNewProduct(context.Background(), &mockProduct)
 		assert.NoError(t, err)
 
-		assert.Equal(t, &mockProduct, sec)
+		assert.Equal(t, &mockProduct, product)
 	})
 
 	t.Run("failed to create product", func(t *testing.T) {
@@ -330,5 +332,44 @@ func TestDeleteProduct(t *testing.T) {
 		err = repo.Delete(context.Background(), mockProduct.Id)
 		assert.Error(t, err)
 		assert.Equal(t, domain.ErrIDNotFound, err)
+	})
+}
+
+func TestCreateProductRecords(t *testing.T) {
+	mockProductRecords := utils.CreateRandomProductRecords()
+
+	t.Run("success", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mock.ExpectExec(queryInsertRecord).
+			WithArgs(
+				mockProductRecords.PurchasePrice,
+				mockProductRecords.SalePrice,
+				mockProductRecords.ProductId,
+			).WillReturnResult(sqlmock.NewResult(1, 1))
+
+		repo := NewMariaDBRepository(db)
+
+		recordId, err := repo.CreateProductRecords(context.Background(), &mockProductRecords)
+		assert.NoError(t, err)
+
+		assert.True(t, fmt.Sprintf("%T", recordId) == "int64" && recordId > 0)
+	})
+
+	t.Run("failed to create product record", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mock.ExpectExec(queryInsertRecord).
+			WithArgs(0, 0, 0).
+			WillReturnResult(sqlmock.NewResult(1, 1))
+
+		repo := NewMariaDBRepository(db)
+		_, err = repo.CreateProductRecords(context.Background(), &mockProductRecords)
+
+		assert.Error(t, err)
 	})
 }
