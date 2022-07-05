@@ -11,27 +11,6 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-// func createRandomSeller() (seller domain.Seller) {
-// 	seller = domain.Seller{
-// 		ID:           1,
-// 		Cid:          utils.RandomCode(),
-// 		Company_name: utils.RandomCategory(),
-// 		Address:      utils.RandomCategory(),
-// 		Telephone:    utils.RandomCategory(),
-// 	}
-// 	return
-// }
-
-// func createRandomListSeller() (listOfSellers []domain.Seller) {
-
-// 	for i := 1; i <= 5; i++ {
-// 		seller := createRandomSeller()
-// 		seller.ID = i
-// 		listOfSellers = append(listOfSellers, seller)
-// 	}
-// 	return
-// }
-
 // func TestGetAll(t *testing.T) {
 // 	mock := new(mocks.Repository)
 
