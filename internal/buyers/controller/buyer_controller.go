@@ -19,21 +19,10 @@ type AppError struct {
 }
 
 type request struct {
-	CardNumberID string `json:"card_number_id"`
-	FirstName    string `json:"first_name"`
-	LastName     string `json:"last_name"`
+	CardNumberID string `json:"card_number_id" binding:"required"`
+	FirstName    string `json:"first_name" binding:"required"`
+	LastName     string `json:"last_name" binding:"required"`
 }
-
-// type requestUpdate struct {
-// 	SectionNumber      int64 `json:"section_number"`
-// 	CurrentTemperature int16 `json:"current_temperature"`
-// 	MinimumTemperature int16 `json:"minimum_temperature"`
-// 	CurrentCapacity    int64 `json:"current_capacity"`
-// 	MinimumCapacity    int64 `json:"minimum_capacity"`
-// 	MaximumCapacity    int64 `json:"maximum_capacity"`
-// 	WarehouseID        int64 `json:"warehouse_id"`
-// 	ProductTypeID      int64 `json:"product_type_id"`
-// }
 
 func NewBuyerController(buyer domain.BuyerService) (*BuyerController, error) {
 
