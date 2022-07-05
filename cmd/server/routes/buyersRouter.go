@@ -1,21 +1,24 @@
 package routes
 
 import (
-	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
-	"github.com/marcoglnd/mercado-fresco-packmain/internal/buyers"
+	"database/sql"
+
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/buyers/controller"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/buyers/repository/mariadb"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/buyers/service"
 
 	"github.com/gin-gonic/gin"
 )
 
-func buyersRouter(superRouter *gin.RouterGroup) {
+func buyersRouter(superRouter *gin.RouterGroup, DBConnection *sql.DB) {
 	//1. repositório
-	repository := buyers.NewRepository()
+	repository := mariadb.NewMariaDBRepository(DBConnection)
 
 	//2. serviço (regra de negócio)
-	service := buyers.NewService(repository)
+	buyerService := service.NewBuyerService(repository)
 
 	//3. controller
-	buyerController := controllers.NewBuyer(service)
+	buyerController, _ := controller.NewBuyerController(buyerService)
 	pr := superRouter.Group("/buyers")
 	{
 		pr.GET("/", buyerController.GetAll())
