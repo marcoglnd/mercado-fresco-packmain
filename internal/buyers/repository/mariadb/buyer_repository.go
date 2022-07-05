@@ -68,7 +68,43 @@ func (m mariadbRepository) GetById(ctx context.Context, id int64) (*domain.Buyer
 	return &buyer, nil
 }
 
+func (m mariadbRepository) GetByCardNumberId(
+	ctx context.Context,
+	cardNumberId string,
+) (*domain.Buyer, error) {
+	row := m.db.QueryRowContext(
+		ctx, "SELECT * FROM buyers WHERE card_number_id = ?", cardNumberId,
+	)
+
+	foundBuyer := &domain.Buyer{}
+	err := row.Scan(
+		&foundBuyer.ID,
+		&foundBuyer.CardNumberID,
+		&foundBuyer.FirstName,
+		&foundBuyer.LastName,
+	)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return foundBuyer, nil
+}
+
 func (m mariadbRepository) Create(ctx context.Context, cardNumberId, firstName, lastName string) (*domain.Buyer, error) {
+	foundBuyer, err := m.GetByCardNumberId(ctx, cardNumberId)
+	if err != nil {
+		return nil, err
+	}
+
+	if foundBuyer != nil {
+		return nil, domain.ErrDuplicatedID
+	}
+
 	var newBuyer = domain.Buyer{
 		CardNumberID: cardNumberId,
 		FirstName:    firstName,

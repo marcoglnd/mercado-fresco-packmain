@@ -97,6 +97,12 @@ func (c BuyerController) Create() gin.HandlerFunc {
 		buyer, err := c.buyer.Create(ctx, req.CardNumberID, req.FirstName, req.LastName)
 
 		if err != nil {
+			if errors.Is(err, domain.ErrDuplicatedID) {
+				ctx.JSON(http.StatusConflict, gin.H{
+					"message": err.Error(),
+				})
+				return
+			}
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"message": err.Error(),
 			})

@@ -14,6 +14,7 @@ type Buyer struct {
 type BuyerRepository interface {
 	GetAll(ctx context.Context) (*[]Buyer, error)
 	GetById(ctx context.Context, id int64) (*Buyer, error)
+	GetByCardNumberId(ctx context.Context, cardNumberId string) (*Buyer, error)
 	Create(ctx context.Context, cardNumberId, firstName, lastName string) (*Buyer, error)
 	Update(ctx context.Context, id int64, cardNumberId, firstName, lastName string) (*Buyer, error)
 	Delete(ctx context.Context, id int64) error

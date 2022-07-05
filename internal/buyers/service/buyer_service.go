@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/buyers/domain"
 )
@@ -34,17 +33,6 @@ func (s buyerService) GetById(ctx context.Context, id int64) (*domain.Buyer, err
 }
 
 func (s buyerService) Create(ctx context.Context, cardNumberId, firstName, lastName string) (*domain.Buyer, error) {
-	buyersList, err := s.repository.GetAll(ctx)
-	if err != nil {
-		return &domain.Buyer{}, err
-	}
-
-	for i := range buyersList {
-		if buyersList[i].CardNumberID == cardNumberId {
-			return Buyer{}, fmt.Errorf("CardNumberID %s do Buyer já existe", cardNumberId)
-		}
-	}
-
 	buyer, err := s.repository.Create(ctx, cardNumberId, firstName, lastName)
 	if err != nil {
 		return buyer, err
