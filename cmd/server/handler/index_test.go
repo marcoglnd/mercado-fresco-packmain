@@ -2,6 +2,7 @@ package controllers_test
 
 import (
 	"bytes"
+	"database/sql"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -19,7 +20,7 @@ func createServer() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	router := gin.Default()
 	routerGroup := router.Group(getPathUrl(""))
-	routes.AddRoutes(routerGroup)
+	routes.AddRoutes(routerGroup, &sql.DB{})
 
 	return router
 }
