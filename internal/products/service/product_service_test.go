@@ -279,3 +279,41 @@ func TestGetProductRecordsById(t *testing.T) {
 		mockProductsRepo.AssertExpectations(t)
 	})
 }
+
+func TestGetQtyOfRecordsById(t *testing.T) {
+	mockProductsRepo := mocks.NewService(t)
+
+	mockQtyOfRecords := utils.CreateRandomQtyOfRecords()
+	mockQtyOfRecordsId := utils.RandomInt64()
+
+	t.Run("In case of success", func(t *testing.T) {
+		mockProductsRepo.On("GetQtyOfRecordsById", mock.Anything, mock.AnythingOfType("int64")).
+		Return(&mockQtyOfRecords, nil).Once()
+
+		service := NewService(mockProductsRepo)
+
+		productRecords, err := service.GetQtyOfRecordsById(context.Background(), mockQtyOfRecordsId)
+
+		assert.NoError(t, err)
+		assert.NotEmpty(t, productRecords)
+
+		assert.Equal(t, &mockQtyOfRecords, productRecords)
+
+		mockProductsRepo.AssertExpectations(t)
+
+	})
+
+	t.Run("In case of error", func(t *testing.T) {
+		mockProductsRepo.On("GetQtyOfRecordsById", mock.Anything, mock.AnythingOfType("int64")).
+			Return(nil, errors.New("failed to retrieve qty of product records")).Once()
+
+		service := NewService(mockProductsRepo)
+
+		productRecords, err := service.GetQtyOfRecordsById(context.Background(), mockQtyOfRecordsId)
+
+		assert.Error(t, err)
+		assert.Empty(t, productRecords)
+
+		mockProductsRepo.AssertExpectations(t)
+	})
+}
