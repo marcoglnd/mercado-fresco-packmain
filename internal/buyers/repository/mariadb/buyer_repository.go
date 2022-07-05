@@ -55,12 +55,11 @@ func (m mariadbRepository) GetById(ctx context.Context, id int64) (*domain.Buyer
 		&buyer.FirstName,
 		&buyer.LastName,
 	)
-	// ID not found
+
 	if errors.Is(err, sql.ErrNoRows) {
 		return &buyer, domain.ErrIDNotFound
 	}
 
-	// Other errors
 	if err != nil {
 		return &buyer, err
 	}
@@ -148,12 +147,10 @@ func (m mariadbRepository) Update(ctx context.Context, id int64, cardNumberId, f
 	}
 
 	affectedRows, err := result.RowsAffected()
-	// ID not found
 	if affectedRows == 0 {
 		return &newBuyer, domain.ErrIDNotFound
 	}
 
-	// Other errors
 	if err != nil {
 		return &newBuyer, err
 	}
@@ -169,12 +166,10 @@ func (m mariadbRepository) Delete(ctx context.Context, id int64) error {
 
 	affectedRows, err := result.RowsAffected()
 
-	// ID not found
 	if affectedRows == 0 {
 		return domain.ErrIDNotFound
 	}
 
-	// Other errors
 	if err != nil {
 		return err
 	}

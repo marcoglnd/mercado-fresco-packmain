@@ -79,32 +79,32 @@ func TestCreateNewProduct(t *testing.T) {
 		buyerServiceMock.AssertExpectations(t)
 	})
 
-	// t.Run("fail with status conflict", func(t *testing.T) {
-	// 	buyerServiceMock.On("Create",
-	// 		mock.Anything,
-	// 		mock.Anything,
-	// 		mock.Anything,
-	// 		mock.Anything,
-	// 	).Return(nil, domain.ErrDuplicatedID).Maybe()
+	t.Run("fail with status conflict", func(t *testing.T) {
+		buyerServiceMock.On("Create",
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+		).Return(nil, domain.ErrDuplicatedID).Maybe()
 
-	// 	payload, err := json.Marshal(mockBuyer)
-	// 	assert.NoError(t, err)
+		payload, err := json.Marshal(mockBuyer)
+		assert.NoError(t, err)
 
-	// 	req := httptest.NewRequest(http.MethodPost, "/api/v1/buyers", bytes.NewBuffer(payload))
-	// 	rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/buyers", bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
 
-	// 	_, engine := gin.CreateTestContext(rec)
+		_, engine := gin.CreateTestContext(rec)
 
-	// 	buyerController := BuyerController{buyer: buyerServiceMock}
+		buyerController := BuyerController{buyer: buyerServiceMock}
 
-	// 	engine.POST("/api/v1/buyers", buyerController.Create())
+		engine.POST("/api/v1/buyers", buyerController.Create())
 
-	// 	engine.ServeHTTP(rec, req)
+		engine.ServeHTTP(rec, req)
 
-	// 	assert.Equal(t, http.StatusConflict, rec.Code)
+		assert.Equal(t, http.StatusConflict, rec.Code)
 
-	// 	buyerServiceMock.AssertExpectations(t)
-	// })
+		buyerServiceMock.AssertExpectations(t)
+	})
 }
 
 func TestGetAll(t *testing.T) {
