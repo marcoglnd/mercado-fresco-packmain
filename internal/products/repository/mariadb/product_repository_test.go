@@ -13,11 +13,11 @@ import (
 )
 
 var (
-	queryInsert  = regexp.QuoteMeta(sqlInsert)
-	queryGetAll  = regexp.QuoteMeta(sqlGetAll)
-	queryGetById = regexp.QuoteMeta(sqlGetById)
-	queryUpdate  = regexp.QuoteMeta(sqlUpdate)
-	queryDelete  = regexp.QuoteMeta(sqlDelete)
+	queryInsertProduct  = regexp.QuoteMeta(sqlInsertProduct)
+	queryGetAllProducts  = regexp.QuoteMeta(sqlGetAllProducts)
+	queryGetProductById = regexp.QuoteMeta(sqlGetProductById)
+	queryUpdateProduct  = regexp.QuoteMeta(sqlUpdateProduct)
+	queryDeleteProduct  = regexp.QuoteMeta(sqlDeleteProduct)
 )
 
 var rowsStruct = []string{
@@ -43,7 +43,7 @@ func TestCreateNewProduct(t *testing.T) {
 		assert.NoError(t, err)
 		defer db.Close()
 
-		mock.ExpectExec(queryInsert).
+		mock.ExpectExec(queryInsertProduct).
 			WithArgs(
 				mockProduct.Description,
 				mockProduct.ExpirationRate,
@@ -71,7 +71,7 @@ func TestCreateNewProduct(t *testing.T) {
 		assert.NoError(t, err)
 		defer db.Close()
 
-		mock.ExpectExec(queryInsert).
+		mock.ExpectExec(queryInsertProduct).
 			WithArgs(0, 0, 0, 0, 0, 0, 0, 0).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 
@@ -108,7 +108,7 @@ func TestGetAll(t *testing.T) {
 			)
 		}
 
-		mock.ExpectQuery(queryGetAll).WillReturnRows(rows)
+		mock.ExpectQuery(queryGetAllProducts).WillReturnRows(rows)
 
 		productsRepo := NewMariaDBRepository(db)
 
@@ -125,7 +125,7 @@ func TestGetAll(t *testing.T) {
 
 		rows := sqlmock.NewRows(rowsStruct).AddRow("", "", "", "", "", "", "", "", "", "", "", "")
 
-		mock.ExpectQuery(queryGetAll).WillReturnRows(rows)
+		mock.ExpectQuery(queryGetAllProducts).WillReturnRows(rows)
 
 		productsRepo := NewMariaDBRepository(db)
 
@@ -138,7 +138,7 @@ func TestGetAll(t *testing.T) {
 		assert.NoError(t, err)
 		defer db.Close()
 
-		mock.ExpectQuery(queryGetAll).WillReturnError(sql.ErrNoRows)
+		mock.ExpectQuery(queryGetAllProducts).WillReturnError(sql.ErrNoRows)
 
 		productsRepo := NewMariaDBRepository(db)
 
@@ -170,7 +170,7 @@ func TestGetById(t *testing.T) {
 			mockProduct.SellerId,
 		)
 
-		mock.ExpectQuery(queryGetById).WillReturnRows(rows)
+		mock.ExpectQuery(queryGetProductById).WillReturnRows(rows)
 
 		productsRepo := NewMariaDBRepository(db)
 
@@ -187,7 +187,7 @@ func TestGetById(t *testing.T) {
 
 		rows := sqlmock.NewRows(rowsStruct).AddRow("", "", "", "", "", "", "", "", "", "", "", "")
 
-		mock.ExpectQuery(queryGetById).WillReturnRows(rows)
+		mock.ExpectQuery(queryGetProductById).WillReturnRows(rows)
 
 		productsRepo := NewMariaDBRepository(db)
 
@@ -200,7 +200,7 @@ func TestGetById(t *testing.T) {
 		assert.NoError(t, err)
 		defer db.Close()
 
-		mock.ExpectQuery(queryGetById).WillReturnError(sql.ErrNoRows)
+		mock.ExpectQuery(queryGetProductById).WillReturnError(sql.ErrNoRows)
 
 		productsRepo := NewMariaDBRepository(db)
 
@@ -217,7 +217,7 @@ func TestUpdateProduct(t *testing.T) {
 		assert.NoError(t, err)
 		defer db.Close()
 
-		mock.ExpectExec(queryUpdate).
+		mock.ExpectExec(queryUpdateProduct).
 			WithArgs(
 				mockProduct.Description,
 				mockProduct.ExpirationRate,
@@ -246,7 +246,7 @@ func TestUpdateProduct(t *testing.T) {
 		assert.NoError(t, err)
 		defer db.Close()
 
-		mock.ExpectExec(queryUpdate).
+		mock.ExpectExec(queryUpdateProduct).
 			WithArgs(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
@@ -260,7 +260,7 @@ func TestUpdateProduct(t *testing.T) {
 		assert.NoError(t, err)
 		defer db.Close()
 
-		mock.ExpectExec(queryUpdate).
+		mock.ExpectExec(queryUpdateProduct).
 			WithArgs(
 				mockProduct.Description,
 				mockProduct.ExpirationRate,
@@ -292,7 +292,7 @@ func TestDeleteProduct(t *testing.T) {
 		assert.NoError(t, err)
 		defer db.Close()
 
-		mock.ExpectExec(queryDelete).
+		mock.ExpectExec(queryDeleteProduct).
 			WithArgs(
 				mockProduct.Id,
 			).WillReturnResult(sqlmock.NewResult(0, 1))
@@ -308,7 +308,7 @@ func TestDeleteProduct(t *testing.T) {
 		assert.NoError(t, err)
 		defer db.Close()
 
-		mock.ExpectExec(queryDelete).
+		mock.ExpectExec(queryDeleteProduct).
 			WithArgs(0).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
@@ -322,7 +322,7 @@ func TestDeleteProduct(t *testing.T) {
 		assert.NoError(t, err)
 		defer db.Close()
 
-		mock.ExpectExec(queryDelete).
+		mock.ExpectExec(queryDeleteProduct).
 			WithArgs(mockProduct.Id).
 			WillReturnResult(sqlmock.NewResult(0, 0))
 
