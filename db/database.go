@@ -13,10 +13,6 @@ func GetDBConnection() *sql.DB {
 	if dbConnection != nil {
 		return dbConnection
 	}
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 	dataSource := fmt.Sprintf(
 		"%s:%s@tcp(localhost:%s)/%s?parseTime=true",
 		os.Getenv("DB_USER"),

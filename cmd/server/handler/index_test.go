@@ -21,7 +21,6 @@ func createServer() *gin.Engine {
 	router := gin.Default()
 	routerGroup := router.Group(getPathUrl(""))
 	routes.AddRoutes(routerGroup, &sql.DB{})
-
 	return router
 }
 
