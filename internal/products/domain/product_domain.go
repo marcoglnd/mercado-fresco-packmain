@@ -85,9 +85,9 @@ type ProductRecords struct {
 }
 
 type RequestProductRecords struct {
-	PurchasePrice float64 `json:"purchase_price"`
-	SalePrice     float64 `json:"sale_price"`
-	ProductId     int64   `json:"product_id"`
+	PurchasePrice float64 `json:"purchase_price" binding:"required"`
+	SalePrice     float64 `json:"sale_price" binding:"required"`
+	ProductId     int64   `json:"product_id" binding:"required"`
 }
 
 type RequestProductRecordId struct {
