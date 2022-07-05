@@ -108,3 +108,28 @@ func (s service) Delete(ctx context.Context, id int64) error {
 
 	return nil
 }
+
+func (s *service) CreateProductRecords(ctx context.Context, record *domain.ProductRecords) (int64, error) {
+	newRecordId, err := s.repository.CreateProductRecords(ctx, record)
+	if err != nil {
+		return newRecordId, err
+	}
+	return newRecordId, nil
+}
+
+func (s *service) GetProductRecordsById(ctx context.Context, id int64) (*domain.ProductRecords, error) {
+	newRecord, err := s.repository.GetProductRecordsById(ctx, id)
+	if err != nil {
+		return newRecord, err
+	}
+	return newRecord, nil
+}
+
+func (s service) GetQtyOfRecordsById(ctx context.Context, id int64) (*domain.QtyOfRecords, error) {
+	report, err := s.repository.GetQtyOfRecordsById(ctx, id)
+	if err != nil {
+		return report, err
+	}
+
+	return report, nil
+}

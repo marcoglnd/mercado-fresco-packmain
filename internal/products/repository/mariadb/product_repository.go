@@ -10,10 +10,14 @@ import (
 
 type repository struct{ db *sql.DB }
 
+func NewMariaDBRepository(db *sql.DB) domain.Repository {
+	return &repository{db: db}
+}
+
 func (r *repository) GetAll(ctx context.Context) (*[]domain.Product, error) {
 	products := []domain.Product{}
 
-	rows, err := r.db.QueryContext(ctx, sqlGetAll)
+	rows, err := r.db.QueryContext(ctx, sqlGetAllProducts)
 	if err != nil {
 		return &products, err
 	}
@@ -47,7 +51,7 @@ func (r *repository) GetAll(ctx context.Context) (*[]domain.Product, error) {
 }
 
 func (r *repository) GetById(ctx context.Context, id int64) (*domain.Product, error) {
-	row := r.db.QueryRowContext(ctx, sqlGetById, id)
+	row := r.db.QueryRowContext(ctx, sqlGetProductById, id)
 
 	product := domain.Product{}
 
@@ -92,7 +96,7 @@ func (r *repository) CreateNewProduct(ctx context.Context, product *domain.Produ
 	}
 	result, err := r.db.ExecContext(
 		ctx,
-		sqlInsert,
+		sqlInsertProduct,
 		&newProduct.Description,
 		&newProduct.ExpirationRate,
 		&newProduct.FreezingRate,
@@ -118,7 +122,7 @@ func (r *repository) CreateNewProduct(ctx context.Context, product *domain.Produ
 
 func (r *repository) Update(ctx context.Context, product *domain.Product) (*domain.Product, error) {
 	newProduct := domain.Product{
-		Id: product.Id,
+		Id:                             product.Id,
 		Description:                    product.Description,
 		ExpirationRate:                 product.ExpirationRate,
 		FreezingRate:                   product.FreezingRate,
@@ -134,7 +138,7 @@ func (r *repository) Update(ctx context.Context, product *domain.Product) (*doma
 
 	result, err := r.db.ExecContext(
 		ctx,
-		sqlUpdate,
+		sqlUpdateProduct,
 		&newProduct.Description,
 		&newProduct.ExpirationRate,
 		&newProduct.FreezingRate,
@@ -165,7 +169,7 @@ func (r *repository) Update(ctx context.Context, product *domain.Product) (*doma
 }
 
 func (r *repository) Delete(ctx context.Context, id int64) error {
-	result, err := r.db.ExecContext(ctx, sqlDelete, id)
+	result, err := r.db.ExecContext(ctx, sqlDeleteProduct, id)
 	if err != nil {
 		return err
 	}
@@ -183,6 +187,68 @@ func (r *repository) Delete(ctx context.Context, id int64) error {
 	return nil
 }
 
-func NewMariaDBRepository(db *sql.DB) domain.Repository {
-	return &repository{db: db}
+func (r *repository) CreateProductRecords(ctx context.Context, record *domain.ProductRecords) (int64, error) {
+	newRecord := domain.ProductRecords{
+		PurchasePrice: record.PurchasePrice,
+		SalePrice:     record.SalePrice,
+		ProductId:     record.ProductId,
+	}
+	result, err := r.db.ExecContext(
+		ctx,
+		sqlCreateRecord,
+		&newRecord.PurchasePrice,
+		&newRecord.SalePrice,
+		&newRecord.ProductId,
+	)
+	if err != nil {
+		return 0, err
+	}
+	insertedId, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+	return insertedId, nil
+}
+
+func (r *repository) GetProductRecordsById(ctx context.Context, id int64) (*domain.ProductRecords, error) {
+	row := r.db.QueryRowContext(ctx, sqlGetRecord, id)
+
+	record := domain.ProductRecords{}
+
+	err := row.Scan(
+		&record.LastUpdateDate,
+		&record.PurchasePrice,
+		&record.SalePrice,
+		&record.ProductId,
+	)
+	if errors.Is(err, sql.ErrNoRows) {
+		return &record, domain.ErrIDNotFound
+	}
+
+	if err != nil {
+		return &record, err
+	}
+
+	return &record, nil
+}
+
+func (r *repository) GetQtyOfRecordsById(ctx context.Context, id int64) (*domain.QtyOfRecords, error) {
+	row := r.db.QueryRowContext(ctx, sqlGetQtyOfRecordsById, id)
+
+	report := domain.QtyOfRecords{}
+
+	err := row.Scan(
+		&report.ProductId,
+		&report.Description,
+		&report.RecordsCount,
+	)
+	if errors.Is(err, sql.ErrNoRows) {
+		return &report, domain.ErrIDNotFound
+	}
+
+	if err != nil {
+		return &report, err
+	}
+
+	return &report, nil
 }

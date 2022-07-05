@@ -29,3 +29,22 @@ func CreateRandomListProduct() []domain.Product {
 	}
 	return listOfProducts
 }
+
+func CreateRandomProductRecords() domain.ProductRecords {
+	records := domain.ProductRecords{
+		LastUpdateDate: RandomString(10),
+		PurchasePrice:  RandomFloat64(),
+		SalePrice:      RandomFloat64(),
+		ProductId:      RandomInt64(),
+	}
+	return records
+}
+
+func CreateRandomQtyOfRecords() domain.QtyOfRecords {
+	qtyOfRecords := domain.QtyOfRecords{
+		ProductId:    RandomInt64(),
+		Description:  RandomString(10),
+		RecordsCount: RandomInt64(),
+	}
+	return qtyOfRecords
+}
