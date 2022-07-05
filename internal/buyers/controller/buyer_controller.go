@@ -19,9 +19,9 @@ type AppError struct {
 }
 
 type request struct {
-	CardNumberID string `json:"card_number_id"`
-	FirstName    string `json:"first_name"`
-	LastName     string `json:"last_name"`
+	CardNumberID string `json:"card_number_id" binding:"required"`
+	FirstName    string `json:"first_name" binding:"required"`
+	LastName     string `json:"last_name" binding:"required"`
 }
 
 // type requestUpdate struct {
