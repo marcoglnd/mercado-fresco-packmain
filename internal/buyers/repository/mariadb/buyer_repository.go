@@ -19,7 +19,7 @@ func NewMariaDBRepository(db *sql.DB) domain.BuyerRepository {
 func (m mariadbRepository) GetAll(ctx context.Context) (*[]domain.Buyer, error) {
 	var buyers []domain.Buyer = []domain.Buyer{}
 
-	rows, err := m.db.QueryContext(ctx, "SELECT * FROM buyers")
+	rows, err := m.db.QueryContext(ctx, sqlGetAll)
 	if err != nil {
 		return &buyers, err
 	}
@@ -45,7 +45,7 @@ func (m mariadbRepository) GetAll(ctx context.Context) (*[]domain.Buyer, error) 
 }
 
 func (m mariadbRepository) GetById(ctx context.Context, id int64) (*domain.Buyer, error) {
-	row := m.db.QueryRowContext(ctx, "SELECT * FROM buyers WHERE ID = ?", id)
+	row := m.db.QueryRowContext(ctx, sqlGetById, id)
 
 	var buyer domain.Buyer
 
@@ -73,7 +73,7 @@ func (m mariadbRepository) GetByCardNumberId(
 	cardNumberId string,
 ) (*domain.Buyer, error) {
 	row := m.db.QueryRowContext(
-		ctx, "SELECT * FROM buyers WHERE card_number_id = ?", cardNumberId,
+		ctx, sqlGetByCardNumberId, cardNumberId,
 	)
 
 	foundBuyer := &domain.Buyer{}
@@ -96,23 +96,13 @@ func (m mariadbRepository) GetByCardNumberId(
 }
 
 func (m mariadbRepository) Create(ctx context.Context, cardNumberId, firstName, lastName string) (*domain.Buyer, error) {
-	foundBuyer, err := m.GetByCardNumberId(ctx, cardNumberId)
-	if err != nil {
-		return nil, err
-	}
-
-	if foundBuyer != nil {
-		return nil, domain.ErrDuplicatedID
-	}
-
 	var newBuyer = domain.Buyer{
 		CardNumberID: cardNumberId,
 		FirstName:    firstName,
 		LastName:     lastName,
 	}
 
-	query := `INSERT INTO buyers 
-	(card_number_id, first_name, last_name) VALUES (?, ?, ?)`
+	query := sqlInsert
 
 	result, err := m.db.ExecContext(
 		ctx,
@@ -143,8 +133,7 @@ func (m mariadbRepository) Update(ctx context.Context, id int64, cardNumberId, f
 		LastName:     lastName,
 	}
 
-	query := `UPDATE buyers SET 
-	card_number_id=?, first_name=?, last_name=? WHERE id=?`
+	query := sqlUpdate
 
 	result, err := m.db.ExecContext(
 		ctx,
@@ -173,7 +162,7 @@ func (m mariadbRepository) Update(ctx context.Context, id int64, cardNumberId, f
 }
 
 func (m mariadbRepository) Delete(ctx context.Context, id int64) error {
-	result, err := m.db.ExecContext(ctx, "DELETE FROM buyers WHERE id=?", id)
+	result, err := m.db.ExecContext(ctx, sqlDelete, id)
 	if err != nil {
 		return err
 	}

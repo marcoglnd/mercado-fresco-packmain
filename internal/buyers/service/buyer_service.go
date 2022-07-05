@@ -33,6 +33,15 @@ func (s buyerService) GetById(ctx context.Context, id int64) (*domain.Buyer, err
 }
 
 func (s buyerService) Create(ctx context.Context, cardNumberId, firstName, lastName string) (*domain.Buyer, error) {
+	foundBuyer, err := s.repository.GetByCardNumberId(ctx, cardNumberId)
+	if err != nil {
+		return nil, err
+	}
+
+	if foundBuyer != nil {
+		return nil, domain.ErrDuplicatedID
+	}
+
 	buyer, err := s.repository.Create(ctx, cardNumberId, firstName, lastName)
 	if err != nil {
 		return buyer, err
