@@ -429,3 +429,188 @@ func TestDelete(t *testing.T) {
 		productsServiceMock.AssertExpectations(t)
 	})
 }
+
+func TestCreateProductRecords(t *testing.T) {
+	mockProductRecords := utils.CreateRandomProductRecords()
+	mockProductRecordsId := utils.RandomInt64()
+
+	productsServiceMock := mocks.NewService(t)
+
+	t.Run("success", func(t *testing.T) {
+
+		productsServiceMock.On("CreateProductRecords",
+			mock.Anything,
+			mock.Anything,
+		).Return(mockProductRecordsId, nil).Once().
+			On("GetProductRecordsById",
+				mock.Anything,
+				mock.AnythingOfType("int64"),
+			).Return(&mockProductRecords, nil).Once()
+
+		payload, err := json.Marshal(mockProductRecords)
+		assert.NoError(t, err)
+
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/productRecords", bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		productController := Controller{service: productsServiceMock}
+
+		engine.POST("/api/v1/productRecords", productController.CreateProductRecords())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusCreated, rec.Code)
+
+		productsServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("fail with status conflict", func(t *testing.T) {
+		mockProductRecordsBad := &domain.ProductRecords{}
+
+		productsServiceMock.On("CreateProductRecords",
+			mock.Anything,
+			mock.Anything,
+		).Return(int64(0), errors.New("bad request")).Maybe().
+			On("GetProductRecordsById",
+				mock.Anything,
+				mock.AnythingOfType("int64"),
+			).Return(mockProductRecordsBad, errors.New("bad request")).Maybe()
+
+		payload, err := json.Marshal(mockProductRecordsBad)
+		assert.NoError(t, err)
+
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/productRecords", bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		productController := Controller{service: productsServiceMock}
+
+		engine.POST("/api/v1/productRecords", productController.CreateProductRecords())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusConflict, rec.Code)
+
+		productsServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("fail with status unprocessable entity", func(t *testing.T) {
+		mockProductRecordsBad := &domain.ProductRecords{}
+		mockProductRecordsId := utils.RandomInt64()
+
+		productsServiceMock.On("CreateProductRecords",
+			mock.Anything,
+			mock.Anything,
+		).Return(mockProductRecordsId, errors.New("bad request")).Maybe().
+			On("GetProductRecordsById",
+				mock.Anything,
+				mock.AnythingOfType("int64"),
+			).Return(mockProductRecordsBad, nil).Maybe()
+
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/productRecords", nil)
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		productController := Controller{service: productsServiceMock}
+
+		engine.POST("/api/v1/productRecords", productController.CreateProductRecords())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusUnprocessableEntity, rec.Code)
+
+		productsServiceMock.AssertExpectations(t)
+	})
+}
+
+func TestGetQtyOfRecordsById(t *testing.T) {
+	mockQtyOfRecords := utils.CreateRandomQtyOfRecords()
+	mockQtyOfRecordsId := utils.RandomInt64()
+
+	productsServiceMock := mocks.NewService(t)
+
+	t.Run("success", func(t *testing.T) {
+
+		productsServiceMock.On("GetQtyOfRecordsById",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(&mockQtyOfRecords, nil).Once()
+
+		payload, err := json.Marshal(mockQtyOfRecords)
+		assert.NoError(t, err)
+
+		PATH := fmt.Sprintf("/api/v1/products/reportRecords?id=%v", mockQtyOfRecordsId)
+		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		productController := Controller{service: productsServiceMock}
+
+		engine.GET("/api/v1/products/reportRecords", productController.GetQtyOfRecordsById())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+
+		productsServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("In case of invalid qty of records id", func(t *testing.T) {
+		mockQtyOfRecordsBad := &domain.QtyOfRecords{}
+
+		productsServiceMock.On("GetQtyOfRecordsById",
+			mock.Anything,
+			mock.AnythingOfType("string"),
+		).Return(mockQtyOfRecordsBad, errors.New("bad request")).Maybe()
+
+		payload, err := json.Marshal(mockQtyOfRecordsBad)
+		assert.NoError(t, err)
+
+		PATH := fmt.Sprintf("/api/v1/products/reportRecords?id=%v", "a")
+		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		productController := Controller{service: productsServiceMock}
+
+		engine.GET("/api/v1/products/reportRecords", productController.GetQtyOfRecordsById())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusBadRequest, rec.Code)
+
+		productsServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("In case of nonexisting qty of records", func(t *testing.T) {
+		productsServiceMock.On("GetQtyOfRecordsById",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(nil, errors.New("expected conflict error")).Maybe()
+
+		payload, err := json.Marshal(mockQtyOfRecords)
+		assert.NoError(t, err)
+
+		PATH := fmt.Sprintf("/api/v1/products/reportRecords?id=%v", mockQtyOfRecordsId)
+		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		productController := Controller{service: productsServiceMock}
+
+		engine.GET("/api/v1/products/reportRecords", productController.GetQtyOfRecordsById())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusNotFound, rec.Code)
+
+		productsServiceMock.AssertExpectations(t)
+	})
+}
