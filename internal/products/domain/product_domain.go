@@ -27,7 +27,7 @@ type Repository interface {
 	Delete(ctx context.Context, id int64) error
 
 	CreateProductRecords(ctx context.Context, record *ProductRecords) (int64, error)
-	GetProductRecords(ctx context.Context, id int64) (*ProductRecords, error)
+	GetProductRecordsById(ctx context.Context, id int64) (*ProductRecords, error)
 
 	GetQtyOfRecords(ctx context.Context, id int64) (*QtyOfRecords, error)
 }
@@ -40,7 +40,7 @@ type Service interface {
 	Delete(ctx context.Context, id int64) error
 
 	CreateProductRecords(ctx context.Context, record *ProductRecords) (int64, error)
-	GetProductRecords(ctx context.Context, id int64) (*ProductRecords, error)
+	GetProductRecordsById(ctx context.Context, id int64) (*ProductRecords, error)
 
 	GetQtyOfRecords(ctx context.Context, id int64) (*QtyOfRecords, error)
 }

@@ -207,15 +207,15 @@ func (c *Controller) CreateProductRecords() gin.HandlerFunc {
 			ctx.Request.Context(),
 			&domain.ProductRecords{
 				PurchasePrice: req.PurchasePrice,
-				SalePrice: req.SalePrice,
-				ProductId: req.ProductId,
+				SalePrice:     req.SalePrice,
+				ProductId:     req.ProductId,
 			},
 		)
 		if err != nil {
 			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 			return
 		}
-		record, err := c.service.GetProductRecords(
+		record, err := c.service.GetProductRecordsById(
 			ctx.Request.Context(),
 			recordId,
 		)

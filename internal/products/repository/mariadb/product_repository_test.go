@@ -20,9 +20,10 @@ var (
 	queryUpdateProduct  = regexp.QuoteMeta(sqlUpdateProduct)
 	queryDeleteProduct  = regexp.QuoteMeta(sqlDeleteProduct)
 	queryInsertRecord   = regexp.QuoteMeta(sqlCreateRecord)
+	queryGetRecordsById   = regexp.QuoteMeta(sqlGetRecord)
 )
 
-var rowsStruct = []string{
+var rowsProductStruct = []string{
 	"id",
 	"description",
 	"expiration_rate",
@@ -35,6 +36,13 @@ var rowsStruct = []string{
 	"width",
 	"product_type_id",
 	"seller_id",
+}
+
+var rowsProductRecordStruct = []string{
+	"last_update_date",
+	"purchase_price",
+	"sale_price",
+	"product_id",
 }
 
 func TestCreateNewProduct(t *testing.T) {
@@ -92,7 +100,7 @@ func TestGetAll(t *testing.T) {
 
 		mockProducts := utils.CreateRandomListProduct()
 
-		rows := sqlmock.NewRows(rowsStruct)
+		rows := sqlmock.NewRows(rowsProductStruct)
 		for _, mockProduct := range mockProducts {
 			rows.AddRow(
 				mockProduct.Id,
@@ -125,7 +133,7 @@ func TestGetAll(t *testing.T) {
 		assert.NoError(t, err)
 		defer db.Close()
 
-		rows := sqlmock.NewRows(rowsStruct).AddRow("", "", "", "", "", "", "", "", "", "", "", "")
+		rows := sqlmock.NewRows(rowsProductStruct).AddRow("", "", "", "", "", "", "", "", "", "", "", "")
 
 		mock.ExpectQuery(queryGetAllProducts).WillReturnRows(rows)
 
@@ -157,7 +165,7 @@ func TestGetById(t *testing.T) {
 
 		mockProduct := utils.CreateRandomProduct()
 
-		rows := sqlmock.NewRows(rowsStruct).AddRow(
+		rows := sqlmock.NewRows(rowsProductStruct).AddRow(
 			mockProduct.Id,
 			mockProduct.Description,
 			mockProduct.ExpirationRate,
@@ -187,7 +195,7 @@ func TestGetById(t *testing.T) {
 		assert.NoError(t, err)
 		defer db.Close()
 
-		rows := sqlmock.NewRows(rowsStruct).AddRow("", "", "", "", "", "", "", "", "", "", "", "")
+		rows := sqlmock.NewRows(rowsProductStruct).AddRow("", "", "", "", "", "", "", "", "", "", "", "")
 
 		mock.ExpectQuery(queryGetProductById).WillReturnRows(rows)
 
@@ -370,6 +378,60 @@ func TestCreateProductRecords(t *testing.T) {
 		repo := NewMariaDBRepository(db)
 		_, err = repo.CreateProductRecords(context.Background(), &mockProductRecords)
 
+		assert.Error(t, err)
+	})
+}
+
+func TestGetProductRecordsById(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mockProductRecords := utils.CreateRandomProductRecords()
+
+		rows := sqlmock.NewRows(rowsProductRecordStruct).AddRow(
+			mockProductRecords.LastUpdateDate,
+			mockProductRecords.PurchasePrice,
+			mockProductRecords.SalePrice,
+			mockProductRecords.ProductId,
+		)
+
+		mock.ExpectQuery(queryGetRecordsById).WillReturnRows(rows)
+
+		productsRepo := NewMariaDBRepository(db)
+
+		result, err := productsRepo.GetProductRecordsById(context.Background(), 0)
+		assert.NoError(t, err)
+
+		assert.Equal(t, result, &mockProductRecords)
+	})
+
+	t.Run("fail to scan product", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		rows := sqlmock.NewRows(rowsProductRecordStruct).AddRow("", "", "", "")
+
+		mock.ExpectQuery(queryGetRecordsById).WillReturnRows(rows)
+
+		productsRepo := NewMariaDBRepository(db)
+
+		_, err = productsRepo.GetProductRecordsById(context.Background(), 1)
+		assert.Error(t, err)
+	})
+
+	t.Run("fail to select product", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mock.ExpectQuery(queryGetRecordsById).WillReturnError(sql.ErrNoRows)
+
+		productsRepo := NewMariaDBRepository(db)
+
+		_, err = productsRepo.GetProductRecordsById(context.Background(), 0)
 		assert.Error(t, err)
 	})
 }

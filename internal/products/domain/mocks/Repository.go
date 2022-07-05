@@ -118,8 +118,8 @@ func (_m *Repository) GetById(ctx context.Context, id int64) (*domain.Product, e
 	return r0, r1
 }
 
-// GetProductRecords provides a mock function with given fields: ctx, id
-func (_m *Repository) GetProductRecords(ctx context.Context, id int64) (*domain.ProductRecords, error) {
+// GetProductRecordsById provides a mock function with given fields: ctx, id
+func (_m *Repository) GetProductRecordsById(ctx context.Context, id int64) (*domain.ProductRecords, error) {
 	ret := _m.Called(ctx, id)
 
 	var r0 *domain.ProductRecords

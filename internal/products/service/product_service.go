@@ -117,8 +117,8 @@ func (s *service) CreateProductRecords(ctx context.Context, record *domain.Produ
 	return newRecordId, nil
 }
 
-func (s *service) GetProductRecords(ctx context.Context, id int64) (*domain.ProductRecords, error) {
-	newRecord, err := s.repository.GetProductRecords(ctx, id)
+func (s *service) GetProductRecordsById(ctx context.Context, id int64) (*domain.ProductRecords, error) {
+	newRecord, err := s.repository.GetProductRecordsById(ctx, id)
 	if err != nil {
 		return newRecord, err
 	}

@@ -210,8 +210,7 @@ func (r *repository) CreateProductRecords(ctx context.Context, record *domain.Pr
 	return insertedId, nil
 }
 
-
-func (r *repository) GetProductRecords(ctx context.Context, id int64) (*domain.ProductRecords, error) {
+func (r *repository) GetProductRecordsById(ctx context.Context, id int64) (*domain.ProductRecords, error) {
 	row := r.db.QueryRowContext(ctx, sqlGetRecord, id)
 
 	record := domain.ProductRecords{}
@@ -242,7 +241,6 @@ func (r *repository) GetQtyOfRecords(ctx context.Context, id int64) (*domain.Qty
 		&report.ProductId,
 		&report.Description,
 		&report.RecordsCount,
-
 	)
 	if errors.Is(err, sql.ErrNoRows) {
 		return &report, domain.ErrIDNotFound
