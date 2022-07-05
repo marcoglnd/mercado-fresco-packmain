@@ -78,10 +78,10 @@ func (m mariadbRepository) Create(ctx context.Context, employee *domain.Employee
 	result, err := m.db.ExecContext(
 		ctx,
 		sqlInsert,
-		&newEmployee.CardNumberId,
-		&newEmployee.FirstName,
-		&newEmployee.LastName,
-		&newEmployee.WarehouseId,
+		&employee.CardNumberId,
+		&employee.FirstName,
+		&employee.LastName,
+		&employee.WarehouseId,
 	)
 	if err != nil {
 		return &newEmployee, err
@@ -93,9 +93,9 @@ func (m mariadbRepository) Create(ctx context.Context, employee *domain.Employee
 		return &newEmployee, err
 	}
 
-	newEmployee.ID = lastId
+	employee.ID = lastId
 
-	return &newEmployee, nil
+	return employee, nil
 }
 
 func (m mariadbRepository) Update(ctx context.Context, employee *domain.Employee) (*domain.Employee, error) {
@@ -104,11 +104,11 @@ func (m mariadbRepository) Update(ctx context.Context, employee *domain.Employee
 	result, err := m.db.ExecContext(
 		ctx,
 		sqlUpdate,
-		&newEmployee.CardNumberId,
-		&newEmployee.FirstName,
-		&newEmployee.LastName,
-		&newEmployee.WarehouseId,
-		&newEmployee.ID,
+		&employee.CardNumberId,
+		&employee.FirstName,
+		&employee.LastName,
+		&employee.WarehouseId,
+		&employee.ID,
 	)
 
 	if err != nil {
@@ -127,7 +127,7 @@ func (m mariadbRepository) Update(ctx context.Context, employee *domain.Employee
 		return &newEmployee, err
 	}
 
-	return &newEmployee, nil
+	return employee, nil
 }
 
 func (m mariadbRepository) Delete(ctx context.Context, id int64) error {
