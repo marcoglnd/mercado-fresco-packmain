@@ -103,7 +103,7 @@ func (c BuyerController) Create() gin.HandlerFunc {
 				})
 				return
 			}
-			ctx.JSON(http.StatusBadRequest, gin.H{
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{
 				"message": err.Error(),
 			})
 			return
