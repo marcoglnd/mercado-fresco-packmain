@@ -665,3 +665,135 @@ func TestGetQtyOfRecordsById(t *testing.T) {
 		productsServiceMock.AssertExpectations(t)
 	})
 }
+
+func TestCreateProductBatches(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		productsServiceMock := mocks.NewService(t)
+		mockProductBatches := utils.CreateRandomProductBatches()
+		mockProductBatchesId := utils.RandomInt64()
+
+		productsServiceMock.On("CreateProductBatches",
+			mock.Anything,
+			mock.Anything,
+		).Return(mockProductBatchesId, nil).Once().
+			On("GetProductBatchesById",
+				mock.Anything,
+				mock.AnythingOfType("int64"),
+			).Return(&mockProductBatches, nil).Once()
+
+		payload, err := json.Marshal(mockProductBatches)
+		assert.NoError(t, err)
+
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/productBatches", bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		productController := Controller{service: productsServiceMock}
+
+		engine.POST("/api/v1/productBatches", productController.CreateProductBatches())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusCreated, rec.Code)
+
+		productsServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("fail with status internal server error", func(t *testing.T) {
+		productsServiceMock := mocks.NewService(t)
+		mockProductBatches := utils.CreateRandomProductBatches()
+		mockProductBatchesId := utils.RandomInt64()
+		mockProductBatchesBad := &domain.ProductBatches{}
+
+		productsServiceMock.On("CreateProductBatches",
+			mock.Anything,
+			mock.Anything,
+		).Return(mockProductBatchesId, nil).
+			On("GetProductBatchesById",
+				mock.Anything,
+				mock.AnythingOfType("int64"),
+			).Return(mockProductBatchesBad, errors.New("bad request")).Maybe()
+
+		payload, err := json.Marshal(mockProductBatches)
+		assert.NoError(t, err)
+
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/productBatches", bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		productController := Controller{service: productsServiceMock}
+
+		engine.POST("/api/v1/productBatches", productController.CreateProductBatches())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
+
+		productsServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("fail with status unprocessable entity", func(t *testing.T) {
+		productsServiceMock := mocks.NewService(t)
+		mockProductBatchesBad := &domain.ProductBatches{}
+		mockProductBatchesId := utils.RandomInt64()
+
+		productsServiceMock.On("CreateProductBatches",
+			mock.Anything,
+			mock.Anything,
+		).Return(mockProductBatchesId, errors.New("bad request")).Maybe().
+			On("GetProductBatchesById",
+				mock.Anything,
+				mock.AnythingOfType("int64"),
+			).Return(mockProductBatchesBad, nil).Maybe()
+
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/productBatches", nil)
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		productController := Controller{service: productsServiceMock}
+
+		engine.POST("/api/v1/productBatches", productController.CreateProductBatches())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusUnprocessableEntity, rec.Code)
+
+		productsServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("fail with status conflict", func(t *testing.T) {
+		productsServiceMock := mocks.NewService(t)
+		mockProductBatchesBad := &domain.ProductBatches{}
+		mockProductBatches := utils.CreateRandomProductBatches()
+
+		productsServiceMock.On("CreateProductBatches",
+			mock.Anything,
+			mock.Anything,
+		).Return(int64(0), errors.New("bad request")).
+			On("GetProductBatchesById",
+				mock.Anything,
+				mock.AnythingOfType("int64"),
+			).Return(mockProductBatchesBad, errors.New("bad request")).Maybe()
+
+		payload, err := json.Marshal(mockProductBatches)
+		assert.NoError(t, err)
+
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/productBatches", bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		productController := Controller{service: productsServiceMock}
+
+		engine.POST("/api/v1/productBatches", productController.CreateProductBatches())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusConflict, rec.Code)
+
+		productsServiceMock.AssertExpectations(t)
+	})
+}

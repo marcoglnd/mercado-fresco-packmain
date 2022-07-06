@@ -334,3 +334,83 @@ func TestGetQtyOfRecordsById(t *testing.T) {
 		mockProductsRepo.AssertExpectations(t)
 	})
 }
+
+func TestCreateProductBatches(t *testing.T) {
+	t.Run("In case of success", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockProductBatches := utils.CreateRandomProductBatches()
+		mockProductBatchesId := utils.RandomInt64()
+
+		mockProductsRepo.On("CreateProductBatches",
+			mock.Anything,
+			mock.Anything,
+		).Return(mockProductBatchesId, nil).Once()
+
+		s := NewService(mockProductsRepo)
+
+		newRecordId, err := s.CreateProductBatches(context.Background(), &mockProductBatches)
+
+		assert.NoError(t, err)
+		assert.Equal(t, mockProductBatchesId, newRecordId)
+
+		mockProductsRepo.AssertExpectations(t)
+	})
+
+	t.Run("In case of error", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockProductBatches := utils.CreateRandomProductBatches()
+
+		mockProductsRepo.On("CreateProductBatches",
+			mock.Anything,
+			mock.Anything,
+		).Return(int64(0), errors.New("failed to create product batch")).Once()
+
+		s := NewService(mockProductsRepo)
+
+		_, err := s.CreateProductBatches(context.Background(), &mockProductBatches)
+
+		assert.Error(t, err)
+
+		mockProductsRepo.AssertExpectations(t)
+	})
+}
+
+func TestGetProductBatchesById(t *testing.T) {
+	t.Run("In case of success", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockProductBatches := utils.CreateRandomProductBatches()
+		mockProductBatchesId := utils.RandomInt64()
+
+		mockProductsRepo.On("GetProductBatchesById", mock.Anything, mock.AnythingOfType("int64")).
+			Return(&mockProductBatches, nil).Once()
+
+		service := NewService(mockProductsRepo)
+
+		productBatches, err := service.GetProductBatchesById(context.Background(), mockProductBatchesId)
+
+		assert.NoError(t, err)
+		assert.NotEmpty(t, productBatches)
+
+		assert.Equal(t, &mockProductBatches, productBatches)
+
+		mockProductsRepo.AssertExpectations(t)
+
+	})
+
+	t.Run("In case of error", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockProductBatchesId := utils.RandomInt64()
+
+		mockProductsRepo.On("GetProductBatchesById", mock.Anything, mock.AnythingOfType("int64")).
+			Return(nil, errors.New("failed to retrieve product batch")).Once()
+
+		service := NewService(mockProductsRepo)
+
+		productBatches, err := service.GetProductBatchesById(context.Background(), mockProductBatchesId)
+
+		assert.Error(t, err)
+		assert.Empty(t, productBatches)
+
+		mockProductsRepo.AssertExpectations(t)
+	})
+}

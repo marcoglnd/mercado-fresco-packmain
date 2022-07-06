@@ -252,3 +252,62 @@ func (r *repository) GetQtyOfRecordsById(ctx context.Context, id int64) (*domain
 
 	return &report, nil
 }
+
+func (r *repository) CreateProductBatches(ctx context.Context, batch *domain.ProductBatches) (int64, error) {
+	newBatch := domain.ProductBatches{
+		BatchNumber:        batch.BatchNumber,
+		CurrentQuantity:    batch.CurrentQuantity,
+		CurrentTemperature: batch.CurrentTemperature,
+		InitialQuantity:    batch.InitialQuantity,
+		MinumumTemperature: batch.MinumumTemperature,
+		ProductId:          batch.ProductId,
+		SectionId:          batch.SectionId,
+	}
+	result, err := r.db.ExecContext(
+		ctx,
+		sqlCreateBatch,
+		&newBatch.BatchNumber,
+		&newBatch.CurrentQuantity,
+		&newBatch.CurrentTemperature,
+		&newBatch.InitialQuantity,
+		&newBatch.MinumumTemperature,
+		&newBatch.ProductId,
+		&newBatch.SectionId,
+	)
+	if err != nil {
+		return 0, err
+	}
+	insertedId, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+	return insertedId, nil
+}
+
+func (r *repository) GetProductBatchesById(ctx context.Context, id int64) (*domain.ProductBatches, error) {
+	row := r.db.QueryRowContext(ctx, sqlGetBatch, id)
+
+	batch := domain.ProductBatches{}
+
+	err := row.Scan(
+		&batch.BatchNumber,
+		&batch.CurrentQuantity,
+		&batch.CurrentTemperature,
+		&batch.DueDate,
+		&batch.InitialQuantity,
+		&batch.ManufacturingDate,
+		&batch.ManufacturingHour,
+		&batch.MinumumTemperature,
+		&batch.ProductId,
+		&batch.SectionId,
+	)
+	if errors.Is(err, sql.ErrNoRows) {
+		return &batch, domain.ErrIDNotFound
+	}
+
+	if err != nil {
+		return &batch, err
+	}
+
+	return &batch, nil
+}

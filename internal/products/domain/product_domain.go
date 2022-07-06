@@ -30,6 +30,9 @@ type Repository interface {
 	GetProductRecordsById(ctx context.Context, id int64) (*ProductRecords, error)
 
 	GetQtyOfRecordsById(ctx context.Context, id int64) (*QtyOfRecords, error)
+
+	CreateProductBatches(ctx context.Context, batch *ProductBatches) (int64, error)
+	GetProductBatchesById(ctx context.Context, id int64) (*ProductBatches, error)
 }
 
 type Service interface {
@@ -43,6 +46,9 @@ type Service interface {
 	GetProductRecordsById(ctx context.Context, id int64) (*ProductRecords, error)
 
 	GetQtyOfRecordsById(ctx context.Context, id int64) (*QtyOfRecords, error)
+
+	CreateProductBatches(ctx context.Context, batch *ProductBatches) (int64, error)
+	GetProductBatchesById(ctx context.Context, id int64) (*ProductBatches, error)
 }
 
 type RequestProducts struct {
@@ -98,4 +104,27 @@ type QtyOfRecords struct {
 	ProductId    int64  `json:"product_id"`
 	Description  string `json:"description"`
 	RecordsCount int64  `json:"records_count"`
+}
+
+type RequestProductBatches struct {
+	BatchNumber        int64   `json:"batch_number"`
+	CurrentQuantity    int64   `json:"current_quantity"`
+	CurrentTemperature float64 `json:"current_temperature"`
+	InitialQuantity    int64   `json:"initial_quantity"`
+	MinumumTemperature float64 `json:"minumum_temperature"`
+	ProductId          int64   `json:"product_id"`
+	SectionId          int64   `json:"section_id"`
+}
+
+type ProductBatches struct {
+	BatchNumber        int64   `json:"batch_number"`
+	CurrentQuantity    int64   `json:"current_quantity"`
+	CurrentTemperature float64 `json:"current_temperature"`
+	DueDate            string  `json:"due_date"`
+	InitialQuantity    int64   `json:"initial_quantity"`
+	ManufacturingDate  string  `json:"manufacturing_date"`
+	ManufacturingHour  string  `json:"manufacturing_hour"`
+	MinumumTemperature float64 `json:"minumum_temperature"`
+	ProductId          int64   `json:"product_id"`
+	SectionId          int64   `json:"section_id"`
 }

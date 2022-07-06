@@ -48,3 +48,19 @@ func CreateRandomQtyOfRecords() domain.QtyOfRecords {
 	}
 	return qtyOfRecords
 }
+
+func CreateRandomProductBatches() domain.ProductBatches {
+	batch := domain.ProductBatches{
+		BatchNumber: RandomInt64(),
+		CurrentQuantity: RandomInt64(),
+		CurrentTemperature: RandomFloat64(),
+		DueDate: RandomString(10),
+		InitialQuantity: RandomInt64(),
+		ManufacturingDate: RandomString(10),
+		ManufacturingHour: RandomString(10),
+		MinumumTemperature: RandomFloat64(),
+		ProductId: RandomInt64(),
+		SectionId: RandomInt64(),
+	}
+	return batch
+}

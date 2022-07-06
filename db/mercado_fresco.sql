@@ -133,7 +133,7 @@ CREATE TABLE `inbound_orders` (
 
 CREATE TABLE `product_batches` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
-    `batch_number` VARCHAR(255) NOT NULL UNIQUE,
+    `batch_number` INT NOT NULL UNIQUE,
     `current_quantity` INT,
     `current_temperature` DECIMAL(19,2),
     `due_date` DATETIME(6),

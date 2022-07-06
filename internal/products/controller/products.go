@@ -191,6 +191,7 @@ func (c *Controller) Delete() gin.HandlerFunc {
 // @Description Create a new product records
 // @Accept json
 // @Produce json
+// @Param product body domain.RequestProductRecords true "Product record to create"
 // @Success 201 {object} domain.ProductRecords
 // @Failure 409 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
@@ -250,5 +251,51 @@ func (c *Controller) GetQtyOfRecordsById() gin.HandlerFunc {
 			return
 		}
 		ctx.JSON(http.StatusOK, product)
+	}
+}
+
+// @Summary Create product records
+// @Tags Products
+// @Description Create a new product records
+// @Accept json
+// @Produce json
+// @Param product body domain.RequestProductBatches true "Product record to create"
+// @Success 201 {object} domain.ProductBatches
+// @Failure 409 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 500 {object} schemes.JSONBadReqResult{error=string}
+// @Router /productRecords [post]
+func (c *Controller) CreateProductBatches() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req domain.RequestProductBatches
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid inputs"})
+			return
+		}
+		batchId, err := c.service.CreateProductBatches(
+			ctx.Request.Context(),
+			&domain.ProductBatches{
+				BatchNumber:        req.BatchNumber,
+				CurrentQuantity:    req.CurrentQuantity,
+				CurrentTemperature: req.CurrentTemperature,
+				InitialQuantity:    req.InitialQuantity,
+				MinumumTemperature: req.MinumumTemperature,
+				ProductId:          req.ProductId,
+				SectionId:          req.SectionId,
+			},
+		)
+		if err != nil {
+			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+			return
+		}
+		batch, err := c.service.GetProductBatchesById(
+			ctx.Request.Context(),
+			batchId,
+		)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(http.StatusCreated, batch)
 	}
 }

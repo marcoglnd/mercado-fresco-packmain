@@ -15,6 +15,7 @@ func productsRouter(superRouter *gin.RouterGroup, conn *sql.DB) {
 	controller := controller.NewProduct(service)
 
 	superRouter.POST("/productRecords", controller.CreateProductRecords())
+	superRouter.POST("/productBatches", controller.CreateProductBatches())
 
 	pr := superRouter.Group("/products")
 	{
