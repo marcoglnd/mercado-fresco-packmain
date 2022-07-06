@@ -119,6 +119,50 @@ func TestGetBiId(t *testing.T) {
 	})
 }
 
+func TestUpdate(t *testing.T) {
+	t.Run("In case of success", func(t *testing.T) {
+		mockEmployeeRepository := mocks.NewEmployeeRepository(t)
+		mockEmployee := utils.CreateRandomEmployee()
+
+		mockEmployeeRepository.On("GetById", mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(&mockEmployee, nil).On("Update", mock.Anything,
+			mock.Anything).Return(&mockEmployee, nil).Once()
+
+		service := NewEmployeeService(mockEmployeeRepository)
+		employee, err := service.Update(context.Background(), &mockEmployee)
+
+		assert.NoError(t, err)
+		assert.NotEmpty(t, employee)
+		assert.Equal(t, &mockEmployee, employee)
+
+		mockEmployeeRepository.AssertExpectations(t)
+	})
+
+	t.Run("In case of error", func(t *testing.T) {
+		mockEmployeeRepository := mocks.NewEmployeeRepository(t)
+		mockEmployee := utils.CreateRandomEmployee()
+
+		mockEmployeeRepository.On(
+			"GetById",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(&mockEmployee, nil).On(
+			"Update",
+			mock.Anything,
+			mock.Anything,
+		).Return(nil, errors.New("failed to retrieve employee")).Once()
+
+		service := NewEmployeeService(mockEmployeeRepository)
+		employee, err := service.Update(context.Background(), &mockEmployee)
+
+		assert.Error(t, err)
+		assert.Empty(t, employee)
+
+		mockEmployeeRepository.AssertExpectations(t)
+	})
+}
+
 func TestDelete(t *testing.T) {
 	t.Run("In case of success", func(t *testing.T) {
 		mockEmployeeRepository := mocks.NewEmployeeRepository(t)
