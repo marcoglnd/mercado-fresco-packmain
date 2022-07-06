@@ -108,7 +108,7 @@ func (c SellerController) Create() gin.HandlerFunc {
 		var req requestCreate
 
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 				"message": err.Error(),
 			})
 			return
@@ -121,13 +121,17 @@ func (c SellerController) Create() gin.HandlerFunc {
 			Telephone:    req.Telephone,
 		})
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
+			if errors.Is(err, domain.ErrDuplicatedCID) {
+				ctx.JSON(http.StatusConflict, gin.H{
+					"message": err.Error(),
+				})
+				return
+			}
+			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 				"message": err.Error(),
 			})
 			return
 		}
-
-		ctx.JSON(http.StatusCreated, seller)
 
 		if err != nil {
 			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
@@ -149,6 +153,8 @@ func (c SellerController) Create() gin.HandlerFunc {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O telefone da empresa é obrigatório"})
 			return
 		}
+
+		ctx.JSON(http.StatusCreated, seller)
 	}
 }
 
