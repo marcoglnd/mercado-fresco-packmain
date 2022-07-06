@@ -37,6 +37,10 @@ func RandomCategory() string {
 
 // RandomCode generates a random amount of number
 
-func RandomCode() int64 {
-	return int64(RandomInt(0, 1000))
+func RandomCode() int {
+	return int(RandomInt(0, 1000))
+}
+
+func RandomInt64() int64 {
+	return RandomInt(0, 1000)
 }

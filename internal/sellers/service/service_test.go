@@ -79,45 +79,46 @@ func TestGetById(t *testing.T) {
 	})
 }
 
-// func TestCreate(t *testing.T) {
+func TestCreate(t *testing.T) {
 
-// 	sellerRepositoryMock := mocks.NewSellerRepository(t)
-// 	mockSeller := utils.CreateRandomSeller()
+	sellerRepositoryMock := mocks.NewSellerRepository(t)
+	mockSeller := utils.CreateRandomSeller()
 
-// 	t.Run("ok", func(t *testing.T) {
-// 		sellerRepositoryMock.On("Create",
-// 			mock.Anything,
-// 			mock.Anything,
-// 			mock.Anything,
-// 			mock.Anything,
-// 		).Return(&mockSeller, nil).Once()
-// 		sellerRepositoryMock.On("GetByID", mock.Anything, mock.Anything).Return(nil, nil)
+	t.Run("ok", func(t *testing.T) {
+		sellerRepositoryMock.On("Create",
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+		).Return(&mockSeller, nil).Once()
 
-// 		service := NewService(sellerRepositoryMock)
-// 		seller, err := service.Create(context.Background(), &mockSeller)
+		service := NewService(sellerRepositoryMock)
+		seller, err := service.Create(context.Background(), &mockSeller)
 
-// 		assert.NoError(t, err)
-// 		assert.Equal(t, &mockSeller, seller)
+		assert.NoError(t, err)
+		assert.Equal(t, &mockSeller, seller)
 
-// 		sellerRepositoryMock.AssertExpectations(t)
-// 	})
+		sellerRepositoryMock.AssertExpectations(t)
+	})
 
-// 	t.Run("fail", func(t *testing.T) {
-// 		sellerRepositoryMock.On("Create",
-// 			mock.Anything,
-// 			mock.Anything,
-// 			mock.Anything,
-// 			mock.Anything,
-// 		).Return(&domain.Seller{}, errors.New("failed to create seller")).Once()
+	t.Run("fail", func(t *testing.T) {
+		sellerRepositoryMock.On("Create",
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+		).Return(nil, errors.New("failed to create seller")).Once()
 
-// 		service := NewService(sellerRepositoryMock)
-// 		_, err := service.Create(context.Background(), &mockSeller)
+		service := NewService(sellerRepositoryMock)
+		_, err := service.Create(context.Background(), &mockSeller)
 
-// 		assert.Error(t, err)
+		assert.Error(t, err)
 
-// 		sellerRepositoryMock.AssertExpectations(t)
-// 	})
-// }
+		sellerRepositoryMock.AssertExpectations(t)
+	})
+}
 func TestUpdate(t *testing.T) {
 
 	mockSeller := utils.CreateRandomSeller()

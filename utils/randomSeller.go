@@ -5,10 +5,11 @@ import "github.com/marcoglnd/mercado-fresco-packmain/internal/sellers/domain"
 func CreateRandomSeller() domain.Seller {
 	seller := domain.Seller{
 		ID:           1,
-		Cid:          RandomCode(),
+		Cid:          RandomInt64(),
 		Company_name: RandomCategory(),
 		Address:      RandomCategory(),
 		Telephone:    RandomCategory(),
+		LocalityID:   RandomInt64(),
 	}
 	return seller
 }

@@ -9,6 +9,7 @@ type Seller struct {
 	Company_name string `json:"company_name"`
 	Address      string `json:"address"`
 	Telephone    string `json:"telephone"`
+	LocalityID   int64  `json:"locality_id"`
 }
 
 type SellerRepository interface {

@@ -17,7 +17,7 @@ type SellerController struct {
 func NewSellerController(service domain.SellerService) (*SellerController, error) {
 
 	if service == nil {
-		return nil, errors.New("Invalid service")
+		return nil, errors.New("invalid service")
 	}
 
 	return &SellerController{
@@ -89,6 +89,7 @@ type requestCreate struct {
 	Company_name string `json:"company_name" binding:"required"`
 	Address      string `json:"address" binding:"required"`
 	Telephone    string `json:"telephone" binding:"required"`
+	LocalityID   int64  `json:"locality_id" binding:"required"`
 }
 
 // @Summary Create seller
@@ -119,6 +120,7 @@ func (c SellerController) Create() gin.HandlerFunc {
 			Company_name: req.Company_name,
 			Address:      req.Address,
 			Telephone:    req.Telephone,
+			LocalityID:   req.LocalityID,
 		})
 		if err != nil {
 			if errors.Is(err, domain.ErrDuplicatedCID) {
@@ -153,6 +155,10 @@ func (c SellerController) Create() gin.HandlerFunc {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O telefone da empresa é obrigatório"})
 			return
 		}
+		if req.LocalityID == 0 {
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O id da localidade é obrigatório"})
+			return
+		}
 
 		ctx.JSON(http.StatusCreated, seller)
 	}
@@ -163,6 +169,7 @@ type requestUpdate struct {
 	Company_name string `json:"company_name"`
 	Address      string `json:"address"`
 	Telephone    string `json:"telephone"`
+	LocalityID   int64  `json:"locality_id"`
 }
 
 // @Summary Update seller
@@ -203,6 +210,7 @@ func (c *SellerController) Update() gin.HandlerFunc {
 			Company_name: req.Company_name,
 			Address:      req.Address,
 			Telephone:    req.Telephone,
+			LocalityID:   req.LocalityID,
 		})
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{
@@ -211,13 +219,6 @@ func (c *SellerController) Update() gin.HandlerFunc {
 			return
 		}
 		ctx.JSON(http.StatusOK, seller)
-
-		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
 	}
 }
 

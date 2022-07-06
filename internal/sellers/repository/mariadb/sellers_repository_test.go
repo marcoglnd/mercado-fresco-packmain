@@ -26,6 +26,7 @@ var rowsStruct = []string{
 	"company_name",
 	"address",
 	"telephone",
+	"locality_id",
 }
 
 func TestGetAll(t *testing.T) {
@@ -44,6 +45,7 @@ func TestGetAll(t *testing.T) {
 				mockSeller.Company_name,
 				mockSeller.Address,
 				mockSeller.Telephone,
+				mockSeller.LocalityID,
 			)
 		}
 
@@ -62,7 +64,7 @@ func TestGetAll(t *testing.T) {
 		assert.NoError(t, err)
 		defer db.Close()
 
-		rows := sqlmock.NewRows(rowsStruct).AddRow("", "", "", "", "")
+		rows := sqlmock.NewRows(rowsStruct).AddRow("", "", "", "", "", "")
 
 		mock.ExpectQuery(queryGetAllSellers).WillReturnRows(rows)
 
@@ -100,6 +102,7 @@ func TestGetById(t *testing.T) {
 			mockSeller.Company_name,
 			mockSeller.Address,
 			mockSeller.Telephone,
+			mockSeller.LocalityID,
 		)
 
 		mock.ExpectQuery(queryGetSellerById).WillReturnRows(rows)
@@ -118,7 +121,7 @@ func TestGetById(t *testing.T) {
 		assert.NoError(t, err)
 		defer db.Close()
 
-		rows := sqlmock.NewRows(rowsStruct).AddRow("", "", "", "", "")
+		rows := sqlmock.NewRows(rowsStruct).AddRow("", "", "", "", "", "")
 
 		mock.ExpectQuery(queryGetSellerById).WillReturnRows(rows)
 
@@ -156,6 +159,7 @@ func TestCreate(t *testing.T) {
 				mockSeller.Company_name,
 				mockSeller.Address,
 				mockSeller.Telephone,
+				mockSeller.LocalityID,
 			).WillReturnResult(sqlmock.NewResult(1, 1))
 
 		repo := NewMariaDBRepository(db)
@@ -171,7 +175,7 @@ func TestCreate(t *testing.T) {
 		defer db.Close()
 
 		mock.ExpectExec(queryInsertSeller).
-			WithArgs(0, 0, 0, 0, 0, 0, 0, 0).
+			WithArgs(0, 0, 0, 0, 0, 0).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 
 		repo := NewMariaDBRepository(db)
@@ -195,6 +199,7 @@ func TestUpdate(t *testing.T) {
 				mockSeller.Company_name,
 				mockSeller.Address,
 				mockSeller.Telephone,
+				mockSeller.LocalityID,
 				mockSeller.ID,
 			).WillReturnResult(sqlmock.NewResult(0, 1))
 
@@ -212,7 +217,7 @@ func TestUpdate(t *testing.T) {
 		defer db.Close()
 
 		mock.ExpectExec(queryUpdateSeller).
-			WithArgs(0, 0, 0, 0, 0).
+			WithArgs(0, 0, 0, 0, 0, 0).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
 		sellersRepo := NewMariaDBRepository(db)
@@ -231,6 +236,7 @@ func TestUpdate(t *testing.T) {
 				mockSeller.Company_name,
 				mockSeller.Address,
 				mockSeller.Telephone,
+				mockSeller.LocalityID,
 				mockSeller.ID,
 			).
 			WillReturnResult(sqlmock.NewResult(0, 0))

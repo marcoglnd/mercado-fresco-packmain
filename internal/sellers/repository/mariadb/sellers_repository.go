@@ -35,6 +35,7 @@ func (m mariadbRepository) GetAll(ctx context.Context) (*[]domain.Seller, error)
 			&seller.Company_name,
 			&seller.Address,
 			&seller.Telephone,
+			&seller.LocalityID,
 		)
 		if err != nil {
 			return &sellers, err
@@ -57,6 +58,7 @@ func (m mariadbRepository) GetByID(ctx context.Context, id int64) (*domain.Selle
 		&seller.Company_name,
 		&seller.Address,
 		&seller.Telephone,
+		&seller.LocalityID,
 	)
 
 	// ID not found
@@ -73,17 +75,24 @@ func (m mariadbRepository) GetByID(ctx context.Context, id int64) (*domain.Selle
 }
 
 func (m mariadbRepository) Create(ctx context.Context, seller *domain.Seller) (*domain.Seller, error) {
-	newSeller := domain.Seller{}
+	newSeller := domain.Seller{
+		Cid:          seller.Cid,
+		Company_name: seller.Company_name,
+		Address:      seller.Address,
+		Telephone:    seller.Telephone,
+		LocalityID:   seller.LocalityID,
+	}
 
 	query := sqlInsertSeller
 
 	result, err := m.db.ExecContext(
 		ctx,
 		query,
-		newSeller.Cid,
-		newSeller.Company_name,
-		newSeller.Address,
-		newSeller.Telephone,
+		&newSeller.Cid,
+		&newSeller.Company_name,
+		&newSeller.Address,
+		&newSeller.Telephone,
+		&newSeller.LocalityID,
 	)
 	if err != nil {
 		return &newSeller, err
@@ -100,18 +109,26 @@ func (m mariadbRepository) Create(ctx context.Context, seller *domain.Seller) (*
 }
 
 func (m mariadbRepository) Update(ctx context.Context, seller *domain.Seller) (*domain.Seller, error) {
-	newSeller := domain.Seller{}
+	newSeller := domain.Seller{
+		ID:           seller.ID,
+		Cid:          seller.Cid,
+		Company_name: seller.Company_name,
+		Address:      seller.Address,
+		Telephone:    seller.Telephone,
+		LocalityID:   seller.LocalityID,
+	}
 
 	query := sqlUpdateSeller
 
 	result, err := m.db.ExecContext(
 		ctx,
 		query,
-		newSeller.Cid,
-		newSeller.Company_name,
-		newSeller.Address,
-		newSeller.Telephone,
-		newSeller.ID,
+		&newSeller.Cid,
+		&newSeller.Company_name,
+		&newSeller.Address,
+		&newSeller.Telephone,
+		&newSeller.LocalityID,
+		&newSeller.ID,
 	)
 	if err != nil {
 		return &newSeller, err
