@@ -177,7 +177,7 @@ func TestGetById(t *testing.T) {
 	})
 }
 
-func TestUpdateProduct(t *testing.T) {
+func TestUpdateBuyer(t *testing.T) {
 	mockBuyer := utils.CreateRandomBuyer()
 
 	t.Run("success", func(t *testing.T) {
@@ -236,7 +236,7 @@ func TestUpdateProduct(t *testing.T) {
 	})
 }
 
-func TestDeleteProduct(t *testing.T) {
+func TestDeleteBuyer(t *testing.T) {
 	mockBuyer := utils.CreateRandomBuyer()
 
 	t.Run("success", func(t *testing.T) {
