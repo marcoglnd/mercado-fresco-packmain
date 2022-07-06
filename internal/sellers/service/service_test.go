@@ -7,49 +7,42 @@ import (
 
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/sellers/domain"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/sellers/domain/mocks"
+	"github.com/marcoglnd/mercado-fresco-packmain/utils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
 
-// func TestGetAll(t *testing.T) {
-// 	mock := new(mocks.Repository)
+func TestGetAll(t *testing.T) {
+	mockSeller := utils.CreateRandomListSeller()
+	sellerRepositoryMock := mocks.NewSellerRepository(t)
 
-// 	sellersArg := createRandomListSeller()
+	t.Run("ok", func(t *testing.T) {
+		sellerRepositoryMock.On("GetAll", mock.Anything).
+			Return(&mockSeller, nil).Once()
 
-// 	t.Run("GetAll in case of success", func(t *testing.T) {
-// 		mock.On("GetAll").Return(sellersArg, nil).Once()
+		s := NewService(sellerRepositoryMock)
+		list, err := s.GetAll(context.Background())
 
-// 		service := NewService(mock)
+		assert.NoError(t, err)
 
-// 		list, err := service.GetAll()
+		assert.Equal(t, &mockSeller, list)
 
-// 		assert.NoError(t, err)
-// 		assert.NotEmpty(t, list)
+		sellerRepositoryMock.AssertExpectations(t)
+	})
 
-// 		for i := 0; i < len(sellersArg); i++ {
-// 			assert.Equal(t, sellersArg[i].ID, list[i].ID)
-// 			assert.Equal(t, sellersArg[i].Cid, list[i].Cid)
-// 			assert.Equal(t, sellersArg[i].Company_name, list[i].Company_name)
-// 			assert.Equal(t, sellersArg[i].Address, list[i].Address)
-// 			assert.Equal(t, sellersArg[i].Telephone, list[i].Telephone)
-// 		}
+	t.Run("fail", func(t *testing.T) {
+		sellerRepositoryMock.On("GetAll", mock.Anything).
+			Return(nil, errors.New("failed to retrieve sellers")).
+			Once()
 
-// 		mock.AssertExpectations(t)
-// 	})
+		s := NewService(sellerRepositoryMock)
+		_, err := s.GetAll(context.Background())
 
-// 	t.Run("GetAll in case of error", func(t *testing.T) {
-// 		mock.On("GetAll").Return(nil, errors.New("failed to retrieve sellers")).Once()
+		assert.NotNil(t, err)
 
-// 		service := NewService(mock)
-
-// 		list, err := service.GetAll()
-
-// 		assert.Error(t, err)
-// 		assert.Empty(t, list)
-
-// 		mock.AssertExpectations(t)
-// 	})
-// }
+		sellerRepositoryMock.AssertExpectations(t)
+	})
+}
 
 // func TestGetById(t *testing.T) {
 // 	mock := new(mocks.Repository)
