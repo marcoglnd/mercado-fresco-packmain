@@ -19,7 +19,7 @@ func NewMariaDBRepository(db *sql.DB) domain.SellerRepository {
 func (m mariadbRepository) GetAll(ctx context.Context) (*[]domain.Seller, error) {
 	sellers := []domain.Seller{}
 
-	rows, err := m.db.QueryContext(ctx, "SELECT id, cid, company_name, address, telephone FROM sellers")
+	rows, err := m.db.QueryContext(ctx, sqlGetAllSellers)
 	if err != nil {
 		return &sellers, err
 	}
@@ -47,7 +47,7 @@ func (m mariadbRepository) GetAll(ctx context.Context) (*[]domain.Seller, error)
 }
 
 func (m mariadbRepository) GetByID(ctx context.Context, id int64) (*domain.Seller, error) {
-	row := m.db.QueryRowContext(ctx, "SELECT id, cid, company_name, address, telephone FROM sellers WHERE ID = ?", id)
+	row := m.db.QueryRowContext(ctx, sqlGetSellerById, id)
 
 	seller := domain.Seller{}
 
@@ -75,8 +75,7 @@ func (m mariadbRepository) GetByID(ctx context.Context, id int64) (*domain.Selle
 func (m mariadbRepository) Create(ctx context.Context, seller *domain.Seller) (*domain.Seller, error) {
 	newSeller := domain.Seller{}
 
-	query := `INSERT INTO sellers 
-	(cid, company_name, address, telephone) VALUES (?, ?, ?, ?)`
+	query := sqlInsertSeller
 
 	result, err := m.db.ExecContext(
 		ctx,
@@ -103,8 +102,7 @@ func (m mariadbRepository) Create(ctx context.Context, seller *domain.Seller) (*
 func (m mariadbRepository) Update(ctx context.Context, seller *domain.Seller) (*domain.Seller, error) {
 	newSeller := domain.Seller{}
 
-	query := `UPDATE sellers SET
-	cid=?, company_name=?, address=?, telephone=? WHERE id=?`
+	query := sqlUpdateSeller
 
 	result, err := m.db.ExecContext(
 		ctx,
@@ -134,7 +132,7 @@ func (m mariadbRepository) Update(ctx context.Context, seller *domain.Seller) (*
 }
 
 func (m mariadbRepository) Delete(ctx context.Context, id int64) error {
-	result, err := m.db.ExecContext(ctx, "DELETE FROM sellers WHERE id=?", id)
+	result, err := m.db.ExecContext(ctx, sqlDeleteSeller, id)
 	if err != nil {
 		return err
 	}
