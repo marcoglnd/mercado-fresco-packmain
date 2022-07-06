@@ -1,4 +1,3 @@
--- Active: 1657024936523@@127.0.0.1@3306@mercado_fresco
 DROP SCHEMA IF EXISTS mercado_fresco;
 CREATE SCHEMA mercado_fresco;
 USE mercado_fresco;
@@ -49,6 +48,7 @@ CREATE TABLE `sections` (
 );
 
 CREATE TABLE `employees` (
+
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `card_number_id` VARCHAR(255) NOT NULL UNIQUE,
   `first_name` VARCHAR(255) NOT NULL,
@@ -155,9 +155,9 @@ CREATE TABLE `products_types` (
 
 CREATE TABLE `product_records` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
-    `last_update_date` DATETIME(6),
-    `purchase_price` DECIMAL(19,2),
-    `sale_price` DECIMAL(19,2),
+    `last_update_date` DATETIME(6) NOT NULL DEFAULT NOW(),
+    `purchase_price` DECIMAL(19,2) NOT NULL,
+    `sale_price` DECIMAL(19,2) NOT NULL,
     `product_id` INT NOT NULL,
     FOREIGN KEY (`product_id`) REFERENCES `products`(`id`)
 );
@@ -205,30 +205,9 @@ ALTER TABLE `purchase_orders` ADD FOREIGN KEY (`wareHouse_id`) REFERENCES `wareh
 
 ALTER TABLE `carriers` ADD FOREIGN KEY (`locality_id`) REFERENCES `localities` (`id`);
 
+
 ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`employe_id`) REFERENCES `employees` (`id`);
 
 ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`product_batch_id`) REFERENCES `product_batches` (`id`);
 
 ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`wareHouse_id`) REFERENCES `warehouse` (`id`);
-
-INSERT INTO `mercado_fresco`.`countries` (`id`, `country_name`) VALUES (1, 'a');
-
-INSERT INTO `mercado_fresco`.`provinces` (`id`, `province_name`, `id_country_fk`) VALUES (1, 'a', 1);
-INSERT INTO `mercado_fresco`.`localities` (`id`, `locality_name`, `province_id`) VALUES (1, 'a', 1);
-INSERT INTO `mercado_fresco`.`sellers` (`id`, `cid`, `company_name`, `address`, `telephone`, `locality_id`) VALUES (1, '1', 'a', 'a', 'a', 1);
-INSERT INTO `mercado_fresco`.`products` (`id`, `description`, `expiration_rate`, `freezing_rate`, `height`, `length`, `net_weight`, `product_code`, `recommended_freezing_temperature`, `width`, `product_type_id`, `seller_id`) VALUES (1, 'a', 1, 1, 1, 1, 1, 'a', 1, 1, 1, 1);
-INSERT INTO `mercado_fresco`.`products_types` (`id`, `description`) VALUES (1, 'a');
-INSERT INTO `mercado_fresco`.`warehouse` (`id`, `address`, `telephone`, `warehouse_code`, `minimun_capacity`, `minimun_temperature`, `locality_id`) VALUES (1, 'a', 'a', 'a', 1, 1, 1);
-INSERT INTO `mercado_fresco`.`sections` (`id`, `section_number`, `current_temperature`, `minimum_temperature`, `current_capacity`, `maximum_capacity`, `warehouse_id`, `product_type_id`) VALUES (1, 1, 1, 1, 1, 1, 1, 1);
-INSERT INTO `mercado_fresco`.`product_batches` (`id`, `batch_number`, `current_quantity`, `current_temperature`, `due_date`, `initial_quantity`, `manufacturing_date`, `manufacturing_hour`, `minimum_temperature`, `product_id`, `section_id`) VALUES (1, '1', 1, 1, '2004-05-23T14:25:10', 1, '2004-05-23T14:25:10', '2004-05-23T14:25:10', 1, 1, 1);
-INSERT INTO `mercado_fresco`.`product_records` (`id`, `last_update_date`, `purchase_price`, `sale_price`, `product_id`) VALUES (1, '2004-05-23T14:25:10', 1, 1, 1);
-INSERT INTO `mercado_fresco`.`employees` (`id`, `card_number_id`, `first_name`, `last_name`, `warehouse_id`) VALUES (1, 'a', 'a', 'a', 1);
-INSERT INTO `mercado_fresco`.`carriers` (`id`, `cid`, `company_name`, `address`, `telephone`, `locality_id`) VALUES (1, 'a', 'a', 'a', 'a', 1);
-INSERT INTO `mercado_fresco`.`order_status` (`id`, `description`) VALUES (1, 'a');
-INSERT INTO `mercado_fresco`.`buyers` (`id`, `card_number_id`, `first_name`, `last_name`) VALUES (1, 1, 'a', 'a');
-INSERT INTO `mercado_fresco`.`purchase_orders` (`id`, `order_number`, `order_date`, `tracking_code`, `buyer_id`, `carrier_id`, `order_status_id`, `wareHouse_id`) VALUES (1, '1', '2004-05-23T14:25:10', 'a', 1, 1, 1, 1);
-INSERT INTO `mercado_fresco`.`inbound_orders` (`id`, `order_date`, `order_number`, `employe_id`, `product_batch_id`, `wareHouse_id`) VALUES (1, '2004-05-23T14:25:10', '1', 1, 1, 1);
-INSERT INTO `mercado_fresco`.`order_details` (`id`, `clean_liness_status`, `quantity`, `temperature`, `product_record_id`, `purchase_order_id`) VALUES (1, 'a', 1, 1, 1, 1);
-INSERT INTO `mercado_fresco`.`users` (`id`, `password`, `username`) VALUES (1, 'a', 'a');
-INSERT INTO `mercado_fresco`.`rol` (`id`, `description`, `rol_name`) VALUES (1, 'a', 'a');
-INSERT INTO `mercado_fresco`.`users_rol` (`usuario_id`, `rol_id`) VALUES (1, 1);

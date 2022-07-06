@@ -7,8 +7,8 @@ import (
 )
 
 func AddRoutes(superRouter *gin.RouterGroup, dbConnection *sql.DB) {
-	productsRouter(superRouter)
-	buyersRouter(superRouter)
+	buyersRouter(superRouter, dbConnection)
+	productsRouter(superRouter, dbConnection)
 	employeesRouter(superRouter, dbConnection)
 	sectionsRouter(superRouter)
 	warehousesRouter(superRouter)

@@ -29,7 +29,7 @@ go.work
 /Godeps/
 
 # Environment variables
-.env
+*.env
 
 # Database persistent volume
 db/.data
