@@ -27,10 +27,10 @@ func TestCreateNewBuyer(t *testing.T) {
 
 		s := NewBuyerService(mockBuyerRepo)
 
-		newProduct, err := s.Create(context.Background(), mockBuyer.CardNumberID, mockBuyer.FirstName, mockBuyer.LastName)
+		newBuyer, err := s.Create(context.Background(), mockBuyer.CardNumberID, mockBuyer.FirstName, mockBuyer.LastName)
 
 		assert.NoError(t, err)
-		assert.Equal(t, &mockBuyer, newProduct)
+		assert.Equal(t, &mockBuyer, newBuyer)
 
 		mockBuyerRepo.AssertExpectations(t)
 	})
@@ -109,7 +109,7 @@ func TestGetById(t *testing.T) {
 
 	t.Run("In case of error", func(t *testing.T) {
 		mockBuyerRepo.On("GetById", mock.Anything, mock.AnythingOfType("int64")).
-			Return(nil, errors.New("failed to retrieve product")).Once()
+			Return(nil, errors.New("failed to retrieve buyer")).Once()
 
 		service := NewBuyerService(mockBuyerRepo)
 
@@ -160,11 +160,11 @@ func TestUpdate(t *testing.T) {
 		).Return(nil, errors.New("failed to update buyer")).Once()
 
 		service := NewBuyerService(mockBuyerRepo)
-		product, err := service.Update(
+		buyer, err := service.Update(
 			context.Background(), mockBuyer.ID, mockBuyer.CardNumberID, mockBuyer.FirstName, mockBuyer.LastName,
 		)
 		assert.Error(t, err)
-		assert.Empty(t, product)
+		assert.Empty(t, buyer)
 
 		mockBuyerRepo.AssertExpectations(t)
 	})

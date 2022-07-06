@@ -17,7 +17,7 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func TestCreateNewProduct(t *testing.T) {
+func TestCreateNewBuyer(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		mockBuyer := utils.CreateRandomBuyer()
 		buyerServiceMock := mocks.NewBuyerService(t)
@@ -229,7 +229,7 @@ func TestGetById(t *testing.T) {
 		buyerServiceMock.AssertExpectations(t)
 	})
 
-	t.Run("In case of invalid product id", func(t *testing.T) {
+	t.Run("In case of invalid buyer id", func(t *testing.T) {
 		mockBuyerBad := &domain.Buyer{}
 
 		buyerServiceMock.On("GetById",
@@ -257,7 +257,7 @@ func TestGetById(t *testing.T) {
 		buyerServiceMock.AssertExpectations(t)
 	})
 
-	t.Run("In case of nonexisting product", func(t *testing.T) {
+	t.Run("In case of nonexisting buyer", func(t *testing.T) {
 		buyerServiceMock.On("GetById",
 			mock.Anything,
 			mock.AnythingOfType("int64"),
@@ -371,7 +371,7 @@ func TestUpdate(t *testing.T) {
 		buyerServiceMock.AssertExpectations(t)
 	})
 
-	t.Run("In case of nonexisting product", func(t *testing.T) {
+	t.Run("In case of nonexisting buyer", func(t *testing.T) {
 		buyerServiceMock.On("Update",
 			mock.Anything,
 			mock.Anything,
