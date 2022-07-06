@@ -282,59 +282,121 @@ func TestCreate(t *testing.T) {
 	})
 }
 
-// func TestUpdate(t *testing.T) {
+func TestUpdate(t *testing.T) {
 
-// 	t.Run("ok", func(t *testing.T) {
-// 		r := createServer()
+	mockSeller := utils.CreateRandomSeller()
+	sellerServiceMock := mocks.NewSellerService(t)
 
-// 		post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
-// 			"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
-// 		}`)
+	t.Run("ok", func(t *testing.T) {
+		sellerServiceMock.On("Update",
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+		).Return(&mockSeller, nil).Once()
 
-// 		patch_req, patch_rr := createRequestTest(http.MethodPatch, getPathUrl("/sellers/1"), `{
-// 			"cid": 400000, "company_name": "Maria", "address": "Receba", "telephone": "4321"
-// 		}`)
+		payload, err := json.Marshal(mockSeller)
+		assert.NoError(t, err)
 
-// 		defer post_req.Body.Close()
-// 		defer patch_req.Body.Close()
+		PATH := fmt.Sprintf("/api/v1/sellers/%v", mockSeller.ID)
+		req := httptest.NewRequest(http.MethodPatch, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
 
-// 		r.ServeHTTP(post_rr, post_req)
-// 		r.ServeHTTP(patch_rr, patch_req)
+		_, engine := gin.CreateTestContext(rec)
 
-// 		assert.Equal(t, http.StatusOK, patch_rr.Code)
+		sellerController := SellerController{service: sellerServiceMock}
 
-// 		var objRes domain.Seller
+		engine.PATCH("/api/v1/sellers/:id", sellerController.Update())
 
-// 		err := json.Unmarshal(patch_rr.Body.Bytes(), &objRes)
+		engine.ServeHTTP(rec, req)
 
-// 		assert.Nil(t, err)
-// 		assert.True(t, objRes.ID == 1)
-// 		assert.True(t, objRes.Cid == 400000)
-// 		assert.True(t, objRes.Company_name == "Maria")
-// 		assert.True(t, objRes.Address == "Receba")
-// 		assert.True(t, objRes.Telephone == "4321")
-// 	})
+		assert.Equal(t, http.StatusOK, rec.Code)
 
-// 	t.Run("non existent", func(t *testing.T) {
-// 		r := createServer()
+		sellerServiceMock.AssertExpectations(t)
+	})
 
-// 		post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
-// 			"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
-// 		}`)
+	t.Run("non existent", func(t *testing.T) {
+		sellerServiceMock.On("Update",
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+		).Return(nil, errors.New("id not found error")).Maybe()
 
-// 		patch_req, patch_rr := createRequestTest(http.MethodPatch, getPathUrl("/sellers/10"), `{
-// 			"cid": 400000, "company_name": "Maria", "address": "Receba", "telephone": "4321"
-// 		}`)
+		payload, err := json.Marshal(mockSeller)
+		assert.NoError(t, err)
 
-// 		defer post_req.Body.Close()
-// 		defer patch_req.Body.Close()
+		PATH := fmt.Sprintf("/api/v1/sellers/%v", utils.RandomInt(0, 999))
+		req := httptest.NewRequest(http.MethodPatch, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
 
-// 		r.ServeHTTP(post_rr, post_req)
-// 		r.ServeHTTP(patch_rr, patch_req)
+		_, engine := gin.CreateTestContext(rec)
 
-// 		assert.Equal(t, http.StatusNotFound, patch_rr.Code)
-// 	})
-// }
+		sellerController := SellerController{service: sellerServiceMock}
+
+		engine.PATCH("/api/v1/sellers/:id", sellerController.Update())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusNotFound, rec.Code)
+
+		sellerServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("bad request", func(t *testing.T) {
+		sellerServiceMock.On("Update",
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+		).Return(&mockSeller, errors.New("bad request")).Maybe()
+
+		PATH := fmt.Sprintf("/api/v1/sellers/%v", mockSeller.ID)
+		req := httptest.NewRequest(http.MethodPatch, PATH, nil)
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		sellerController := SellerController{service: sellerServiceMock}
+
+		engine.PATCH("/api/v1/sellers/:id", sellerController.Update())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusBadRequest, rec.Code)
+
+		sellerServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("invalid id", func(t *testing.T) {
+		sellerServiceMock.On("Update",
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+			mock.Anything,
+		).Return(&mockSeller, errors.New("bad request")).Maybe()
+
+		PATH := fmt.Sprintf("/api/v1/sellers/%v", "a")
+		req := httptest.NewRequest(http.MethodPatch, PATH, nil)
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		sellerController := SellerController{service: sellerServiceMock}
+
+		engine.PATCH("/api/v1/sellers/:id", sellerController.Update())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusBadRequest, rec.Code)
+
+		sellerServiceMock.AssertExpectations(t)
+	})
+}
 
 // func TestDelete(t *testing.T) {
 
