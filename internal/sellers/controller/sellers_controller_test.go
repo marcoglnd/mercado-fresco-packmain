@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -15,6 +16,148 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
+
+func TestGetAll(t *testing.T) {
+
+	mockSeller := utils.CreateRandomListSeller()
+	sellerServiceMock := mocks.NewSellerService(t)
+
+	t.Run("ok", func(t *testing.T) {
+		sellerServiceMock.On("GetAll",
+			mock.Anything,
+		).Return(&mockSeller, nil).Once()
+
+		payload, err := json.Marshal(mockSeller)
+		assert.NoError(t, err)
+
+		req := httptest.NewRequest(http.MethodGet, "/api/v1/sellers", bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		sellerController := SellerController{service: sellerServiceMock}
+
+		engine.GET("/api/v1/sellers", sellerController.GetAll())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+
+		sellerServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("fail", func(t *testing.T) {
+		mockSellerBad := &[]domain.Seller{}
+
+		sellerServiceMock.On("GetAll",
+			mock.Anything,
+		).Return(mockSellerBad, errors.New("Internal server error")).Maybe()
+
+		payload, err := json.Marshal(mockSellerBad)
+		assert.NoError(t, err)
+
+		req := httptest.NewRequest(http.MethodGet, "/api/v1/sellers", bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		sellerController := SellerController{service: sellerServiceMock}
+
+		engine.GET("/api/v1/sellers", sellerController.GetAll())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
+
+		sellerServiceMock.AssertExpectations(t)
+	})
+}
+
+func TestGetByID(t *testing.T) {
+
+	mockSeller := utils.CreateRandomSeller()
+	sellerServiceMock := mocks.NewSellerService(t)
+
+	t.Run("existent", func(t *testing.T) {
+		sellerServiceMock.On("GetByID",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(&mockSeller, nil).Once()
+
+		payload, err := json.Marshal(mockSeller)
+		assert.NoError(t, err)
+
+		PATH := fmt.Sprintf("/api/v1/sellers/%v", mockSeller.ID)
+		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		sellerController := SellerController{service: sellerServiceMock}
+
+		engine.GET("/api/v1/sellers/:id", sellerController.GetByID())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+
+		sellerServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("non existent", func(t *testing.T) {
+		sellerServiceMock.On("GetByID",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(nil, errors.New("expected conflict error")).Maybe()
+
+		payload, err := json.Marshal(mockSeller)
+		assert.NoError(t, err)
+
+		PATH := fmt.Sprintf("/api/v1/sellers/%v", utils.RandomInt(0, 999))
+		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		sellerController := SellerController{service: sellerServiceMock}
+
+		engine.GET("/api/v1/sellers/:id", sellerController.GetByID())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusNotFound, rec.Code)
+
+		sellerServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("bad request", func(t *testing.T) {
+		mockSellerBad := &domain.Seller{}
+
+		sellerServiceMock.On("GetByID",
+			mock.Anything,
+			mock.AnythingOfType("string"),
+		).Return(mockSellerBad, errors.New("bad request")).Maybe()
+
+		payload, err := json.Marshal(mockSellerBad)
+		assert.NoError(t, err)
+
+		PATH := fmt.Sprintf("/api/v1/sellers/%v", "a")
+		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		sellerController := SellerController{service: sellerServiceMock}
+
+		engine.GET("/api/v1/sellers/:id", sellerController.GetByID())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusBadRequest, rec.Code)
+
+		sellerServiceMock.AssertExpectations(t)
+	})
+}
 
 func TestCreate(t *testing.T) {
 
@@ -138,87 +281,6 @@ func TestCreate(t *testing.T) {
 		sellerServiceMock.AssertExpectations(t)
 	})
 }
-
-// func TestGetAll(t *testing.T) {
-
-// 	t.Run("ok", func(t *testing.T) {
-// 		r := createServer()
-
-// 		req, rr := createRequestTest(http.MethodGet, getPathUrl("/sellers/"), "")
-
-// 		defer req.Body.Close()
-
-// 		r.ServeHTTP(rr, req)
-
-// 		assert.Equal(t, http.StatusOK, rr.Code)
-
-// 		objRes := struct {
-// 			Code int
-// 			Data []domain.Seller
-// 		}{}
-
-// 		err := json.Unmarshal(rr.Body.Bytes(), &objRes)
-
-// 		assert.Nil(t, err)
-// 		assert.True(t, len(objRes.Data) >= 0)
-// 	})
-// }
-
-// func TestGetByID(t *testing.T) {
-
-// 	t.Run("non existent", func(t *testing.T) {
-// 		r := createServer()
-
-// 		post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
-// 			"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
-// 		}`)
-
-// 		get_req, get_rr := createRequestTest(http.MethodGet, getPathUrl("/sellers/10"), "")
-
-// 		defer post_req.Body.Close()
-// 		defer get_req.Body.Close()
-
-// 		r.ServeHTTP(post_rr, post_req)
-// 		r.ServeHTTP(get_rr, get_req)
-
-// 		assert.Equal(t, http.StatusNotFound, get_rr.Code)
-// 	})
-
-// 	t.Run("existent", func(t *testing.T) {
-// 		seller := &domain.Seller{
-// 			ID:           1,
-// 			Cid:          402323,
-// 			Company_name: "Jhon",
-// 			Address:      "Doe",
-// 			Telephone:    "1234",
-// 		}
-// 		mockService := new(mocks.Service)
-// 		mockService.On("GetById", mock.AnythingOfType("int")).Return(*seller, nil)
-
-// 		rr := httptest.NewRecorder()
-// 		ctx, engine := gin.CreateTestContext(rr)
-// 		ns := controller.NewSeller(mockService)
-
-// 		engine.GET("/api/v1/sellers/:id", ns.GetById())
-// 		request, err := http.NewRequest(http.MethodGet, "/api/v1/sellers/1", nil)
-// 		assert.NoError(t, err)
-// 		ctx.Request = request
-// 		engine.ServeHTTP(rr, ctx.Request)
-
-// 		assert.Equal(t, http.StatusOK, rr.Code)
-
-// 		var objRes domain.Seller
-
-// 		err = json.Unmarshal(rr.Body.Bytes(), &objRes)
-
-// 		assert.Nil(t, err)
-// 		assert.True(t, objRes.ID == 1)
-// 		assert.True(t, objRes.Cid == 402323)
-// 		assert.True(t, objRes.Company_name == "Jhon")
-// 		assert.True(t, objRes.Address == "Doe")
-// 		assert.True(t, objRes.Telephone == "1234")
-// 	})
-// }
 
 // func TestUpdate(t *testing.T) {
 

@@ -72,7 +72,7 @@ func (c SellerController) GetByID() gin.HandlerFunc {
 			return
 		}
 
-		seller, _ := c.service.GetByID(ctx, intId)
+		seller, err := c.service.GetByID(ctx, intId)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{
 				"message": err.Error(),
