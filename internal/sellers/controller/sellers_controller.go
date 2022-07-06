@@ -218,22 +218,6 @@ func (c *SellerController) Update() gin.HandlerFunc {
 			})
 			return
 		}
-		if req.Cid == 0 {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "A identificação da empresa (cid) é obrigatória"})
-			return
-		}
-		if req.Company_name == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O nome da empresa é obrigatório"})
-			return
-		}
-		if req.Address == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O endereço da empresa é obrigatório"})
-			return
-		}
-		if req.Telephone == "" {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "O telefone da empresa é obrigatório"})
-			return
-		}
 	}
 }
 

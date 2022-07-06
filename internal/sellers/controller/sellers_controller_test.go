@@ -398,72 +398,77 @@ func TestUpdate(t *testing.T) {
 	})
 }
 
-// func TestDelete(t *testing.T) {
+func TestDelete(t *testing.T) {
 
-// 	t.Run("ok", func(t *testing.T) {
-// 		r := createServer()
+	mockSeller := utils.CreateRandomSeller()
+	sellerServiceMock := mocks.NewSellerService(t)
 
-// 		post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
-// 			"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
-// 		}`)
+	t.Run("ok", func(t *testing.T) {
+		sellerServiceMock.On("Delete",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(nil).Once()
 
-// 		get_req, get_rr := createRequestTest(http.MethodGet, getPathUrl("/sellers/"), "")
+		PATH := fmt.Sprintf("/api/v1/sellers/%v", mockSeller.ID)
+		req := httptest.NewRequest(http.MethodDelete, PATH, nil)
+		rec := httptest.NewRecorder()
 
-// 		r.ServeHTTP(post_rr, post_req)
-// 		r.ServeHTTP(get_rr, get_req)
+		_, engine := gin.CreateTestContext(rec)
 
-// 		objRes := struct {
-// 			Code int
-// 			Data []domain.Seller
-// 		}{}
+		sellerController := SellerController{service: sellerServiceMock}
 
-// 		err := json.Unmarshal(get_rr.Body.Bytes(), &objRes)
+		engine.DELETE("/api/v1/sellers/:id", sellerController.Delete())
 
-// 		buyersLen := len(objRes.Data)
+		engine.ServeHTTP(rec, req)
 
-// 		assert.Nil(t, err)
-// 		assert.True(t, buyersLen > 0)
+		assert.Equal(t, http.StatusNoContent, rec.Code)
 
-// 		delete_req, delete_rr := createRequestTest(http.MethodDelete, getPathUrl("/sellers/1"), "")
+		sellerServiceMock.AssertExpectations(t)
+	})
 
-// 		defer post_req.Body.Close()
-// 		defer delete_req.Body.Close()
+	t.Run("non existent", func(t *testing.T) {
+		sellerServiceMock.On("Delete",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(errors.New("expected conflict error")).Maybe()
 
-// 		r.ServeHTTP(delete_rr, delete_req)
+		PATH := fmt.Sprintf("/api/v1/sellers/%v", utils.RandomInt(0, 999))
+		req := httptest.NewRequest(http.MethodDelete, PATH, nil)
+		rec := httptest.NewRecorder()
 
-// 		secondGet_req, secondGet_rr := createRequestTest(http.MethodGet, getPathUrl("/sellers/"), "")
+		_, engine := gin.CreateTestContext(rec)
 
-// 		r.ServeHTTP(secondGet_rr, secondGet_req)
+		sellerController := SellerController{service: sellerServiceMock}
 
-// 		secondObjRes := struct {
-// 			Code int
-// 			Data []domain.Seller
-// 		}{}
+		engine.DELETE("/api/v1/sellers/:id", sellerController.Delete())
 
-// 		json.Unmarshal(secondGet_rr.Body.Bytes(), &secondObjRes)
+		engine.ServeHTTP(rec, req)
 
-// 		secondBuyersLen := len(secondObjRes.Data)
+		assert.Equal(t, http.StatusNotFound, rec.Code)
 
-// 		assert.Equal(t, http.StatusNoContent, delete_rr.Code)
-// 		assert.True(t, buyersLen-1 == secondBuyersLen)
-// 	})
+		sellerServiceMock.AssertExpectations(t)
+	})
 
-// 	t.Run("non existent", func(t *testing.T) {
-// 		r := createServer()
+	t.Run("bad request", func(t *testing.T) {
+		sellerServiceMock.On("Delete",
+			mock.Anything,
+			mock.AnythingOfType("string"),
+		).Return(errors.New("bad request")).Maybe()
 
-// 		post_req, post_rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
-// 			"cid": 402323, "company_name": "Jhon", "address": "Doe", "telephone": "1234"
-// 		}`)
+		PATH := fmt.Sprintf("/api/v1/sellers/%v", "a")
+		req := httptest.NewRequest(http.MethodDelete, PATH, nil)
+		rec := httptest.NewRecorder()
 
-// 		r.ServeHTTP(post_rr, post_req)
+		_, engine := gin.CreateTestContext(rec)
 
-// 		delete_req, delete_rr := createRequestTest(http.MethodDelete, getPathUrl("/sellers/10"), "")
+		sellerController := SellerController{service: sellerServiceMock}
 
-// 		defer post_req.Body.Close()
-// 		defer delete_req.Body.Close()
+		engine.DELETE("/api/v1/sellers/:id", sellerController.Delete())
 
-// 		r.ServeHTTP(delete_rr, delete_req)
+		engine.ServeHTTP(rec, req)
 
-// 		assert.Equal(t, http.StatusNotFound, delete_rr.Code)
-// 	})
-// }
+		assert.Equal(t, http.StatusBadRequest, rec.Code)
+
+		sellerServiceMock.AssertExpectations(t)
+	})
+}
