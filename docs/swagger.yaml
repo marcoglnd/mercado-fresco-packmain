@@ -19,43 +19,6 @@ definitions:
       warehouse_id:
         type: integer
     type: object
-  controllers.requestProducts:
-    properties:
-      description:
-        type: string
-      expiration_rate:
-        type: integer
-      freezing_rate:
-        type: integer
-      height:
-        type: number
-      length:
-        type: number
-      netweight:
-        type: number
-      product_code:
-        type: string
-      product_type_id:
-        type: integer
-      recommended_freezing_temperature:
-        type: number
-      seller_id:
-        type: integer
-      width:
-        type: number
-    required:
-    - description
-    - expiration_rate
-    - freezing_rate
-    - height
-    - length
-    - netweight
-    - product_code
-    - product_type_id
-    - recommended_freezing_temperature
-    - seller_id
-    - width
-    type: object
   controllers.requestSection:
     properties:
       current_capacity:
@@ -95,7 +58,7 @@ definitions:
       telephone:
         type: string
     type: object
-  products.Product:
+  domain.Product:
     properties:
       description:
         type: string
@@ -107,6 +70,42 @@ definitions:
         type: number
       id:
         type: integer
+      length:
+        type: number
+      netweight:
+        type: number
+      product_code:
+        type: string
+      product_type_id:
+        type: integer
+      recommended_freezing_temperature:
+        type: number
+      seller_id:
+        type: integer
+      width:
+        type: number
+    type: object
+  domain.ProductRecords:
+    properties:
+      last_update_date:
+        type: string
+      product_id:
+        type: integer
+      purchase_price:
+        type: number
+      sale_price:
+        type: number
+    type: object
+  domain.RequestProductsUpdated:
+    properties:
+      description:
+        type: string
+      expiration_rate:
+        type: integer
+      freezing_rate:
+        type: integer
+      height:
+        type: number
       length:
         type: number
       netweight:
@@ -615,6 +614,48 @@ paths:
       summary: Update employee
       tags:
       - Employees
+  /productRecords:
+    post:
+      consumes:
+      - application/json
+      description: Create a new product records
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.ProductRecords'
+        "409":
+          description: Conflict
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Create product records
+      tags:
+      - Products
   /products:
     get:
       consumes:
@@ -630,7 +671,7 @@ paths:
             - $ref: '#/definitions/schemes.JSONSuccessResult'
             - properties:
                 data:
-                  $ref: '#/definitions/products.Product'
+                  $ref: '#/definitions/domain.Product'
               type: object
         "404":
           description: Not Found
@@ -654,14 +695,14 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/controllers.requestProducts'
+          $ref: '#/definitions/domain.RequestProductsUpdated'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/products.Product'
+            $ref: '#/definitions/domain.Product'
         "409":
           description: Conflict
           schema:
@@ -743,7 +784,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/products.Product'
+            $ref: '#/definitions/domain.Product'
         "400":
           description: Bad Request
           schema:
@@ -780,14 +821,14 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/controllers.requestProducts'
+          $ref: '#/definitions/domain.RequestProductsUpdated'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/products.Product'
+            $ref: '#/definitions/domain.Product'
         "400":
           description: Bad Request
           schema:
@@ -816,6 +857,45 @@ paths:
                   type: string
               type: object
       summary: Update product
+      tags:
+      - Products
+  /products/reportRecords:
+    get:
+      consumes:
+      - application/json
+      description: Get quantity of product records
+      parameters:
+      - description: records ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.ProductRecords'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Quantity of records
       tags:
       - Products
   /sections:
