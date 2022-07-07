@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/employees/domain"
 	"github.com/marcoglnd/mercado-fresco-packmain/utils"
 	"github.com/stretchr/testify/assert"
 )
@@ -185,5 +186,69 @@ func TestGetById(t *testing.T) {
 		_, err = repository.GetById(context.Background(), 0)
 
 		assert.Error(t, err)
+	})
+}
+
+func TestUpdateEmployee(t *testing.T) {
+	mockEmployee := utils.CreateRandomEmployee()
+
+	t.Run("success to update employee", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+
+		assert.NoError(t, err)
+
+		defer db.Close()
+
+		mock.ExpectExec(regexp.QuoteMeta(sqlUpdate)).WithArgs(
+			mockEmployee.CardNumberId,
+			mockEmployee.FirstName,
+			mockEmployee.LastName,
+			mockEmployee.WarehouseId,
+			mockEmployee.ID,
+		).WillReturnResult(sqlmock.NewResult(0, 1))
+
+		repository := NewMariaDBRepository(db)
+		result, err := repository.Update(context.Background(), &mockEmployee)
+
+		assert.NoError(t, err)
+		assert.Equal(t, &mockEmployee, result)
+	})
+
+	t.Run("fail to update employee", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+
+		assert.NoError(t, err)
+
+		defer db.Close()
+
+		mock.ExpectExec(regexp.QuoteMeta(sqlUpdate)).WithArgs("", "", "", "").
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
+		repository := NewMariaDBRepository(db)
+		_, err = repository.Update(context.Background(), &mockEmployee)
+
+		assert.Error(t, err)
+	})
+
+	t.Run("employee not updated", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+
+		assert.NoError(t, err)
+
+		defer db.Close()
+
+		mock.ExpectExec(regexp.QuoteMeta(sqlUpdate)).WithArgs(
+			mockEmployee.CardNumberId,
+			mockEmployee.FirstName,
+			mockEmployee.LastName,
+			mockEmployee.WarehouseId,
+			mockEmployee.ID,
+		).WillReturnResult(sqlmock.NewResult(0, 0))
+
+		repository := NewMariaDBRepository(db)
+		_, err = repository.Update(context.Background(), &mockEmployee)
+
+		assert.Error(t, err)
+		assert.Equal(t, domain.ErrIdNotFound, err)
 	})
 }
