@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses/controller"
-	"github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses/repository"
+	repository "github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses/repository/mariadb"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses/service"
 )
 
