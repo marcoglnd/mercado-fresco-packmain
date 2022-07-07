@@ -364,3 +364,81 @@ func TestUpdate(t *testing.T) {
 		mockEmployeeService.AssertExpectations(t)
 	})
 }
+
+func TestDelete(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		mockEmployee := utils.CreateRandomEmployee()
+		mockEmployeeService := mocks.NewEmployeeService(t)
+
+		mockEmployeeService.On("Delete",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(nil).Once()
+
+		PATH := fmt.Sprintf("/api/v1/employees/%v", mockEmployee.ID)
+		req := httptest.NewRequest(http.MethodDelete, PATH, nil)
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		employeeController := EmployeeController{service: mockEmployeeService}
+
+		engine.DELETE("/api/v1/employees/:id", employeeController.Delete())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusNoContent, rec.Code)
+
+		mockEmployeeService.AssertExpectations(t)
+	})
+
+	t.Run("In case of invalid employee id", func(t *testing.T) {
+		mockEmployeeService := mocks.NewEmployeeService(t)
+
+		mockEmployeeService.On("Delete",
+			mock.Anything,
+			mock.AnythingOfType("string"),
+		).Return(errors.New("bad request")).Maybe()
+
+		PATH := fmt.Sprintf("/api/v1/employees/%v", "a")
+		req := httptest.NewRequest(http.MethodDelete, PATH, nil)
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		employeeController := EmployeeController{service: mockEmployeeService}
+
+		engine.DELETE("/api/v1/employees/:id", employeeController.Delete())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusBadRequest, rec.Code)
+
+		mockEmployeeService.AssertExpectations(t)
+	})
+
+	t.Run("In case of nonexisting employee", func(t *testing.T) {
+		mockEmployeeService := mocks.NewEmployeeService(t)
+
+		mockEmployeeService.On("Delete",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(errors.New("expected conflict error")).Maybe()
+
+		PATH := fmt.Sprintf("/api/v1/employees/%v", utils.RandomInt64())
+		req := httptest.NewRequest(http.MethodDelete, PATH, nil)
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		employeeController := EmployeeController{service: mockEmployeeService}
+
+		engine.DELETE("/api/v1/employees/:id", employeeController.Delete())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusNotFound, rec.Code)
+
+		mockEmployeeService.AssertExpectations(t)
+	})
+}
