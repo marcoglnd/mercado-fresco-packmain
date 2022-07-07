@@ -127,3 +127,63 @@ func TestGetAll(t *testing.T) {
 		assert.Error(t, err)
 	})
 }
+
+func TestGetById(t *testing.T) {
+	t.Run("success to get employee by id", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+
+		assert.NoError(t, err)
+
+		defer db.Close()
+
+		mockEmployee := utils.CreateRandomEmployee()
+
+		rows := sqlmock.NewRows(rowsEmployeeStruct).AddRow(
+			mockEmployee.ID,
+			mockEmployee.CardNumberId,
+			mockEmployee.FirstName,
+			mockEmployee.LastName,
+			mockEmployee.WarehouseId,
+		)
+
+		mock.ExpectQuery(regexp.QuoteMeta(sqlGetById)).WillReturnRows(rows)
+
+		repository := NewMariaDBRepository(db)
+		result, err := repository.GetById(context.Background(), 0)
+
+		assert.NoError(t, err)
+		assert.Equal(t, result, &mockEmployee)
+	})
+
+	t.Run("fail to scan employee", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+
+		assert.NoError(t, err)
+
+		defer db.Close()
+
+		rows := sqlmock.NewRows(rowsEmployeeStruct).AddRow("", "", "", "", "")
+
+		mock.ExpectQuery(regexp.QuoteMeta(sqlGetById)).WillReturnRows(rows)
+
+		repository := NewMariaDBRepository(db)
+		_, err = repository.GetById(context.Background(), 1)
+
+		assert.Error(t, err)
+	})
+
+	t.Run("fail to select employee", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+
+		assert.NoError(t, err)
+
+		defer db.Close()
+
+		mock.ExpectQuery(regexp.QuoteMeta(sqlGetById)).WillReturnError(sql.ErrNoRows)
+
+		repository := NewMariaDBRepository(db)
+		_, err = repository.GetById(context.Background(), 0)
+
+		assert.Error(t, err)
+	})
+}
