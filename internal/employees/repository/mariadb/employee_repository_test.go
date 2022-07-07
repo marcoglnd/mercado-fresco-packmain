@@ -252,3 +252,60 @@ func TestUpdateEmployee(t *testing.T) {
 		assert.Equal(t, domain.ErrIdNotFound, err)
 	})
 }
+
+func TestDeleteEmployee(t *testing.T) {
+	mockEmployee := utils.CreateRandomEmployee()
+
+	t.Run("success to delete employee", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+
+		assert.NoError(t, err)
+
+		defer db.Close()
+
+		mock.ExpectExec(regexp.QuoteMeta(sqlDelete)).
+			WithArgs(
+				mockEmployee.ID,
+			).WillReturnResult(sqlmock.NewResult(0, 1))
+
+		repository := NewMariaDBRepository(db)
+		err = repository.Delete(context.Background(), mockEmployee.ID)
+
+		assert.NoError(t, err)
+	})
+
+	t.Run("fail to delete employee", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+
+		assert.NoError(t, err)
+
+		defer db.Close()
+
+		mock.ExpectExec(regexp.QuoteMeta(sqlDelete)).
+			WithArgs(0).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
+		repository := NewMariaDBRepository(db)
+		err = repository.Delete(context.Background(), mockEmployee.ID)
+
+		assert.Error(t, err)
+	})
+
+	t.Run("employee not deleted", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+
+		assert.NoError(t, err)
+
+		defer db.Close()
+
+		mock.ExpectExec(regexp.QuoteMeta(sqlDelete)).
+			WithArgs(mockEmployee.ID).
+			WillReturnResult(sqlmock.NewResult(0, 0))
+
+		repository := NewMariaDBRepository(db)
+		err = repository.Delete(context.Background(), mockEmployee.ID)
+
+		assert.Error(t, err)
+		assert.Equal(t, domain.ErrIdNotFound, err)
+	})
+}
