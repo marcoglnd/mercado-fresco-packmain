@@ -1,19 +1,19 @@
-package controllers
+package controller
 
 import (
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses/domain"
 )
 
 type WarehouseController struct {
-	service warehouses.Service
+	service domain.WarehouseService
 }
 
-func NewWarehouse(w warehouses.Service) *WarehouseController {
-	return &WarehouseController{service: w}
+func NewWarehouseController(ws domain.WarehouseService) *WarehouseController {
+	return &WarehouseController{service: ws}
 }
 
 // @Summary Create warehouse
@@ -27,7 +27,7 @@ func NewWarehouse(w warehouses.Service) *WarehouseController {
 // @Router /warehouses [post]
 func (wc *WarehouseController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var warehouseInput warehouses.CreateWarehouseInput
+		var warehouseInput domain.CreateWarehouseInput
 		if err := ctx.ShouldBindJSON(&warehouseInput); err != nil {
 			ctx.AbortWithStatusJSON(
 				http.StatusUnprocessableEntity,
@@ -36,7 +36,7 @@ func (wc *WarehouseController) Create() gin.HandlerFunc {
 			return
 		}
 
-		if err := wc.service.IsWarehouseCodeAvailable(warehouseInput.WarehouseCode); err != nil {
+		if err := wc.service.IsWarehouseCodeAvailable(ctx, warehouseInput.WarehouseCode); err != nil {
 			ctx.AbortWithStatusJSON(
 				http.StatusConflict,
 				gin.H{"error": err.Error()},
@@ -44,13 +44,15 @@ func (wc *WarehouseController) Create() gin.HandlerFunc {
 			return
 		}
 
-		w, err := wc.service.Create(
-			warehouseInput.WarehouseCode,
-			warehouseInput.Address,
-			warehouseInput.Telephone,
-			warehouseInput.MinimumCapacity,
-			warehouseInput.MinimumTemperature,
-		)
+		warehouse := domain.Warehouse{
+			WarehouseCode:      warehouseInput.WarehouseCode,
+			Address:            warehouseInput.Address,
+			Telephone:          warehouseInput.Telephone,
+			MinimumCapacity:    warehouseInput.MinimumCapacity,
+			MinimumTemperature: warehouseInput.MinimumTemperature,
+		}
+
+		createdWarehouse, err := wc.service.Create(ctx, &warehouse)
 
 		if err != nil {
 			ctx.AbortWithStatusJSON(
@@ -61,7 +63,7 @@ func (wc *WarehouseController) Create() gin.HandlerFunc {
 		}
 
 		ctx.JSON(
-			http.StatusCreated, w,
+			http.StatusCreated, createdWarehouse,
 		)
 	}
 }
@@ -76,7 +78,7 @@ func (wc *WarehouseController) Create() gin.HandlerFunc {
 // @Router /warehouses [get]
 func (wc *WarehouseController) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		ws, err := wc.service.GetAll()
+		ws, err := wc.service.GetAll(ctx)
 
 		if err != nil {
 			ctx.AbortWithStatusJSON(
@@ -106,7 +108,7 @@ func (wc *WarehouseController) GetAll() gin.HandlerFunc {
 // @Router /warehouses/{id} [get]
 func (wc *WarehouseController) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		warehouseId, err := strconv.Atoi(ctx.Param("id"))
+		warehouseId, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.AbortWithStatusJSON(
 				http.StatusBadRequest,
@@ -115,7 +117,7 @@ func (wc *WarehouseController) GetById() gin.HandlerFunc {
 			return
 		}
 
-		w, err := wc.service.FindById(warehouseId)
+		w, err := wc.service.FindById(ctx, warehouseId)
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
@@ -143,7 +145,7 @@ func (wc *WarehouseController) GetById() gin.HandlerFunc {
 // @Router /warehouses/{id} [patch]
 func (wc *WarehouseController) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		warehouseId, err := strconv.Atoi(ctx.Param("id"))
+		warehouseId, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.AbortWithStatusJSON(
 				http.StatusBadRequest,
@@ -152,7 +154,7 @@ func (wc *WarehouseController) Update() gin.HandlerFunc {
 			return
 		}
 
-		var warehouseInput warehouses.UpdateWarehouseInput
+		var warehouseInput domain.UpdateWarehouseInput
 		if err := ctx.ShouldBindJSON(&warehouseInput); err != nil {
 			ctx.AbortWithStatusJSON(
 				http.StatusUnprocessableEntity,
@@ -161,7 +163,7 @@ func (wc *WarehouseController) Update() gin.HandlerFunc {
 			return
 		}
 
-		if _, err := wc.service.FindById(warehouseId); err != nil {
+		if _, err := wc.service.FindById(ctx, warehouseId); err != nil {
 			ctx.AbortWithStatusJSON(
 				http.StatusNotFound,
 				gin.H{"error": "could not find warehouse"},
@@ -169,14 +171,16 @@ func (wc *WarehouseController) Update() gin.HandlerFunc {
 			return
 		}
 
-		updatedWarehouse, err := wc.service.Update(
-			warehouseId,
-			warehouseInput.WarehouseCode,
-			warehouseInput.Address,
-			warehouseInput.Telephone,
-			warehouseInput.MinimumCapacity,
-			warehouseInput.MinimumTemperature,
-		)
+		warehouse := domain.Warehouse{
+			ID:                 warehouseId,
+			WarehouseCode:      warehouseInput.WarehouseCode,
+			Address:            warehouseInput.Address,
+			Telephone:          warehouseInput.Telephone,
+			MinimumCapacity:    warehouseInput.MinimumCapacity,
+			MinimumTemperature: warehouseInput.MinimumTemperature,
+		}
+
+		updatedWarehouse, err := wc.service.Update(ctx, &warehouse)
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
@@ -202,7 +206,7 @@ func (wc *WarehouseController) Update() gin.HandlerFunc {
 // @Router /warehouses/{id} [delete]
 func (wc *WarehouseController) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		warehouseId, err := strconv.Atoi(ctx.Param("id"))
+		warehouseId, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.AbortWithStatusJSON(
 				http.StatusBadRequest,
@@ -211,7 +215,7 @@ func (wc *WarehouseController) Delete() gin.HandlerFunc {
 			return
 		}
 
-		if err := wc.service.Delete(warehouseId); err != nil {
+		if err := wc.service.Delete(ctx, warehouseId); err != nil {
 			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
 			})
