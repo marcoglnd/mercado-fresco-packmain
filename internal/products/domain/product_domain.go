@@ -30,6 +30,7 @@ type Repository interface {
 	GetProductRecordsById(ctx context.Context, id int64) (*ProductRecords, error)
 
 	GetQtyOfRecordsById(ctx context.Context, id int64) (*QtyOfRecords, error)
+	GetQtyOfAllRecords(ctx context.Context) (*[]QtyOfRecords, error)
 }
 
 type Service interface {
@@ -43,6 +44,7 @@ type Service interface {
 	GetProductRecordsById(ctx context.Context, id int64) (*ProductRecords, error)
 
 	GetQtyOfRecordsById(ctx context.Context, id int64) (*QtyOfRecords, error)
+	GetQtyOfAllRecords(ctx context.Context) (*[]QtyOfRecords, error)
 }
 
 type RequestProducts struct {

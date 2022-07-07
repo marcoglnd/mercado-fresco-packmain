@@ -48,3 +48,12 @@ func CreateRandomQtyOfRecords() domain.QtyOfRecords {
 	}
 	return qtyOfRecords
 }
+
+func CreateRandomListQtyOfRecords() []domain.QtyOfRecords {
+	var listOfQtyOfRecords []domain.QtyOfRecords
+	for i := 1; i <= 5; i++ {
+		qtyOfRecords := CreateRandomQtyOfRecords()
+		listOfQtyOfRecords = append(listOfQtyOfRecords, qtyOfRecords)
+	}
+	return listOfQtyOfRecords
+}
