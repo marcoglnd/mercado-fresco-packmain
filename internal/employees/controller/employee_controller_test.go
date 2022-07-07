@@ -102,3 +102,59 @@ func TestCreateNewEmployee(t *testing.T) {
 		mockEmployeeService.AssertExpectations(t)
 	})
 }
+
+func TestGetAll(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		mockEmployee := utils.CreateRandomListEmployees()
+		mockEmployeeService := mocks.NewEmployeeService(t)
+
+		mockEmployeeService.On("GetAll",
+			mock.Anything,
+		).Return(&mockEmployee, nil).Once()
+
+		payload, err := json.Marshal(mockEmployee)
+		assert.NoError(t, err)
+
+		req := httptest.NewRequest(http.MethodGet, "/api/v1/employees", bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		employeeController := EmployeeController{service: mockEmployeeService}
+
+		engine.GET("/api/v1/employees", employeeController.GetAll())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+
+		mockEmployeeService.AssertExpectations(t)
+	})
+
+	t.Run("In case of internal server error", func(t *testing.T) {
+		mockEmployeeService := mocks.NewEmployeeService(t)
+		mockEmployee := &[]domain.Employee{}
+
+		mockEmployeeService.On("GetAll",
+			mock.Anything,
+		).Return(mockEmployee, errors.New("Internal server error")).Maybe()
+
+		payload, err := json.Marshal(mockEmployee)
+		assert.NoError(t, err)
+
+		req := httptest.NewRequest(http.MethodGet, "/api/v1/employees", bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		employeeController := EmployeeController{service: mockEmployeeService}
+
+		engine.GET("/api/v1/employees", employeeController.GetAll())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
+
+		mockEmployeeService.AssertExpectations(t)
+	})
+}

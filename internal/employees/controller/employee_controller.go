@@ -49,7 +49,7 @@ func (c EmployeeController) GetAll() gin.HandlerFunc {
 
 		employees, err := c.service.GetAll(ctx.Request.Context())
 		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
