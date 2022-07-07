@@ -13,6 +13,7 @@ import (
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/carriers/controller"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/carriers/domain"
 	mock "github.com/marcoglnd/mercado-fresco-packmain/internal/carriers/mocks"
+	"github.com/marcoglnd/mercado-fresco-packmain/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -21,13 +22,7 @@ func TestCreateOk(t *testing.T) {
 	serviceMock := mock.NewMockCarrierService(ctrl)
 	controller := controller.NewCarrierController(serviceMock)
 
-	carrierInput := domain.Carrier{
-		Cid:         "CID#1",
-		CompanyName: "Some Company",
-		Address:     "Rua Sao Paulo 200",
-		Telephone:   "30021025",
-		LocalityId:  1,
-	}
+	carrierInput := utils.CreateRandomCarrier()
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(carrierInput)
 	assert.Nil(t, err)
@@ -57,13 +52,7 @@ func TestCreateConflict(t *testing.T) {
 	serviceMock := mock.NewMockCarrierService(ctrl)
 	controller := controller.NewCarrierController(serviceMock)
 
-	carrierInput := domain.Carrier{
-		Cid:         "CID#1",
-		CompanyName: "Some Company",
-		Address:     "Rua Sao Paulo 200",
-		Telephone:   "30021025",
-		LocalityId:  1,
-	}
+	carrierInput := utils.CreateRandomCarrier()
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(carrierInput)
 	assert.Nil(t, err)
@@ -104,13 +93,7 @@ func TestCreateFail(t *testing.T) {
 	serviceMock := mock.NewMockCarrierService(ctrl)
 	controller := controller.NewCarrierController(serviceMock)
 
-	carrierInput := domain.Carrier{
-		Cid:         "CID#1",
-		CompanyName: "Some Company",
-		Address:     "Rua Sao Paulo 200",
-		Telephone:   "30021025",
-		LocalityId:  1,
-	}
+	carrierInput := utils.CreateRandomCarrier()
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(carrierInput)
 	assert.Nil(t, err)

@@ -14,6 +14,7 @@ import (
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses/controller"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses/domain"
 	mock "github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses/mocks"
+	"github.com/marcoglnd/mercado-fresco-packmain/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -22,13 +23,7 @@ func TestCreateOk(t *testing.T) {
 	serviceMock := mock.NewMockWarehouseService(ctrl)
 	controller := controller.NewWarehouseController(serviceMock)
 
-	warehouseInput := domain.Warehouse{
-		WarehouseCode:      "IBC",
-		Address:            "Rua Sao Paulo",
-		Telephone:          "1130304040",
-		MinimumCapacity:    3,
-		MinimumTemperature: 10,
-	}
+	warehouseInput := utils.CreateRandomWarehouse()
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(warehouseInput)
 	assert.Nil(t, err)
@@ -75,13 +70,7 @@ func TestCreateConflict(t *testing.T) {
 	serviceMock := mock.NewMockWarehouseService(ctrl)
 	controller := controller.NewWarehouseController(serviceMock)
 
-	warehouseInput := domain.Warehouse{
-		WarehouseCode:      "IBC",
-		Address:            "Rua Sao Paulo",
-		Telephone:          "1130304040",
-		MinimumCapacity:    3,
-		MinimumTemperature: 10,
-	}
+	warehouseInput := utils.CreateRandomWarehouse()
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(warehouseInput)
 	assert.Nil(t, err)
@@ -105,13 +94,7 @@ func TestCreateFail(t *testing.T) {
 	serviceMock := mock.NewMockWarehouseService(ctrl)
 	controller := controller.NewWarehouseController(serviceMock)
 
-	warehouseInput := domain.Warehouse{
-		WarehouseCode:      "IBC",
-		Address:            "Rua Sao Paulo",
-		Telephone:          "1130304040",
-		MinimumCapacity:    3,
-		MinimumTemperature: 10,
-	}
+	warehouseInput := utils.CreateRandomWarehouse()
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(warehouseInput)
 	assert.Nil(t, err)
@@ -265,14 +248,7 @@ func TestUpdateNotFound(t *testing.T) {
 	serviceMock := mock.NewMockWarehouseService(ctrl)
 	controller := controller.NewWarehouseController(serviceMock)
 
-	warehouseInput := domain.Warehouse{
-		ID:                 int64(1),
-		WarehouseCode:      "IBC",
-		Address:            "Rua Sao Paulo",
-		Telephone:          "1130304040",
-		MinimumCapacity:    3,
-		MinimumTemperature: 10,
-	}
+	warehouseInput := utils.CreateRandomWarehouse()
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(warehouseInput)
 	assert.Nil(t, err)
@@ -296,14 +272,7 @@ func TestUpdateFail(t *testing.T) {
 	serviceMock := mock.NewMockWarehouseService(ctrl)
 	controller := controller.NewWarehouseController(serviceMock)
 
-	warehouseInput := domain.Warehouse{
-		ID:                 int64(1),
-		WarehouseCode:      "IBC",
-		Address:            "Rua Sao Paulo",
-		Telephone:          "1130304040",
-		MinimumCapacity:    3,
-		MinimumTemperature: 10,
-	}
+	warehouseInput := utils.CreateRandomWarehouse()
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(warehouseInput)
 	assert.Nil(t, err)
@@ -328,14 +297,7 @@ func TestUpdateOk(t *testing.T) {
 	serviceMock := mock.NewMockWarehouseService(ctrl)
 	controller := controller.NewWarehouseController(serviceMock)
 
-	warehouseInput := domain.Warehouse{
-		ID:                 int64(1),
-		WarehouseCode:      "IBC",
-		Address:            "Rua Sao Paulo",
-		Telephone:          "1130304040",
-		MinimumCapacity:    3,
-		MinimumTemperature: 10,
-	}
+	warehouseInput := utils.CreateRandomWarehouse()
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(warehouseInput)
 	assert.Nil(t, err)

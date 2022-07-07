@@ -1,8 +1,11 @@
 package main
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/routes"
 	"github.com/marcoglnd/mercado-fresco-packmain/docs"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/db"
@@ -26,6 +29,10 @@ import (
 // @query.collection.format multi
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
 	dbConnection := db.GetDBConnection()
 	PATH := "/api/v1"
 	router := gin.Default()

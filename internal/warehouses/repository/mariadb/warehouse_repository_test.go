@@ -8,18 +8,12 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses/domain"
+	"github.com/marcoglnd/mercado-fresco-packmain/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCreate(t *testing.T) {
-	warehouseFake := &domain.Warehouse{
-		WarehouseCode:      "IBC",
-		Address:            "Rua Sao Paulo",
-		Telephone:          "1130304040",
-		MinimumCapacity:    3,
-		MinimumTemperature: 10,
-	}
+	warehouseFake := utils.CreateRandomWarehouse()
 
 	t.Run("Must create warehouse", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
@@ -37,7 +31,7 @@ func TestCreate(t *testing.T) {
 
 		warehousesRepo := NewWarehouseRepository(db)
 
-		wh, err := warehousesRepo.Create(context.TODO(), warehouseFake)
+		wh, err := warehousesRepo.Create(context.TODO(), &warehouseFake)
 		assert.NoError(t, err)
 		assert.Equal(t, warehouseFake.Address, wh.Address)
 	})
@@ -58,7 +52,7 @@ func TestCreate(t *testing.T) {
 
 		warehousesRepo := NewWarehouseRepository(db)
 
-		_, err = warehousesRepo.Create(context.TODO(), warehouseFake)
+		_, err = warehousesRepo.Create(context.TODO(), &warehouseFake)
 		assert.Error(t, err)
 	})
 
@@ -78,21 +72,14 @@ func TestCreate(t *testing.T) {
 
 		warehousesRepo := NewWarehouseRepository(db)
 
-		_, err = warehousesRepo.Create(context.TODO(), warehouseFake)
+		_, err = warehousesRepo.Create(context.TODO(), &warehouseFake)
 		assert.Error(t, err)
 	})
 
 }
 
 func TestUpdate(t *testing.T) {
-	warehouseFake := &domain.Warehouse{
-		ID:                 2,
-		WarehouseCode:      "IBC",
-		Address:            "Rua Sao Paulo",
-		Telephone:          "1130304040",
-		MinimumCapacity:    3,
-		MinimumTemperature: 10,
-	}
+	warehouseFake := utils.CreateRandomWarehouse()
 
 	t.Run("Must update warehouse", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
@@ -111,7 +98,7 @@ func TestUpdate(t *testing.T) {
 
 		warehousesRepo := NewWarehouseRepository(db)
 
-		err = warehousesRepo.Update(context.TODO(), warehouseFake)
+		err = warehousesRepo.Update(context.TODO(), &warehouseFake)
 		assert.NoError(t, err)
 	})
 
@@ -132,22 +119,14 @@ func TestUpdate(t *testing.T) {
 
 		warehousesRepo := NewWarehouseRepository(db)
 
-		err = warehousesRepo.Update(context.TODO(), warehouseFake)
+		err = warehousesRepo.Update(context.TODO(), &warehouseFake)
 		assert.Error(t, err)
 	})
 
 }
 
 func TestFindById(t *testing.T) {
-	warehouseFake := &domain.Warehouse{
-		ID:                 2,
-		WarehouseCode:      "IBC",
-		Address:            "Rua Sao Paulo",
-		Telephone:          "1130304040",
-		MinimumCapacity:    3,
-		MinimumTemperature: 10,
-		LocalityId:         1,
-	}
+	warehouseFake := utils.CreateRandomWarehouse()
 
 	t.Run("Must find warehouse", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
@@ -204,15 +183,7 @@ func TestFindById(t *testing.T) {
 }
 
 func TestFindByWarehouseCode(t *testing.T) {
-	warehouseFake := &domain.Warehouse{
-		ID:                 2,
-		WarehouseCode:      "IBC",
-		Address:            "Rua Sao Paulo",
-		Telephone:          "1130304040",
-		MinimumCapacity:    3,
-		MinimumTemperature: 10,
-		LocalityId:         1,
-	}
+	warehouseFake := utils.CreateRandomWarehouse()
 
 	t.Run("Must find warehouse", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
@@ -287,15 +258,7 @@ func TestFindByWarehouseCode(t *testing.T) {
 }
 
 func TestGetAll(t *testing.T) {
-	warehouseFake := &domain.Warehouse{
-		ID:                 2,
-		WarehouseCode:      "IBC",
-		Address:            "Rua Sao Paulo",
-		Telephone:          "1130304040",
-		MinimumCapacity:    3,
-		MinimumTemperature: 10,
-		LocalityId:         1,
-	}
+	warehouseFake := utils.CreateRandomWarehouse()
 
 	t.Run("Must find warehouses", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
@@ -396,14 +359,7 @@ func TestGetAll(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	warehouseFake := &domain.Warehouse{
-		ID:                 1,
-		WarehouseCode:      "IBC",
-		Address:            "Rua Sao Paulo",
-		Telephone:          "1130304040",
-		MinimumCapacity:    3,
-		MinimumTemperature: 10,
-	}
+	warehouseFake := utils.CreateRandomWarehouse()
 
 	t.Run("Must delete warehouse", func(t *testing.T) {
 		db, mock, err := sqlmock.New()

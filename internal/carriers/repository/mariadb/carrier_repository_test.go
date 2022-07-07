@@ -8,18 +8,12 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/marcoglnd/mercado-fresco-packmain/internal/carriers/domain"
+	"github.com/marcoglnd/mercado-fresco-packmain/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCreate(t *testing.T) {
-	carrierFake := &domain.Carrier{
-		Cid:         "CID#1",
-		CompanyName: "Some Company",
-		Address:     "Rua Sao Paulo 200",
-		Telephone:   "30021025",
-		LocalityId:  1,
-	}
+	carrierFake := utils.CreateRandomCarrier()
 
 	t.Run("Must create carrier", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
@@ -37,7 +31,7 @@ func TestCreate(t *testing.T) {
 
 		carriersRepo := NewCarrierRepository(db)
 
-		ca, err := carriersRepo.Create(context.TODO(), carrierFake)
+		ca, err := carriersRepo.Create(context.TODO(), &carrierFake)
 		assert.NoError(t, err)
 		assert.Equal(t, carrierFake.Address, ca.Address)
 	})
@@ -58,7 +52,7 @@ func TestCreate(t *testing.T) {
 
 		carriersRepo := NewCarrierRepository(db)
 
-		_, err = carriersRepo.Create(context.TODO(), carrierFake)
+		_, err = carriersRepo.Create(context.TODO(), &carrierFake)
 		assert.Error(t, err)
 	})
 
@@ -78,20 +72,14 @@ func TestCreate(t *testing.T) {
 
 		carriersRepo := NewCarrierRepository(db)
 
-		_, err = carriersRepo.Create(context.TODO(), carrierFake)
+		_, err = carriersRepo.Create(context.TODO(), &carrierFake)
 		assert.Error(t, err)
 	})
 
 }
 
 func TestFindById(t *testing.T) {
-	carrierFake := &domain.Carrier{
-		Cid:         "CID#1",
-		CompanyName: "Some Company",
-		Address:     "Rua Sao Paulo 200",
-		Telephone:   "30021025",
-		LocalityId:  1,
-	}
+	carrierFake := utils.CreateRandomCarrier()
 
 	t.Run("Must find carrier", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
@@ -146,13 +134,7 @@ func TestFindById(t *testing.T) {
 }
 
 func TestFindByCid(t *testing.T) {
-	carrierFake := &domain.Carrier{
-		Cid:         "CID#1",
-		CompanyName: "Some Company",
-		Address:     "Rua Sao Paulo 200",
-		Telephone:   "30021025",
-		LocalityId:  1,
-	}
+	carrierFake := utils.CreateRandomCarrier()
 
 	t.Run("Must find carrier", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
@@ -225,14 +207,7 @@ func TestFindByCid(t *testing.T) {
 }
 
 func TestGetAll(t *testing.T) {
-	carrierFake := &domain.Carrier{
-		ID:          2,
-		Cid:         "CID#1",
-		CompanyName: "Some Company",
-		Address:     "Rua Sao Paulo 200",
-		Telephone:   "30021025",
-		LocalityId:  1,
-	}
+	carrierFake := utils.CreateRandomCarrier()
 
 	t.Run("Must find carriers", func(t *testing.T) {
 		db, mock, err := sqlmock.New()

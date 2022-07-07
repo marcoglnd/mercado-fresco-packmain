@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 var dbConnection *sql.DB
@@ -14,10 +12,6 @@ var dbConnection *sql.DB
 func GetDBConnection() *sql.DB {
 	if dbConnection != nil {
 		return dbConnection
-	}
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal(err)
 	}
 	dataSource := fmt.Sprintf(
 		"%s:%s@tcp(localhost:%s)/%s?parseTime=true",
