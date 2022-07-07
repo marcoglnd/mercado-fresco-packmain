@@ -1,17 +1,19 @@
 package routes
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
-	"github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses/controller"
+	repository "github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses/repository/mariadb"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses/service"
 )
 
-func warehousesRouter(superRouter *gin.RouterGroup) {
-	repository := warehouses.NewRepository()
-	service := warehouses.NewService(repository)
-	w := controllers.NewWarehouse(service)
+func warehousesRouter(superRouter *gin.RouterGroup, dbConnection *sql.DB) {
+	repository := repository.NewWarehouseRepository(dbConnection)
+	service := service.NewWarehouseService(repository)
+	warehouseController := controller.NewWarehouseController(service)
 
 	pr := superRouter.Group("/warehouses")
 	{
@@ -20,10 +22,10 @@ func warehousesRouter(superRouter *gin.RouterGroup) {
 				"debug": "is running",
 			})
 		})
-		pr.POST("/", w.Create())
-		pr.GET("/", w.GetAll())
-		pr.GET("/:id", w.GetById())
-		pr.PATCH("/:id", w.Update())
-		pr.DELETE("/:id", w.Delete())
+		pr.POST("/", warehouseController.Create())
+		pr.GET("/", warehouseController.GetAll())
+		pr.GET("/:id", warehouseController.GetById())
+		pr.PATCH("/:id", warehouseController.Update())
+		pr.DELETE("/:id", warehouseController.Delete())
 	}
 }
