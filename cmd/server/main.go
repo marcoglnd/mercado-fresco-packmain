@@ -7,6 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 	"github.com/marcoglnd/mercado-fresco-packmain/cmd/server/routes"
+	"github.com/marcoglnd/mercado-fresco-packmain/db"
 	"github.com/marcoglnd/mercado-fresco-packmain/docs"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/db"
 	ginSwagger "github.com/swaggo/gin-swagger"

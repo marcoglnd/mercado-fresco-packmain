@@ -42,12 +42,30 @@ func Test_CreateSeller_fail(t *testing.T) {
 	r := createServer()
 
 	req, rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
-		"company_name": "Jhon", "address": "Doe"
+		"cid": 1234, "company_name": "Jhon", "address": "Doe"
+	}`)
+
+	second_req, second_rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
+		"cid": 1234, "company_name": "Jhon", "telephone": "1234567"
+	}`)
+
+	third_req, third_rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
+		"cid": 1234, "address": "Doe", "telephone": "1234567"
+	}`)
+
+	fourth_req, fouth_rr := createRequestTest(http.MethodPost, getPathUrl("/sellers/"), `{
+		"company_name": "Jhon", "address": "Doe", "telephone": "1234567"
 	}`)
 
 	r.ServeHTTP(rr, req)
+	r.ServeHTTP(second_rr, second_req)
+	r.ServeHTTP(third_rr, third_req)
+	r.ServeHTTP(fouth_rr, fourth_req)
 
 	assert.Equal(t, http.StatusUnprocessableEntity, rr.Code)
+	assert.Equal(t, http.StatusUnprocessableEntity, second_rr.Code)
+	assert.Equal(t, http.StatusUnprocessableEntity, third_rr.Code)
+	assert.Equal(t, http.StatusUnprocessableEntity, fouth_rr.Code)
 }
 
 func Test_CreateSeller_conflict(t *testing.T) {
