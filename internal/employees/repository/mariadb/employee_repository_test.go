@@ -230,7 +230,7 @@ func TestUpdateEmployee(t *testing.T) {
 		assert.Error(t, err)
 	})
 
-	t.Run("employee not updated", func(t *testing.T) {
+	t.Run("employee's ID not founded", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
 
 		assert.NoError(t, err)
@@ -291,7 +291,7 @@ func TestDeleteEmployee(t *testing.T) {
 		assert.Error(t, err)
 	})
 
-	t.Run("employee not deleted", func(t *testing.T) {
+	t.Run("employee's ID not founded", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
 
 		assert.NoError(t, err)
