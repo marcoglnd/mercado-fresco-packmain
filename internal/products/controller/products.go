@@ -243,7 +243,7 @@ func (c *Controller) GetQtyOfRecordsById() gin.HandlerFunc {
 		if err := ctx.ShouldBindQuery(&req); err != nil {
 			products, err := c.service.GetQtyOfAllRecords(ctx.Request.Context())
 			if err != nil {
-				ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 				return
 			}
 			ctx.JSON(http.StatusOK, gin.H{"data": products})

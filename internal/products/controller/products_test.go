@@ -673,4 +673,36 @@ func TestGetQtyOfRecordsById(t *testing.T) {
 
 		productsServiceMock.AssertExpectations(t)
 	})
+
+	t.Run("In case of internal server error", func(t *testing.T) {
+		mockQtyOfRecords := utils.CreateRandomQtyOfRecords()
+		productsServiceMock := mocks.NewService(t)
+
+		productsServiceMock.On("GetQtyOfRecordsById",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(&mockQtyOfRecords, nil).Maybe().
+			On("GetQtyOfAllRecords",
+				mock.Anything,
+			).Return(nil, errors.New("Internal server error")).Maybe()
+
+		payload, err := json.Marshal(mockQtyOfRecords)
+		assert.NoError(t, err)
+
+		PATH := "/api/v1/products/reportRecords"
+		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		productController := Controller{service: productsServiceMock}
+
+		engine.GET("/api/v1/products/reportRecords", productController.GetQtyOfRecordsById())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
+
+		productsServiceMock.AssertExpectations(t)
+	})
 }
