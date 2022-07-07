@@ -248,3 +248,119 @@ func TestGetById(t *testing.T) {
 		mockEmployeeService.AssertExpectations(t)
 	})
 }
+
+func TestUpdate(t *testing.T) {
+
+	t.Run("success", func(t *testing.T) {
+		mockEmployee := utils.CreateRandomEmployee()
+		mockEmployeeService := mocks.NewEmployeeService(t)
+
+		mockEmployeeService.On("Update",
+			mock.Anything,
+			mock.Anything,
+		).Return(&mockEmployee, nil).Once()
+
+		payload, err := json.Marshal(mockEmployee)
+		assert.NoError(t, err)
+
+		PATH := fmt.Sprintf("/api/v1/employees/%v", mockEmployee.ID)
+		req := httptest.NewRequest(http.MethodPatch, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		employeeController := EmployeeController{service: mockEmployeeService}
+
+		engine.PATCH("/api/v1/employees/:id", employeeController.Update())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+
+		mockEmployeeService.AssertExpectations(t)
+	})
+
+	t.Run("In case of bad request", func(t *testing.T) {
+		mockEmployee := utils.CreateRandomEmployee()
+		mockEmployeeService := mocks.NewEmployeeService(t)
+
+		mockEmployeeService.On("Update",
+			mock.Anything,
+			mock.Anything,
+		).Return(&mockEmployee, errors.New("bad request")).Maybe()
+
+		PATH := fmt.Sprintf("/api/v1/employees/%v", mockEmployee.ID)
+		req := httptest.NewRequest(http.MethodPatch, PATH, nil)
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		employeeController := EmployeeController{service: mockEmployeeService}
+
+		engine.PATCH("/api/v1/employees/:id", employeeController.Update())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusBadRequest, rec.Code)
+
+		mockEmployeeService.AssertExpectations(t)
+	})
+
+	t.Run("In case of invalid employee id", func(t *testing.T) {
+		mockEmployeeService := mocks.NewEmployeeService(t)
+		mockEmployee := &domain.Employee{}
+
+		mockEmployeeService.On("Update",
+			mock.Anything,
+			mock.Anything,
+		).Return(mockEmployee, errors.New("bad request")).Maybe()
+
+		payload, err := json.Marshal(mockEmployee)
+		assert.NoError(t, err)
+
+		PATH := fmt.Sprintf("/api/v1/employees/%v", "a")
+		req := httptest.NewRequest(http.MethodPatch, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		employeeController := EmployeeController{service: mockEmployeeService}
+
+		engine.PATCH("/api/v1/employees/:id", employeeController.Update())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusBadRequest, rec.Code)
+
+		mockEmployeeService.AssertExpectations(t)
+	})
+
+	t.Run("In case of nonexisting employee", func(t *testing.T) {
+		mockEmployee := utils.CreateRandomEmployee()
+		mockEmployeeService := mocks.NewEmployeeService(t)
+
+		mockEmployeeService.On("Update",
+			mock.Anything,
+			mock.Anything,
+		).Return(nil, errors.New("expected not found error")).Maybe()
+
+		payload, err := json.Marshal(mockEmployee)
+		assert.NoError(t, err)
+
+		PATH := fmt.Sprintf("/api/v1/employees/%v", utils.RandomInt64())
+		req := httptest.NewRequest(http.MethodPatch, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		employeeController := EmployeeController{service: mockEmployeeService}
+
+		engine.PATCH("/api/v1/employees/:id", employeeController.Update())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusNotFound, rec.Code)
+
+		mockEmployeeService.AssertExpectations(t)
+	})
+}
