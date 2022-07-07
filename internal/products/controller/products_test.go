@@ -584,7 +584,10 @@ func TestGetQtyOfRecordsById(t *testing.T) {
 		productsServiceMock.On("GetQtyOfRecordsById",
 			mock.Anything,
 			mock.AnythingOfType("int64"),
-		).Return(&mockQtyOfRecords, nil).Once()
+		).Return(&mockQtyOfRecords, nil).Once().
+			On("GetQtyOfAllRecords",
+				mock.Anything,
+			).Return(nil, nil).Maybe()
 
 		payload, err := json.Marshal(mockQtyOfRecords)
 		assert.NoError(t, err)
@@ -606,19 +609,22 @@ func TestGetQtyOfRecordsById(t *testing.T) {
 		productsServiceMock.AssertExpectations(t)
 	})
 
-	t.Run("In case of invalid qty of records id", func(t *testing.T) {
+	t.Run("In case of empty id", func(t *testing.T) {
 		productsServiceMock := mocks.NewService(t)
-		mockQtyOfRecordsBad := &domain.QtyOfRecords{}
+		mockListQtyOfRecords := utils.CreateRandomListQtyOfRecords()
 
 		productsServiceMock.On("GetQtyOfRecordsById",
 			mock.Anything,
 			mock.AnythingOfType("string"),
-		).Return(mockQtyOfRecordsBad, errors.New("bad request")).Maybe()
+		).Return(&mockListQtyOfRecords, errors.New("bad request")).Maybe().
+			On("GetQtyOfAllRecords",
+				mock.Anything,
+			).Return(&mockListQtyOfRecords, nil).Once()
 
-		payload, err := json.Marshal(mockQtyOfRecordsBad)
+		payload, err := json.Marshal(mockListQtyOfRecords)
 		assert.NoError(t, err)
 
-		PATH := fmt.Sprintf("/api/v1/products/reportRecords?id=%v", "a")
+		PATH := fmt.Sprintf("/api/v1/products/reportRecords?id=%v", "")
 		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
 		rec := httptest.NewRecorder()
 
@@ -630,12 +636,12 @@ func TestGetQtyOfRecordsById(t *testing.T) {
 
 		engine.ServeHTTP(rec, req)
 
-		assert.Equal(t, http.StatusBadRequest, rec.Code)
+		assert.Equal(t, http.StatusOK, rec.Code)
 
 		productsServiceMock.AssertExpectations(t)
 	})
 
-	t.Run("In case of nonexisting qty of records", func(t *testing.T) {
+	t.Run("In case of nonexisting id qty of records in database", func(t *testing.T) {
 		mockQtyOfRecords := utils.CreateRandomQtyOfRecords()
 		mockQtyOfRecordsId := utils.RandomInt64()
 		productsServiceMock := mocks.NewService(t)
@@ -643,7 +649,10 @@ func TestGetQtyOfRecordsById(t *testing.T) {
 		productsServiceMock.On("GetQtyOfRecordsById",
 			mock.Anything,
 			mock.AnythingOfType("int64"),
-		).Return(nil, errors.New("expected conflict error")).Maybe()
+		).Return(nil, errors.New("expected conflict error")).Maybe().
+			On("GetQtyOfAllRecords",
+				mock.Anything,
+			).Return(nil, nil).Maybe()
 
 		payload, err := json.Marshal(mockQtyOfRecords)
 		assert.NoError(t, err)

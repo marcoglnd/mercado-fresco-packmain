@@ -95,7 +95,6 @@ type RequestProductRecords struct {
 type RequestProductRecordId struct {
 	Id int64 `form:"id" binding:"required,min=1"`
 }
-
 type QtyOfRecords struct {
 	ProductId    int64  `json:"product_id"`
 	Description  string `json:"description"`

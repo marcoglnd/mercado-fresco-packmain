@@ -246,7 +246,7 @@ func (c *Controller) GetQtyOfRecordsById() gin.HandlerFunc {
 				ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 				return
 			}
-			ctx.JSON(http.StatusOK, products)
+			ctx.JSON(http.StatusOK, gin.H{"data": products})
 			return
 		}
 		product, err := c.service.GetQtyOfRecordsById(ctx.Request.Context(), req.Id)
@@ -254,6 +254,6 @@ func (c *Controller) GetQtyOfRecordsById() gin.HandlerFunc {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": "invalid id"})
 			return
 		}
-		ctx.JSON(http.StatusOK, product)
+		ctx.JSON(http.StatusOK, gin.H{"data": product})
 	}
 }
