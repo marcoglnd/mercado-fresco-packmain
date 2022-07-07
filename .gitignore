@@ -34,6 +34,7 @@ go.work
 # Database persistent volume
 db/.data
 
+
 # IDE
 \.idea/
 \.vscode/
