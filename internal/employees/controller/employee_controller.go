@@ -100,7 +100,7 @@ func (c EmployeeController) Create() gin.HandlerFunc {
 
 		var req requestEmployeeCreate
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 			return
 		}
 
