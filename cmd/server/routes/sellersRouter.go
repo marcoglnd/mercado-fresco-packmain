@@ -19,14 +19,12 @@ func sellersRouter(superRouter *gin.RouterGroup, DBConnection *sql.DB) {
 	//3. controller
 	sellerController, _ := controller.NewSellerController(sellerService)
 
-	superRouter.POST("/localities", sellerController.CreateLocality())
-
-	pr := superRouter.Group("/sellers")
+	sl := superRouter.Group("/sellers")
 	{
-		pr.GET("/", sellerController.GetAll())
-		pr.GET("/:id", sellerController.GetByID())
-		pr.POST("/", sellerController.Create())
-		pr.PATCH("/:id", sellerController.Update())
-		pr.DELETE("/:id", sellerController.Delete())
+		sl.GET("/", sellerController.GetAll())
+		sl.GET("/:id", sellerController.GetByID())
+		sl.POST("/", sellerController.Create())
+		sl.PATCH("/:id", sellerController.Update())
+		sl.DELETE("/:id", sellerController.Delete())
 	}
 }

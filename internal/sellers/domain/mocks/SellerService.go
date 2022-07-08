@@ -37,27 +37,6 @@ func (_m *SellerService) Create(ctx context.Context, seller *domain.Seller) (*do
 	return r0, r1
 }
 
-// CreateLocality provides a mock function with given fields: ctx, record
-func (_m *SellerService) CreateLocality(ctx context.Context, record *domain.Locality) (int64, error) {
-	ret := _m.Called(ctx, record)
-
-	var r0 int64
-	if rf, ok := ret.Get(0).(func(context.Context, *domain.Locality) int64); ok {
-		r0 = rf(ctx, record)
-	} else {
-		r0 = ret.Get(0).(int64)
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, *domain.Locality) error); ok {
-		r1 = rf(ctx, record)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
 // Delete provides a mock function with given fields: ctx, id
 func (_m *SellerService) Delete(ctx context.Context, id int64) error {
 	ret := _m.Called(ctx, id)

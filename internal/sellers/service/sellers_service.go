@@ -56,18 +56,34 @@ func (s sellerService) Delete(ctx context.Context, id int64) error {
 	return nil
 }
 
-func (s sellerService) CreateLocality(ctx context.Context, local *domain.Locality) (int64, error) {
-	newLocality, err := s.repository.CreateLocality(ctx, local)
-	if err != nil {
-		return newLocality, err
-	}
-	return newLocality, nil
-}
+// func (s sellerService) CreateLocality(ctx context.Context, local *domain.Locality) (int64, error) {
+// 	newLocality, err := s.repository.CreateLocality(ctx, local)
+// 	if err != nil {
+// 		return newLocality, err
+// 	}
+// 	return newLocality, nil
+// }
 
-func (s sellerService) GetLocalityByID(ctx context.Context, id int64) (*domain.GetLocality, error) {
-	getLocality, err := s.repository.GetLocalityByID(ctx, id)
-	if err != nil {
-		return getLocality, err
-	}
-	return getLocality, nil
-}
+// func (s sellerService) GetLocalityByID(ctx context.Context, id int64) (*domain.GetLocality, error) {
+// 	getLocality, err := s.repository.GetLocalityByID(ctx, id)
+// 	if err != nil {
+// 		return getLocality, err
+// 	}
+// 	return getLocality, nil
+// }
+
+// func (s sellerService) GetQtyOfSellers(ctx context.Context) (*[]domain.QtyOfSellers, error) {
+// 	listOfSellers, err := s.repository.GetQtyOfSellers(ctx)
+// 	if err != nil {
+// 		return listOfSellers, err
+// 	}
+// 	return listOfSellers, nil
+// }
+
+// func (s sellerService) GetQtyOfSellersByLocalityId(ctx context.Context, id int64) (*domain.QtyOfSellers, error) {
+// 	getSellersByLocalityID, err := s.repository.GetQtyOfSellersByLocalityId(ctx, id)
+// 	if err != nil {
+// 		return getSellersByLocalityID, err
+// 	}
+// 	return getSellersByLocalityID, nil
+// }
