@@ -29,7 +29,7 @@ func (s purchaseOrderService) Create(ctx context.Context,
 	}
 
 	if foundPurchaseOrder != nil {
-		return nil, domain.ErrDuplicatedID
+		return nil, domain.ErrDuplicatedOrderNumber
 	}
 
 	purchaseOrder, err := s.repository.Create(
