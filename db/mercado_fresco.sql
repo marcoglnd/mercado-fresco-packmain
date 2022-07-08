@@ -47,7 +47,8 @@ CREATE TABLE `sections` (
   `product_type_id` int NOT NULL
 );
 
-CREATE TABLE `employee` (
+CREATE TABLE `employees` (
+
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `card_number_id` VARCHAR(255) NOT NULL UNIQUE,
   `first_name` VARCHAR(255) NOT NULL,
@@ -180,7 +181,7 @@ ALTER TABLE `sections` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouse` (
 
 ALTER TABLE `sections` ADD FOREIGN KEY (`product_type_id`) REFERENCES `products_types` (`id`);
 
-ALTER TABLE `employee` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouse` (`id`);
+ALTER TABLE `employees` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouse` (`id`);
 
 ALTER TABLE `warehouse` ADD FOREIGN KEY (`locality_id`) REFERENCES `localities` (`id`);
 
@@ -204,7 +205,8 @@ ALTER TABLE `purchase_orders` ADD FOREIGN KEY (`wareHouse_id`) REFERENCES `wareh
 
 ALTER TABLE `carriers` ADD FOREIGN KEY (`locality_id`) REFERENCES `localities` (`id`);
 
-ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`employe_id`) REFERENCES `employee` (`id`);
+
+ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`employe_id`) REFERENCES `employees` (`id`);
 
 ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`product_batch_id`) REFERENCES `product_batches` (`id`);
 

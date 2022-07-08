@@ -34,5 +34,11 @@ go.work
 # Database persistent volume
 db/.data
 
-# End of https://www.toptal.com/developers/gitignore/api/go
+# IDE
+\.idea/
+\.vscode/
+
+# MacOS
 .DS_Store
+
+# End of https://www.toptal.com/developers/gitignore/api/go
