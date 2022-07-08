@@ -189,3 +189,21 @@ func (c EmployeeController) Delete() gin.HandlerFunc {
 		ctx.JSON(http.StatusNoContent, nil)
 	}
 }
+
+func (c EmployeeController) GetOrdersByEmployeeId() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		employee, err := c.service.GetById(ctx, id)
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(http.StatusOK, employee)
+	}
+}
