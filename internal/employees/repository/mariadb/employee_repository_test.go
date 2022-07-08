@@ -188,7 +188,6 @@ func TestGetById(t *testing.T) {
 		assert.Error(t, err)
 	})
 }
-
 func TestGetByCardNumberId(t *testing.T) {
 	t.Run("success to get card_number_id", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
