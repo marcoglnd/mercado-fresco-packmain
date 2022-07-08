@@ -72,6 +72,32 @@ func (m mariadbRepository) GetById(ctx context.Context, id int64) (*domain.Emplo
 	return &employee, nil
 }
 
+func (m mariadbRepository) GetByCardNumberId(ctx context.Context, cardNumberId string) (*domain.Employee, error) {
+	row := m.db.QueryRowContext(ctx, sqlGetByCardNumberId, cardNumberId)
+
+	foundEmployee := &domain.Employee{}
+
+	err := row.Scan(
+		&foundEmployee.ID,
+		&foundEmployee.CardNumberId,
+		&foundEmployee.FirstName,
+		&foundEmployee.LastName,
+		&foundEmployee.WarehouseId,
+	)
+
+	// ID not found
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
+	}
+
+	// Other errors
+	if err != nil {
+		return nil, err
+	}
+
+	return foundEmployee, nil
+}
+
 func (m mariadbRepository) Create(ctx context.Context, employee *domain.Employee) (*domain.Employee, error) {
 	newEmployee := domain.Employee{}
 

@@ -51,6 +51,6 @@ func (i InboundOrderController) Create() gin.HandlerFunc {
 			return
 		}
 
-		ctx.JSON(http.StatusCreated, inboundOrder)
+		ctx.JSON(http.StatusCreated, gin.H{"data": inboundOrder})
 	}
 }

@@ -21,6 +21,7 @@ func TestCreateNewEmployee(t *testing.T) {
 			mock.Anything,
 			mock.Anything,
 		).Return(&mockEmployee, nil).Once()
+		mockEmployeeRepository.On("GetByCardNumberId", mock.Anything, mock.Anything).Return(nil, nil).Once()
 
 		service := NewEmployeeService(mockEmployeeRepository)
 		newEmployee, err := service.Create(context.Background(), &mockEmployee)
@@ -39,7 +40,8 @@ func TestCreateNewEmployee(t *testing.T) {
 		mockEmployeeRepository.On("Create",
 			mock.Anything,
 			mock.Anything,
-		).Return(&domain.Employee{}, errors.New("failes to create employee")).Once()
+		).Return(&domain.Employee{}, errors.New("failed to create employee")).Once()
+		mockEmployeeRepository.On("GetByCardNumberId", mock.Anything, mock.Anything).Return(nil, nil).Once()
 
 		service := NewEmployeeService(mockEmployeeRepository)
 		_, err := service.Create(context.Background(), &mockEmployee)

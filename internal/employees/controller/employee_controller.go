@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -111,7 +112,9 @@ func (c EmployeeController) Create() gin.HandlerFunc {
 			WarehouseId:  req.WarehouseId,
 		})
 		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusConflict, gin.H{"error": err.Error()})
+			if errors.Is(err, domain.ErrDuplicatedID) {
+				ctx.AbortWithStatusJSON(http.StatusConflict, gin.H{"error": err.Error()})
+			}
 			return
 		}
 

@@ -35,13 +35,23 @@ func (e employeeService) GetById(ctx context.Context, id int64) (*domain.Employe
 }
 
 func (e employeeService) Create(ctx context.Context, employee *domain.Employee) (*domain.Employee, error) {
-	employee, err := e.repository.Create(ctx, employee)
+	foundEmployee, err := e.repository.GetByCardNumberId(ctx, employee.CardNumberId)
 
 	if err != nil {
-		return employee, err
+		return nil, err
 	}
 
-	return employee, nil
+	if foundEmployee != nil {
+		return nil, domain.ErrDuplicatedID
+	}
+
+	newEmployee, err := e.repository.Create(ctx, employee)
+
+	if err != nil {
+		return newEmployee, err
+	}
+
+	return newEmployee, nil
 }
 
 func (e employeeService) Update(ctx context.Context, employee *domain.Employee) (*domain.Employee, error) {
