@@ -616,7 +616,7 @@ func TestGetQtyOfRecordsById(t *testing.T) {
 		productsServiceMock.On("GetQtyOfRecordsById",
 			mock.Anything,
 			mock.AnythingOfType("string"),
-		).Return(&mockListQtyOfRecords, errors.New("bad request")).Maybe().
+		).Return(&mockListQtyOfRecords, nil).Maybe().
 			On("GetQtyOfAllRecords",
 				mock.Anything,
 			).Return(&mockListQtyOfRecords, nil).Once()
