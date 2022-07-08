@@ -59,7 +59,7 @@ func (c PurchaseOrderController) Create() gin.HandlerFunc {
 		)
 
 		if err != nil {
-			if errors.Is(err, domain.ErrDuplicatedID) {
+			if errors.Is(err, domain.ErrDuplicatedOrderNumber) {
 				ctx.JSON(http.StatusConflict, gin.H{
 					"message": err.Error(),
 				})

@@ -3,5 +3,5 @@ package domain
 import "errors"
 
 var (
-	ErrDuplicatedID = errors.New("duplicated card_number_id")
+	ErrDuplicatedOrderNumber = errors.New("duplicated order number")
 )
