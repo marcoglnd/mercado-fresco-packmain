@@ -205,3 +205,79 @@ func TestDelete(t *testing.T) {
 		mockBuyerRepo.AssertExpectations(t)
 	})
 }
+
+func TestReportPurchaseOrders(t *testing.T) {
+
+	t.Run("In case of success", func(t *testing.T) {
+
+		mockBuyerRepo := mocks.NewBuyerRepository(t)
+		mockReportPurchaseOrders := utils.CreateRandomReportPurchaseOrder()
+		mockQtyOfRecordsId := utils.RandomInt64()
+
+		mockBuyerRepo.On("ReportPurchaseOrders", mock.Anything, mock.AnythingOfType("int64")).
+			Return(&mockReportPurchaseOrders, nil).Once()
+
+		service := NewBuyerService(mockBuyerRepo)
+		reportPurchaseOrders, err := service.ReportPurchaseOrders(context.Background(), mockQtyOfRecordsId)
+
+		assert.NoError(t, err)
+		assert.NotEmpty(t, reportPurchaseOrders)
+		assert.Equal(t, &mockReportPurchaseOrders, reportPurchaseOrders)
+
+		mockBuyerRepo.AssertExpectations(t)
+	})
+
+	t.Run("In case of error", func(t *testing.T) {
+
+		mockBuyerRepo := mocks.NewBuyerRepository(t)
+		mockQtyOfRecordsId := utils.RandomInt64()
+
+		mockBuyerRepo.On("ReportPurchaseOrders", mock.Anything, mock.AnythingOfType("int64")).
+			Return(nil, errors.New("failed to retrieve report purchase orders")).Once()
+
+		service := NewBuyerService(mockBuyerRepo)
+		productRecords, err := service.ReportPurchaseOrders(context.Background(), mockQtyOfRecordsId)
+
+		assert.Error(t, err)
+		assert.Empty(t, productRecords)
+
+		mockBuyerRepo.AssertExpectations(t)
+	})
+}
+
+func TestReportAllPurchaseOrders(t *testing.T) {
+
+	t.Run("In case of success", func(t *testing.T) {
+
+		mockBuyerRepo := mocks.NewBuyerRepository(t)
+		mockListReportPurchaseOrders := utils.CreateRandomListReportPurchaseOrder()
+
+		mockBuyerRepo.On("ReportAllPurchaseOrders", mock.Anything).
+			Return(&mockListReportPurchaseOrders, nil).Once()
+
+		service := NewBuyerService(mockBuyerRepo)
+		reportPurchaseOrders, err := service.ReportAllPurchaseOrders(context.Background())
+
+		assert.NoError(t, err)
+		assert.NotEmpty(t, reportPurchaseOrders)
+		assert.Equal(t, &mockListReportPurchaseOrders, reportPurchaseOrders)
+
+		mockBuyerRepo.AssertExpectations(t)
+	})
+
+	t.Run("In case of error", func(t *testing.T) {
+
+		mockBuyerRepo := mocks.NewBuyerRepository(t)
+
+		mockBuyerRepo.On("ReportAllPurchaseOrders", mock.Anything).
+			Return(nil, errors.New("failed to retrieve list of report purchase orders")).Once()
+
+		service := NewBuyerService(mockBuyerRepo)
+		productRecords, err := service.ReportAllPurchaseOrders(context.Background())
+
+		assert.Error(t, err)
+		assert.Empty(t, productRecords)
+
+		mockBuyerRepo.AssertExpectations(t)
+	})
+}
