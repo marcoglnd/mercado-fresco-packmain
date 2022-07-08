@@ -189,6 +189,34 @@ func TestGetById(t *testing.T) {
 	})
 }
 
+func TestGetByCardNumberId(t *testing.T) {
+	t.Run("success to get card_number_id", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+
+		assert.NoError(t, err)
+
+		defer db.Close()
+
+		mockEmployee := utils.CreateRandomEmployee()
+
+		rows := sqlmock.NewRows(rowsEmployeeStruct).AddRow(
+			mockEmployee.ID,
+			mockEmployee.CardNumberId,
+			mockEmployee.FirstName,
+			mockEmployee.LastName,
+			mockEmployee.WarehouseId,
+		)
+
+		mock.ExpectQuery(regexp.QuoteMeta(sqlGetByCardNumberId)).WillReturnRows(rows)
+
+		repository := NewMariaDBRepository(db)
+		result, err := repository.GetByCardNumberId(context.Background(), "")
+
+		assert.NoError(t, err)
+		assert.Equal(t, result, &mockEmployee)
+	})
+}
+
 func TestUpdateEmployee(t *testing.T) {
 	mockEmployee := utils.CreateRandomEmployee()
 
