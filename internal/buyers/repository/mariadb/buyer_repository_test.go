@@ -13,11 +13,12 @@ import (
 )
 
 var (
-	queryInsert  = regexp.QuoteMeta(sqlInsert)
-	queryGetAll  = regexp.QuoteMeta(sqlGetAll)
-	queryGetById = regexp.QuoteMeta(sqlGetById)
-	queryUpdate  = regexp.QuoteMeta(sqlUpdate)
-	queryDelete  = regexp.QuoteMeta(sqlDelete)
+	queryInsert                = regexp.QuoteMeta(sqlInsert)
+	queryGetAll                = regexp.QuoteMeta(sqlGetAll)
+	queryGetById               = regexp.QuoteMeta(sqlGetById)
+	queryUpdate                = regexp.QuoteMeta(sqlUpdate)
+	queryDelete                = regexp.QuoteMeta(sqlDelete)
+	queryFindAllPurchaseOrders = regexp.QuoteMeta(sqlFindAllPurchaseOrders)
 )
 
 var rowsStruct = []string{
@@ -294,33 +295,33 @@ func TestDeleteBuyer(t *testing.T) {
 }
 
 func TestGetQtyOfAllRecords(t *testing.T) {
-	// t.Run("success", func(t *testing.T) {
-	// 	db, mock, err := sqlmock.New()
-	// 	assert.NoError(t, err)
-	// 	defer db.Close()
+	t.Run("success", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
 
-	// 	mockListOfReportPurchaseOrders := utils.CreateRandomListReportPurchaseOrder()
+		mockListOfReportPurchaseOrders := utils.CreateRandomListReportPurchaseOrder()
 
-	// 	rows := sqlmock.NewRows(rowsListReportPurchaseOrders)
-	// 	for _, mockReport := range mockListOfReportPurchaseOrders {
-	// 		rows.AddRow(
-	// 			mockReport.ID,
-	// 			mockReport.CardNumberID,
-	// 			mockReport.FirstName,
-	// 			mockReport.LastName,
-	// 			mockReport.PurchaseOrdersCount,
-	// 		)
-	// 	}
+		rows := sqlmock.NewRows(rowsListReportPurchaseOrders)
+		for _, mockReport := range mockListOfReportPurchaseOrders {
+			rows.AddRow(
+				mockReport.ID,
+				mockReport.CardNumberID,
+				mockReport.FirstName,
+				mockReport.LastName,
+				mockReport.PurchaseOrdersCount,
+			)
+		}
 
-	// 	mock.ExpectQuery(sqlFindAllPurchaseOrders).WillReturnRows(rows)
+		mock.ExpectQuery(queryFindAllPurchaseOrders).WillReturnRows(rows)
 
-	// 	buyersRepo := NewMariaDBRepository(db)
+		buyersRepo := NewMariaDBRepository(db)
 
-	// 	result, err := buyersRepo.ReportAllPurchaseOrders(context.Background())
-	// 	assert.NoError(t, err)
+		result, err := buyersRepo.ReportAllPurchaseOrders(context.Background())
+		assert.NoError(t, err)
 
-	// 	assert.Equal(t, result, &mockListOfReportPurchaseOrders)
-	// })
+		assert.Equal(t, result, &mockListOfReportPurchaseOrders)
+	})
 
 	t.Run("fail to scan qty of all records", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
@@ -329,7 +330,7 @@ func TestGetQtyOfAllRecords(t *testing.T) {
 
 		rows := sqlmock.NewRows(rowsListReportPurchaseOrders).AddRow("", "", "", "", "")
 
-		mock.ExpectQuery(sqlFindAllPurchaseOrders).WillReturnRows(rows)
+		mock.ExpectQuery(queryFindAllPurchaseOrders).WillReturnRows(rows)
 
 		buyersRepo := NewMariaDBRepository(db)
 
@@ -342,7 +343,7 @@ func TestGetQtyOfAllRecords(t *testing.T) {
 		assert.NoError(t, err)
 		defer db.Close()
 
-		mock.ExpectQuery(sqlFindAllPurchaseOrders).WillReturnError(sql.ErrNoRows)
+		mock.ExpectQuery(queryFindAllPurchaseOrders).WillReturnError(sql.ErrNoRows)
 
 		buyersRepo := NewMariaDBRepository(db)
 
