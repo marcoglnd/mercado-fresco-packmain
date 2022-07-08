@@ -255,3 +255,43 @@ func (c *SellerController) Delete() gin.HandlerFunc {
 		ctx.JSON(http.StatusNoContent, nil)
 	}
 }
+
+type requestCreateLocality struct {
+	LocalityName string `json:"locality_name" binding:"required"`
+	ProvinceID   int64  `json:"province_id" binding:"required"`
+}
+
+func (c *SellerController) CreateLocality() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req requestCreateLocality
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid inputs"})
+			return
+		}
+		localId, err := c.service.CreateLocality(
+			ctx.Request.Context(),
+			&domain.Locality{
+				LocalityName: req.LocalityName,
+				ProvinceID:   req.ProvinceID,
+			},
+		)
+		if err != nil {
+			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+			return
+		}
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		locality, err := c.service.GetLocalityByID(ctx, localId)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		ctx.JSON(http.StatusCreated, locality)
+	}
+}

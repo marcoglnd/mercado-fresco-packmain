@@ -37,9 +37,7 @@ func (s sellerService) Create(ctx context.Context, seller *domain.Seller) (*doma
 	if err != nil {
 		return seller, err
 	}
-
 	return seller, nil
-
 }
 
 func (s sellerService) Update(ctx context.Context, seller *domain.Seller) (*domain.Seller, error) {
@@ -56,4 +54,20 @@ func (s sellerService) Delete(ctx context.Context, id int64) error {
 		return err
 	}
 	return nil
+}
+
+func (s sellerService) CreateLocality(ctx context.Context, local *domain.Locality) (int64, error) {
+	newLocality, err := s.repository.CreateLocality(ctx, local)
+	if err != nil {
+		return newLocality, err
+	}
+	return newLocality, nil
+}
+
+func (s sellerService) GetLocalityByID(ctx context.Context, id int64) (*domain.GetLocality, error) {
+	getLocality, err := s.repository.GetLocalityByID(ctx, id)
+	if err != nil {
+		return getLocality, err
+	}
+	return getLocality, nil
 }

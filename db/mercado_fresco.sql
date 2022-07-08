@@ -64,7 +64,7 @@ CREATE TABLE `buyers` (
 
 CREATE TABLE `localities` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
-    `locality_name` VARCHAR(255) NOT NULL,
+    `locality_name` VARCHAR(255) NOT NULL UNIQUE,
     `province_id` INT NOT NULL
 );
 
