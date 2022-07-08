@@ -23,5 +23,6 @@ func buyersRouter(superRouter *gin.RouterGroup, DBConnection *sql.DB) {
 		pr.POST("/", buyerController.Create())
 		pr.PATCH("/:id", buyerController.Update())
 		pr.DELETE("/:id", buyerController.Delete())
+		pr.GET("/reportPurchaseOrders", buyerController.ReportPurchaseOrders())
 	}
 }
