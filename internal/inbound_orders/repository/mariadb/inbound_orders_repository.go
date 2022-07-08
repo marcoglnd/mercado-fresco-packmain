@@ -4,14 +4,14 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/marcoglnd/mercado-fresco-packmain/internal/inboundOrders/domain"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/inbound_orders/domain"
 )
 
 type mariadbRepository struct {
 	db *sql.DB
 }
 
-func NewMariaDBRepository(db *sql.DB) domain.InboundOrdersRepository {
+func NewMariaDBRepository(db *sql.DB) domain.InboundOrderRepository {
 	return mariadbRepository{db: db}
 }
 

@@ -48,7 +48,6 @@ CREATE TABLE `sections` (
 );
 
 CREATE TABLE `employees` (
-
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `card_number_id` VARCHAR(255) NOT NULL UNIQUE,
   `first_name` VARCHAR(255) NOT NULL,

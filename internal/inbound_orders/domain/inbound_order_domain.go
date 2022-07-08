@@ -2,10 +2,10 @@ package domain
 
 import "context"
 
-type InboundOrdersRepository interface {
+type InboundOrderRepository interface {
 	Create(ctx context.Context, inboundOrder *InboundOrder) (*InboundOrder, error)
 }
 
-type InboundOrdersService interface {
+type InboundOrderService interface {
 	Create(ctx context.Context, inboundOrder *InboundOrder) (*InboundOrder, error)
 }

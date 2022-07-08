@@ -3,14 +3,14 @@ package service
 import (
 	"context"
 
-	"github.com/marcoglnd/mercado-fresco-packmain/internal/inboundOrders/domain"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/inbound_orders/domain"
 )
 
 type inboundOrderService struct {
-	repository domain.InboundOrdersRepository
+	repository domain.InboundOrderRepository
 }
 
-func NewInboundOrderService(ir domain.InboundOrdersRepository) domain.InboundOrdersService {
+func NewInboundOrderService(ir domain.InboundOrderRepository) domain.InboundOrderService {
 	return &inboundOrderService{repository: ir}
 }
 
