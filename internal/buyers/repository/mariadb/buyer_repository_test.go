@@ -27,6 +27,14 @@ var rowsStruct = []string{
 	"last_name",
 }
 
+var rowsListReportPurchaseOrders = []string{
+	"id",
+	"card_number_id",
+	"first_name",
+	"last_name",
+	"purchase_orders_count",
+}
+
 func TestCreateNewBuyer(t *testing.T) {
 	mockBuyer := utils.CreateRandomBuyer()
 
@@ -282,5 +290,63 @@ func TestDeleteBuyer(t *testing.T) {
 		err = repo.Delete(context.Background(), mockBuyer.ID)
 		assert.Error(t, err)
 		assert.Equal(t, domain.ErrIDNotFound, err)
+	})
+}
+
+func TestGetQtyOfAllRecords(t *testing.T) {
+	// t.Run("success", func(t *testing.T) {
+	// 	db, mock, err := sqlmock.New()
+	// 	assert.NoError(t, err)
+	// 	defer db.Close()
+
+	// 	mockListOfReportPurchaseOrders := utils.CreateRandomListReportPurchaseOrder()
+
+	// 	rows := sqlmock.NewRows(rowsListReportPurchaseOrders)
+	// 	for _, mockReport := range mockListOfReportPurchaseOrders {
+	// 		rows.AddRow(
+	// 			mockReport.ID,
+	// 			mockReport.CardNumberID,
+	// 			mockReport.FirstName,
+	// 			mockReport.LastName,
+	// 			mockReport.PurchaseOrdersCount,
+	// 		)
+	// 	}
+
+	// 	mock.ExpectQuery(sqlFindAllPurchaseOrders).WillReturnRows(rows)
+
+	// 	buyersRepo := NewMariaDBRepository(db)
+
+	// 	result, err := buyersRepo.ReportAllPurchaseOrders(context.Background())
+	// 	assert.NoError(t, err)
+
+	// 	assert.Equal(t, result, &mockListOfReportPurchaseOrders)
+	// })
+
+	t.Run("fail to scan qty of all records", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		rows := sqlmock.NewRows(rowsListReportPurchaseOrders).AddRow("", "", "", "", "")
+
+		mock.ExpectQuery(sqlFindAllPurchaseOrders).WillReturnRows(rows)
+
+		buyersRepo := NewMariaDBRepository(db)
+
+		_, err = buyersRepo.ReportAllPurchaseOrders(context.Background())
+		assert.Error(t, err)
+	})
+
+	t.Run("fail to select qty of all records", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mock.ExpectQuery(sqlFindAllPurchaseOrders).WillReturnError(sql.ErrNoRows)
+
+		buyersRepo := NewMariaDBRepository(db)
+
+		_, err = buyersRepo.ReportAllPurchaseOrders(context.Background())
+		assert.Error(t, err)
 	})
 }
