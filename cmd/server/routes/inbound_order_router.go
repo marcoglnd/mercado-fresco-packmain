@@ -18,6 +18,6 @@ func inboundOrderRouter(superRouter *gin.RouterGroup, conn *sql.DB) {
 	pr := superRouter.Group("/inboundOrders")
 	{
 		pr.POST("/", controller.Create())
-		//pr.GET("/reportInboundOrders", controller.GetOrdersByEmployeeId())
+		pr.GET("/", controller.GetAll())
 	}
 }
