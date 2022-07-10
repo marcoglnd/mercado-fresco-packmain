@@ -29,7 +29,20 @@ func NewInboundOrderController(service domain.InboundOrderService) (*InboundOrde
 	}, nil
 }
 
-func (i InboundOrderController) Create() gin.HandlerFunc {
+func (c InboundOrderController) GetAll() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		inboundOrders, err := c.service.GetAll(ctx.Request.Context())
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, gin.H{"data": inboundOrders})
+	}
+}
+
+func (c InboundOrderController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		var req requestInboundOrderCreate
@@ -38,7 +51,7 @@ func (i InboundOrderController) Create() gin.HandlerFunc {
 			return
 		}
 
-		inboundOrder, err := i.service.Create(ctx, &domain.InboundOrder{
+		inboundOrder, err := c.service.Create(ctx, &domain.InboundOrder{
 			OrderDate:      req.OrderDate,
 			OrderNumber:    req.OrderNumber,
 			EmployeeId:     req.EmployeeId,
