@@ -18,14 +18,31 @@ const (
 	) 
 	VALUES (?, ?, ?, ?, 1)`
 
-	sqlCarriersCount = `
+	sqlCarriersCountAll = `
 	SELECT 
+		l.id,
+		l.locality_name,
 		COUNT(c.locality_id) AS carriers_count
 	FROM 
 		localities l
 	LEFT JOIN
         carriers c
-	ON  c.locality_id = l.id
+	ON 	c.locality_id = l.id
+    GROUP BY
+        l.id
+	`
+
+	sqlCarriersCountById = `
+	SELECT 
+		l.id,
+		l.locality_name,
+		COUNT(c.locality_id) AS carriers_count
+	FROM 
+		localities l
+	LEFT JOIN
+        carriers c
+	ON 	c.locality_id = l.id
+	WHERE l.id = ?
     GROUP BY
         l.id
 	`

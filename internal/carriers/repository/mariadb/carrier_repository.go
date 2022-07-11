@@ -128,3 +128,54 @@ func (r *carrierRepository) GetAll(
 
 	return &carriers, nil
 }
+
+func (r *carrierRepository) GetAllCarriersReport(
+	ctx context.Context,
+) (*[]domain.CarrierReport, error) {
+	reports := []domain.CarrierReport{}
+
+	rows, err := r.db.QueryContext(ctx, sqlCarriersCountAll)
+	if err != nil {
+		return &reports, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var report domain.CarrierReport
+
+		if err := rows.Scan(
+			&report.LocalityId,
+			&report.LocalityName,
+			&report.CarriersCount,
+		); err != nil {
+			return &reports, err
+		}
+
+		reports = append(reports, report)
+	}
+
+	return &reports, nil
+}
+
+func (r *carrierRepository) GetCarriersReportById(
+	ctx context.Context,
+	id int64,
+) (*domain.CarrierReport, error) {
+	row := r.db.QueryRowContext(
+		ctx, sqlCarriersCountById, id,
+	)
+
+	foundReport := &domain.CarrierReport{}
+	err := row.Scan(
+		&foundReport.LocalityId,
+		&foundReport.LocalityName,
+		&foundReport.CarriersCount,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return foundReport, nil
+}

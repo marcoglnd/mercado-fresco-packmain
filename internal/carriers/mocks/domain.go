@@ -95,6 +95,36 @@ func (mr *MockCarrierRepositoryMockRecorder) GetAll(ctx interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAll", reflect.TypeOf((*MockCarrierRepository)(nil).GetAll), ctx)
 }
 
+// GetAllCarriersReport mocks base method.
+func (m *MockCarrierRepository) GetAllCarriersReport(ctx context.Context) (*[]domain.CarrierReport, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllCarriersReport", ctx)
+	ret0, _ := ret[0].(*[]domain.CarrierReport)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllCarriersReport indicates an expected call of GetAllCarriersReport.
+func (mr *MockCarrierRepositoryMockRecorder) GetAllCarriersReport(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllCarriersReport", reflect.TypeOf((*MockCarrierRepository)(nil).GetAllCarriersReport), ctx)
+}
+
+// GetCarriersReportById mocks base method.
+func (m *MockCarrierRepository) GetCarriersReportById(ctx context.Context, id int64) (*domain.CarrierReport, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCarriersReportById", ctx, id)
+	ret0, _ := ret[0].(*domain.CarrierReport)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCarriersReportById indicates an expected call of GetCarriersReportById.
+func (mr *MockCarrierRepositoryMockRecorder) GetCarriersReportById(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCarriersReportById", reflect.TypeOf((*MockCarrierRepository)(nil).GetCarriersReportById), ctx, id)
+}
+
 // MockCarrierService is a mock of CarrierService interface.
 type MockCarrierService struct {
 	ctrl     *gomock.Controller
@@ -161,6 +191,36 @@ func (m *MockCarrierService) FindById(ctx context.Context, id int64) (*domain.Ca
 func (mr *MockCarrierServiceMockRecorder) FindById(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindById", reflect.TypeOf((*MockCarrierService)(nil).FindById), ctx, id)
+}
+
+// GetAllCarriersReport mocks base method.
+func (m *MockCarrierService) GetAllCarriersReport(ctx context.Context) (*[]domain.CarrierReport, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllCarriersReport", ctx)
+	ret0, _ := ret[0].(*[]domain.CarrierReport)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllCarriersReport indicates an expected call of GetAllCarriersReport.
+func (mr *MockCarrierServiceMockRecorder) GetAllCarriersReport(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllCarriersReport", reflect.TypeOf((*MockCarrierService)(nil).GetAllCarriersReport), ctx)
+}
+
+// GetCarriersReportById mocks base method.
+func (m *MockCarrierService) GetCarriersReportById(ctx context.Context, id int64) (*domain.CarrierReport, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCarriersReportById", ctx, id)
+	ret0, _ := ret[0].(*domain.CarrierReport)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCarriersReportById indicates an expected call of GetCarriersReportById.
+func (mr *MockCarrierServiceMockRecorder) GetCarriersReportById(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCarriersReportById", reflect.TypeOf((*MockCarrierService)(nil).GetCarriersReportById), ctx, id)
 }
 
 // IsCidAvailable mocks base method.

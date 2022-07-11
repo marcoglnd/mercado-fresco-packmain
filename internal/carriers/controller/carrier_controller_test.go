@@ -112,3 +112,98 @@ func TestCreateFail(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusUnprocessableEntity, rr.Code)
 }
+
+func TestReportCarriersOk(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	serviceMock := mock.NewMockCarrierService(ctrl)
+	controller := controller.NewCarrierController(serviceMock)
+
+	serviceMock.EXPECT().GetAllCarriersReport(gomock.Any()).Return(&[]domain.CarrierReport{}, nil)
+
+	rr := httptest.NewRecorder()
+	_, engine := gin.CreateTestContext(rr)
+
+	req, err := http.NewRequest(http.MethodGet, "/", nil)
+
+	engine.GET("/", controller.ReportCarriers())
+	engine.ServeHTTP(rr, req)
+
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusOK, rr.Code)
+}
+
+func TestReportCarriersFailValidation(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	serviceMock := mock.NewMockCarrierService(ctrl)
+	controller := controller.NewCarrierController(serviceMock)
+
+	rr := httptest.NewRecorder()
+	_, engine := gin.CreateTestContext(rr)
+
+	req, err := http.NewRequest(http.MethodGet, "/?id=notint", nil)
+
+	engine.GET("/", controller.ReportCarriers())
+	engine.ServeHTTP(rr, req)
+
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusBadRequest, rr.Code)
+}
+
+func TestReportCarriersFailGetAll(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	serviceMock := mock.NewMockCarrierService(ctrl)
+	controller := controller.NewCarrierController(serviceMock)
+
+	serviceMock.EXPECT().GetAllCarriersReport(gomock.Any()).Return(nil, errors.New("some error"))
+
+	rr := httptest.NewRecorder()
+	_, engine := gin.CreateTestContext(rr)
+
+	req, err := http.NewRequest(http.MethodGet, "/", nil)
+
+	engine.GET("/", controller.ReportCarriers())
+	engine.ServeHTTP(rr, req)
+
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusUnprocessableEntity, rr.Code)
+}
+
+func TestReportCarriersByIdOk(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	serviceMock := mock.NewMockCarrierService(ctrl)
+	controller := controller.NewCarrierController(serviceMock)
+
+	serviceMock.EXPECT().GetCarriersReportById(gomock.Any(), int64(1)).Return(&domain.CarrierReport{}, nil)
+
+	rr := httptest.NewRecorder()
+	_, engine := gin.CreateTestContext(rr)
+
+	req, err := http.NewRequest(http.MethodGet, "/?id=1", nil)
+
+	engine.GET("/", controller.ReportCarriers())
+	engine.ServeHTTP(rr, req)
+
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusOK, rr.Code)
+}
+
+func TestReportCarriersByIdFail(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	serviceMock := mock.NewMockCarrierService(ctrl)
+	controller := controller.NewCarrierController(serviceMock)
+
+	serviceMock.EXPECT().GetCarriersReportById(
+		gomock.Any(), int64(1),
+	).Return(nil, errors.New("some error"))
+
+	rr := httptest.NewRecorder()
+	_, engine := gin.CreateTestContext(rr)
+
+	req, err := http.NewRequest(http.MethodGet, "/?id=1", nil)
+
+	engine.GET("/", controller.ReportCarriers())
+	engine.ServeHTTP(rr, req)
+
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusNotFound, rr.Code)
+}

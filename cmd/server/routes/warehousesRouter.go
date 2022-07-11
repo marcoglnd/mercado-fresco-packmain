@@ -2,7 +2,6 @@ package routes
 
 import (
 	"database/sql"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/warehouses/controller"
@@ -17,11 +16,6 @@ func warehousesRouter(superRouter *gin.RouterGroup, dbConnection *sql.DB) {
 
 	pr := superRouter.Group("/warehouses")
 	{
-		pr.GET("/debug", func(ctx *gin.Context) {
-			ctx.JSON(http.StatusTeapot, gin.H{
-				"debug": "is running",
-			})
-		})
 		pr.POST("/", warehouseController.Create())
 		pr.GET("/", warehouseController.GetAll())
 		pr.GET("/:id", warehouseController.GetById())
