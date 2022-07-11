@@ -1,6 +1,8 @@
 package utils
 
-import "github.com/marcoglnd/mercado-fresco-packmain/internal/sellers/domain"
+import (
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/sellers/domain"
+)
 
 func CreateRandomSeller() domain.Seller {
 	seller := domain.Seller{
