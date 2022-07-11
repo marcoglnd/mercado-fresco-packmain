@@ -14,4 +14,5 @@ func AddRoutes(superRouter *gin.RouterGroup, dbConnection *sql.DB) {
 	sectionsRouter(superRouter)
 	warehousesRouter(superRouter, dbConnection)
 	sellersRouter(superRouter)
+	carriersRouter(superRouter, dbConnection)
 }

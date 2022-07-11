@@ -64,3 +64,28 @@ func (s *carrierService) FindByCid(ctx context.Context, cid string) (*domain.Car
 
 	return foundCarrier, nil
 }
+
+func (s *carrierService) GetAllCarriersReport(
+	ctx context.Context,
+) (*[]domain.CarrierReport, error) {
+	carriersReport, err := s.repository.GetAllCarriersReport(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return carriersReport, nil
+}
+
+func (s *carrierService) GetCarriersReportById(
+	ctx context.Context,
+	id int64,
+) (*domain.CarrierReport, error) {
+	carrierReport, err := s.repository.GetCarriersReportById(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return carrierReport, nil
+}

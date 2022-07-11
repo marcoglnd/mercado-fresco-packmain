@@ -66,3 +66,44 @@ func (cc *CarrierController) Create() gin.HandlerFunc {
 		)
 	}
 }
+
+// @Summary Report Carriers
+// @Tags Carriers
+// @Description Get quantity of carriers by locality id
+// @Accept json
+// @Produce json
+// @Param id query int true "locality ID"
+// @Router /reportCarriers [get]
+func (cc *CarrierController) ReportCarriers() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var reportCarriersInput struct {
+			Id int64 `form:"id"`
+		}
+		if err := ctx.ShouldBindQuery(&reportCarriersInput); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		var reports *[]domain.CarrierReport
+		if reportCarriersInput.Id == 0 {
+			allReports, err := cc.service.GetAllCarriersReport(ctx)
+			if err != nil {
+				ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+				return
+			}
+			reports = allReports
+		} else {
+			customReport, err := cc.service.GetCarriersReportById(
+				ctx,
+				reportCarriersInput.Id,
+			)
+			if err != nil {
+				ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+				return
+			}
+			reports = &[]domain.CarrierReport{
+				*customReport,
+			}
+		}
+		ctx.JSON(http.StatusOK, gin.H{"data": reports})
+	}
+}

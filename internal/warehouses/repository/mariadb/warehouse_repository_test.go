@@ -27,6 +27,7 @@ func TestCreate(t *testing.T) {
 				warehouseFake.WarehouseCode,
 				warehouseFake.MinimumCapacity,
 				warehouseFake.MinimumTemperature,
+				warehouseFake.LocalityId,
 			).WillReturnResult(sqlmock.NewResult(1, 1))
 
 		warehousesRepo := NewWarehouseRepository(db)
@@ -43,6 +44,7 @@ func TestCreate(t *testing.T) {
 
 		mock.ExpectExec(regexp.QuoteMeta(sqlStore)).
 			WithArgs(
+				0,
 				0,
 				0,
 				0,
@@ -68,6 +70,7 @@ func TestCreate(t *testing.T) {
 				warehouseFake.WarehouseCode,
 				warehouseFake.MinimumCapacity,
 				warehouseFake.MinimumTemperature,
+				warehouseFake.LocalityId,
 			).WillReturnResult(sqlmock.NewErrorResult(errors.New("fail")))
 
 		warehousesRepo := NewWarehouseRepository(db)
