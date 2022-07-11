@@ -59,7 +59,7 @@ func (_m *LocalityRepository) GetLocalityByID(ctx context.Context, id int64) (*d
 }
 
 // GetQtyOfSellers provides a mock function with given fields: ctx
-func (_m *LocalityRepository) GetQtyOfSellers(ctx context.Context) (*[]domain.QtyOfSellers, error) {
+func (_m *LocalityRepository) GetAllQtyOfSellers(ctx context.Context) (*[]domain.QtyOfSellers, error) {
 	ret := _m.Called(ctx)
 
 	var r0 *[]domain.QtyOfSellers

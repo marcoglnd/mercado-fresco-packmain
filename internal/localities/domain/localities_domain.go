@@ -7,14 +7,14 @@ import "context"
 type LocalityRepository interface {
 	CreateLocality(ctx context.Context, local *Locality) (int64, error)
 	GetLocalityByID(ctx context.Context, id int64) (*GetLocality, error)
-	GetQtyOfSellers(ctx context.Context) (*[]QtyOfSellers, error)
+	GetAllQtyOfSellers(ctx context.Context) (*[]QtyOfSellers, error)
 	GetQtyOfSellersByLocalityId(ctx context.Context, id int64) (*QtyOfSellers, error)
 }
 
 type LocalityService interface {
 	CreateLocality(ctx context.Context, local *Locality) (int64, error)
 	GetLocalityByID(ctx context.Context, id int64) (*GetLocality, error)
-	GetQtyOfSellers(ctx context.Context) (*[]QtyOfSellers, error)
+	GetAllQtyOfSellers(ctx context.Context) (*[]QtyOfSellers, error)
 	GetQtyOfSellersByLocalityId(ctx context.Context, id int64) (*QtyOfSellers, error)
 }
 

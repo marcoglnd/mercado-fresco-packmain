@@ -72,8 +72,8 @@ func (s sellerService) Delete(ctx context.Context, id int64) error {
 // 	return getLocality, nil
 // }
 
-// func (s sellerService) GetQtyOfSellers(ctx context.Context) (*[]domain.QtyOfSellers, error) {
-// 	listOfSellers, err := s.repository.GetQtyOfSellers(ctx)
+// func (s sellerService) GetAllQtyOfSellers(ctx context.Context) (*[]domain.QtyOfSellers, error) {
+// 	listOfSellers, err := s.repository.GetAllQtyOfSellers(ctx)
 // 	if err != nil {
 // 		return listOfSellers, err
 // 	}

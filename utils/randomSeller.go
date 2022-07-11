@@ -17,11 +17,11 @@ func CreateRandomSeller() domain.Seller {
 }
 
 func CreateRandomListSeller() []domain.Seller {
-	var listOfProducts []domain.Seller
+	var listOfSellers []domain.Seller
 	for i := 1; i <= 5; i++ {
 		seller := CreateRandomSeller()
 		seller.ID = int64(i)
-		listOfProducts = append(listOfProducts, seller)
+		listOfSellers = append(listOfSellers, seller)
 	}
-	return listOfProducts
+	return listOfSellers
 }

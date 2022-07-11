@@ -62,10 +62,10 @@ func (m mariadbRepository) GetLocalityByID(ctx context.Context, id int64) (*doma
 	return &getLocality, nil
 }
 
-func (m mariadbRepository) GetQtyOfSellers(ctx context.Context) (*[]domain.QtyOfSellers, error) {
+func (m mariadbRepository) GetAllQtyOfSellers(ctx context.Context) (*[]domain.QtyOfSellers, error) {
 	listOfSellers := []domain.QtyOfSellers{}
 
-	rows, err := m.db.QueryContext(ctx, sqlGetQtyOfSellersLocalityId)
+	rows, err := m.db.QueryContext(ctx, sqlGetQtyOfSellersByLocality)
 	if err != nil {
 		return &listOfSellers, err
 	}

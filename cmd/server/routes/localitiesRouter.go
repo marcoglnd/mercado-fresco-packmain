@@ -22,6 +22,6 @@ func localitiesRouter(superRouter *gin.RouterGroup, DBConnection *sql.DB) {
 	ll := superRouter.Group("/localities")
 	{
 		ll.POST("/", localityController.CreateLocality())
-		ll.GET("/reportSellers", localityController.GetQtyOfSellers())
+		ll.GET("/reportSellers", localityController.GetAllQtyOfSellers())
 	}
 }

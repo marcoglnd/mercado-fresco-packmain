@@ -20,7 +20,7 @@ type SellerRepository interface {
 	Delete(ctx context.Context, id int64) error
 	// CreateLocality(ctx context.Context, local *Locality) (int64, error)
 	// GetLocalityByID(ctx context.Context, id int64) (*GetLocality, error)
-	// GetQtyOfSellers(ctx context.Context) (*[]QtyOfSellers, error)
+	// GetAllQtyOfSellers(ctx context.Context) (*[]QtyOfSellers, error)
 	// GetQtyOfSellersByLocalityId(ctx context.Context, id int64) (*QtyOfSellers, error)
 }
 
@@ -32,7 +32,7 @@ type SellerService interface {
 	Delete(ctx context.Context, id int64) error
 	// CreateLocality(ctx context.Context, local *Locality) (int64, error)
 	// GetLocalityByID(ctx context.Context, id int64) (*GetLocality, error)
-	// GetQtyOfSellers(ctx context.Context) (*[]QtyOfSellers, error)
+	// GetAllQtyOfSellers(ctx context.Context) (*[]QtyOfSellers, error)
 	// GetQtyOfSellersByLocalityId(ctx context.Context, id int64) (*QtyOfSellers, error)
 }
 

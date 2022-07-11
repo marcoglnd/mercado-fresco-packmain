@@ -65,13 +65,13 @@ func (c *LocalityController) CreateLocality() gin.HandlerFunc {
 	}
 }
 
-func (c LocalityController) GetQtyOfSellers() gin.HandlerFunc {
+func (c LocalityController) GetAllQtyOfSellers() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		strId := ctx.Query("id")
 		intId, _ := strconv.ParseInt(strId, 10, 64)
 		if intId == 0 {
-			listsOfSellers, err := c.service.GetQtyOfSellers(ctx)
+			listsOfSellers, err := c.service.GetAllQtyOfSellers(ctx)
 			if err != nil {
 				ctx.JSON(http.StatusInternalServerError, gin.H{
 					"message": err.Error(),

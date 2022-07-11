@@ -296,13 +296,13 @@ func (c *SellerController) Delete() gin.HandlerFunc {
 // 	}
 // }
 
-// func (c SellerController) GetQtyOfSellers() gin.HandlerFunc {
+// func (c SellerController) GetAllQtyOfSellers() gin.HandlerFunc {
 // 	return func(ctx *gin.Context) {
 
 // 		strId := ctx.Query("id")
 // 		intId, _ := strconv.ParseInt(strId, 10, 64)
 // 		if intId == 0 {
-// 			listsOfSellers, err := c.service.GetQtyOfSellers(ctx)
+// 			listsOfSellers, err := c.service.GetAllQtyOfSellers(ctx)
 // 			if err != nil {
 // 				ctx.JSON(http.StatusInternalServerError, gin.H{
 // 					"message": err.Error(),

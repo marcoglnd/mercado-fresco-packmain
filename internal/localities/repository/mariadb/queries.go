@@ -14,7 +14,7 @@ const (
 		localities.id = sellers.locality_id 
 		AND localities.id = ?
 			GROUP BY localities.id `
-	sqlGetQtyOfSellersLocalityId = `SELECT localities.id, localities.locality_name , COUNT(localities.id) sellers_count 
+	sqlGetQtyOfSellersByLocality = `SELECT localities.id, localities.locality_name , COUNT(localities.id) sellers_count 
 			FROM mercado_fresco.localities localities, mercado_fresco.sellers sellers
 			WHERE 
 				localities.id = sellers.locality_id 

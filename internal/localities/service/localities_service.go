@@ -32,8 +32,8 @@ func (s localityService) GetLocalityByID(ctx context.Context, id int64) (*domain
 	return getLocality, nil
 }
 
-func (s localityService) GetQtyOfSellers(ctx context.Context) (*[]domain.QtyOfSellers, error) {
-	listOfSellers, err := s.repository.GetQtyOfSellers(ctx)
+func (s localityService) GetAllQtyOfSellers(ctx context.Context) (*[]domain.QtyOfSellers, error) {
+	listOfSellers, err := s.repository.GetAllQtyOfSellers(ctx)
 	if err != nil {
 		return listOfSellers, err
 	}
