@@ -16,7 +16,7 @@ const (
 		telephone, 
 		locality_id
 	) 
-	VALUES (?, ?, ?, ?, 1)`
+	VALUES (?, ?, ?, ?, ?)`
 
 	sqlCarriersCountAll = `
 	SELECT 
