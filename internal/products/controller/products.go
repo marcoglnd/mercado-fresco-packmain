@@ -223,7 +223,7 @@ func (c *Controller) CreateProductRecords() gin.HandlerFunc {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusCreated, record)
+		ctx.JSON(http.StatusCreated, gin.H{"data": record})
 	}
 }
 
