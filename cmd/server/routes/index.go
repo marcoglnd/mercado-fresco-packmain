@@ -11,6 +11,7 @@ func AddRoutes(superRouter *gin.RouterGroup, dbConnection *sql.DB) {
 	purchaseOrdersRouter(superRouter, dbConnection)
 	productsRouter(superRouter, dbConnection)
 	employeesRouter(superRouter, dbConnection)
+	inboundOrderRouter(superRouter, dbConnection)
 	sectionsRouter(superRouter)
 	warehousesRouter(superRouter, dbConnection)
 	sellersRouter(superRouter)

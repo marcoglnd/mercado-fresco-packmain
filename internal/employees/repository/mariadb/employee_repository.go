@@ -150,3 +150,57 @@ func (m mariadbRepository) Delete(ctx context.Context, id int64) error {
 
 	return nil
 }
+
+func (m mariadbRepository) ReportAllInboundOrders(ctx context.Context) (*[]domain.InboundOrder, error) {
+	var inboundOrders = []domain.InboundOrder{}
+
+	rows, err := m.db.QueryContext(ctx, sqlAllInboundOrdersCount)
+
+	if err != nil {
+		return &inboundOrders, err
+	}
+
+	for rows.Next() {
+		var inboundOrder = domain.InboundOrder{}
+
+		if err := rows.Scan(
+			&inboundOrder.ID,
+			&inboundOrder.CardNumberId,
+			&inboundOrder.FirstName,
+			&inboundOrder.LastName,
+			&inboundOrder.WarehouseId,
+			&inboundOrder.InboundOrdersCount,
+		); err != nil {
+			return &inboundOrders, err
+		}
+
+		inboundOrders = append(inboundOrders, inboundOrder)
+	}
+
+	return &inboundOrders, nil
+}
+
+func (m mariadbRepository) ReportInboundOrders(ctx context.Context, employeeId int64) (*domain.InboundOrder, error) {
+	var inboundOrder = domain.InboundOrder{}
+
+	row := m.db.QueryRowContext(ctx, sqlInboundOrdersCountByEmployeeId, employeeId)
+
+	err := row.Scan(
+		&inboundOrder.ID,
+		&inboundOrder.CardNumberId,
+		&inboundOrder.FirstName,
+		&inboundOrder.LastName,
+		&inboundOrder.WarehouseId,
+		&inboundOrder.InboundOrdersCount,
+	)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &inboundOrder, err
+}
