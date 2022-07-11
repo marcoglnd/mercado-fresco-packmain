@@ -17,6 +17,6 @@ func carriersRouter(superRouter *gin.RouterGroup, dbConnection *sql.DB) {
 	pr := superRouter.Group("/carriers")
 	{
 		pr.POST("/", carrierController.Create())
-		pr.GET("/reportLocalities", carrierController.ReportCarriers())
 	}
+	superRouter.GET("/localities/reportCarriers", carrierController.ReportCarriers())
 }
