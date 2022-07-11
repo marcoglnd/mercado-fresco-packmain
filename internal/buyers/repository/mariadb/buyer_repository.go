@@ -176,3 +176,54 @@ func (m mariadbRepository) Delete(ctx context.Context, id int64) error {
 
 	return nil
 }
+
+func (m mariadbRepository) ReportAllPurchaseOrders(ctx context.Context) (*[]domain.PurchaseOrdersResponse, error) {
+	var report = []domain.PurchaseOrdersResponse{}
+
+	rows, err := m.db.QueryContext(ctx, sqlFindAllPurchaseOrders)
+
+	if err != nil {
+		return &report, err
+	}
+
+	for rows.Next() {
+		var response = domain.PurchaseOrdersResponse{}
+
+		if err := rows.Scan(
+			&response.ID,
+			&response.CardNumberID,
+			&response.FirstName,
+			&response.LastName,
+			&response.PurchaseOrdersCount,
+		); err != nil {
+			return &report, err
+		}
+
+		report = append(report, response)
+	}
+
+	return &report, nil
+}
+
+func (m mariadbRepository) ReportPurchaseOrders(ctx context.Context, buyerId int64) (*domain.PurchaseOrdersResponse, error) {
+	var response = domain.PurchaseOrdersResponse{}
+	row := m.db.QueryRowContext(ctx, sqlFindPurchaseOrderByBuyerId, buyerId)
+
+	err := row.Scan(
+		&response.ID,
+		&response.CardNumberID,
+		&response.FirstName,
+		&response.LastName,
+		&response.PurchaseOrdersCount,
+	)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &response, err
+}

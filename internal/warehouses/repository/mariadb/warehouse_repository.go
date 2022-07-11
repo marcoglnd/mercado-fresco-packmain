@@ -28,6 +28,7 @@ func (r *warehouseRepository) Create(
 		&warehouse.WarehouseCode,
 		&warehouse.MinimumCapacity,
 		&warehouse.MinimumTemperature,
+		&warehouse.LocalityId,
 	)
 	if err != nil {
 		return nil, err

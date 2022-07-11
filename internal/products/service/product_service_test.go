@@ -334,3 +334,37 @@ func TestGetQtyOfRecordsById(t *testing.T) {
 		mockProductsRepo.AssertExpectations(t)
 	})
 }
+
+func TestGetQtyOfAllRecords(t *testing.T) {
+	t.Run("In case of success", func(t *testing.T) {
+		mockReportsRepo := mocks.NewRepository(t)
+		mockReports := utils.CreateRandomListQtyOfRecords()
+
+		mockReportsRepo.On("GetQtyOfAllRecords", mock.Anything).
+			Return(&mockReports, nil).Once()
+
+		s := NewService(mockReportsRepo)
+		list, err := s.GetQtyOfAllRecords(context.Background())
+
+		assert.NoError(t, err)
+
+		assert.Equal(t, &mockReports, list)
+
+		mockReportsRepo.AssertExpectations(t)
+	})
+
+	t.Run("In case of error", func(t *testing.T) {
+		mockReportsRepo := mocks.NewRepository(t)
+
+		mockReportsRepo.On("GetQtyOfAllRecords", mock.Anything).
+			Return(nil, errors.New("failed to retrieve reports")).
+			Once()
+
+		s := NewService(mockReportsRepo)
+		_, err := s.GetQtyOfAllRecords(context.Background())
+
+		assert.NotNil(t, err)
+
+		mockReportsRepo.AssertExpectations(t)
+	})
+}

@@ -120,6 +120,52 @@ func (_m *BuyerRepository) GetById(ctx context.Context, id int64) (*domain.Buyer
 	return r0, r1
 }
 
+// ReportAllPurchaseOrders provides a mock function with given fields: ctx
+func (_m *BuyerRepository) ReportAllPurchaseOrders(ctx context.Context) (*[]domain.PurchaseOrdersResponse, error) {
+	ret := _m.Called(ctx)
+
+	var r0 *[]domain.PurchaseOrdersResponse
+	if rf, ok := ret.Get(0).(func(context.Context) *[]domain.PurchaseOrdersResponse); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*[]domain.PurchaseOrdersResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ReportPurchaseOrders provides a mock function with given fields: ctx, buyerId
+func (_m *BuyerRepository) ReportPurchaseOrders(ctx context.Context, buyerId int64) (*domain.PurchaseOrdersResponse, error) {
+	ret := _m.Called(ctx, buyerId)
+
+	var r0 *domain.PurchaseOrdersResponse
+	if rf, ok := ret.Get(0).(func(context.Context, int64) *domain.PurchaseOrdersResponse); ok {
+		r0 = rf(ctx, buyerId)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*domain.PurchaseOrdersResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, buyerId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Update provides a mock function with given fields: ctx, id, cardNumberId, firstName, lastName
 func (_m *BuyerRepository) Update(ctx context.Context, id int64, cardNumberId string, firstName string, lastName string) (*domain.Buyer, error) {
 	ret := _m.Called(ctx, id, cardNumberId, firstName, lastName)

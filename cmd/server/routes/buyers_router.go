@@ -11,13 +11,10 @@ import (
 )
 
 func buyersRouter(superRouter *gin.RouterGroup, DBConnection *sql.DB) {
-	//1. repositório
 	repository := mariadb.NewMariaDBRepository(DBConnection)
 
-	//2. serviço (regra de negócio)
 	buyerService := service.NewBuyerService(repository)
 
-	//3. controller
 	buyerController, _ := controller.NewBuyerController(buyerService)
 	pr := superRouter.Group("/buyers")
 	{
@@ -26,5 +23,6 @@ func buyersRouter(superRouter *gin.RouterGroup, DBConnection *sql.DB) {
 		pr.POST("/", buyerController.Create())
 		pr.PATCH("/:id", buyerController.Update())
 		pr.DELETE("/:id", buyerController.Delete())
+		pr.GET("/reportPurchaseOrders", buyerController.ReportPurchaseOrders())
 	}
 }
