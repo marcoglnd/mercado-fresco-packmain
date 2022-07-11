@@ -21,6 +21,6 @@ func employeesRouter(superRouter *gin.RouterGroup, conn *sql.DB) {
 		pr.POST("/", controller.Create())
 		pr.PATCH("/:id", controller.Update())
 		pr.DELETE("/:id", controller.Delete())
-		pr.GET("/reportInboundOrders", controller.GetOrdersByEmployeeId())
+		pr.GET("/reportInboundOrders", controller.ReportInboundOrders())
 	}
 }

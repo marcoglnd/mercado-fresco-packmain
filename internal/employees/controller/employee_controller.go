@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"errors"
 	"net/http"
 	"strconv"
 
@@ -42,7 +41,7 @@ func NewEmployeeController(service domain.EmployeeService) (*EmployeeController,
 // @Description get all employees
 // @Accept json
 // @Produce json
-// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Employee}
+// @Success 200 {object} schemes.JSONSuccessResult{data=domain.Employee}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /employees [get]
 func (c EmployeeController) GetAll() gin.HandlerFunc {
@@ -64,7 +63,7 @@ func (c EmployeeController) GetAll() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Employee ID"
-// @Success 200 {object} schemes.Employee
+// @Success 200 {object} domain.Employee
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /employees/{id} [get]
@@ -92,7 +91,7 @@ func (c EmployeeController) GetById() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param employee body requestEmployee true "Employee to create"
-// @Success 201 {object} schemes.Employee
+// @Success 201 {object} domain.Employee
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
 // @Router /employees [post]
@@ -112,9 +111,7 @@ func (c EmployeeController) Create() gin.HandlerFunc {
 			WarehouseId:  req.WarehouseId,
 		})
 		if err != nil {
-			if errors.Is(err, domain.ErrDuplicatedID) {
-				ctx.AbortWithStatusJSON(http.StatusConflict, gin.H{"error": err.Error()})
-			}
+			ctx.AbortWithStatusJSON(http.StatusConflict, gin.H{"error": err.Error()})
 			return
 		}
 
@@ -129,7 +126,7 @@ func (c EmployeeController) Create() gin.HandlerFunc {
 // @Produce json
 // @Param id path int true "Employee ID"
 // @Param employee body requestEmployee true "Employee to update"
-// @Success 200 {object} schemes.Employee
+// @Success 200 {object} domain.Employee
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /employees/{id} [patch]
@@ -193,24 +190,16 @@ func (c EmployeeController) Delete() gin.HandlerFunc {
 	}
 }
 
-func (c EmployeeController) GetOrdersByEmployeeId() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-
-		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
-		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		employee, err := c.service.GetById(ctx, id)
-		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
-			return
-		}
-		ctx.JSON(http.StatusOK, employee)
-	}
-}
-
+// @Summary Quantity of inbound orders
+// @Tags Employees
+// @Description Get quantity of inbound orders
+// @Accept json
+// @Produce json
+// @Param id query int true "employee ID"
+// @Success 200 {object} domain.InboundOrder
+// @Failure 500 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Router /employees/reportInboundOrders [get]
 func (c EmployeeController) ReportInboundOrders() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 

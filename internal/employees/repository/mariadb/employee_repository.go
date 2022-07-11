@@ -72,32 +72,6 @@ func (m mariadbRepository) GetById(ctx context.Context, id int64) (*domain.Emplo
 	return &employee, nil
 }
 
-func (m mariadbRepository) GetByCardNumberId(ctx context.Context, cardNumberId string) (*domain.Employee, error) {
-	row := m.db.QueryRowContext(ctx, sqlGetByCardNumberId, cardNumberId)
-
-	foundEmployee := &domain.Employee{}
-
-	err := row.Scan(
-		&foundEmployee.ID,
-		&foundEmployee.CardNumberId,
-		&foundEmployee.FirstName,
-		&foundEmployee.LastName,
-		&foundEmployee.WarehouseId,
-	)
-
-	// ID not found
-	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil
-	}
-
-	// Other errors
-	if err != nil {
-		return nil, err
-	}
-
-	return foundEmployee, nil
-}
-
 func (m mariadbRepository) Create(ctx context.Context, employee *domain.Employee) (*domain.Employee, error) {
 	newEmployee := domain.Employee{}
 
@@ -180,7 +154,7 @@ func (m mariadbRepository) Delete(ctx context.Context, id int64) error {
 func (m mariadbRepository) ReportAllInboundOrders(ctx context.Context) (*[]domain.InboundOrder, error) {
 	var inboundOrders = []domain.InboundOrder{}
 
-	rows, err := m.db.QueryContext(ctx, sqlFindAllInboundOrders)
+	rows, err := m.db.QueryContext(ctx, sqlAllInboundOrdersCount)
 
 	if err != nil {
 		return &inboundOrders, err
@@ -209,7 +183,7 @@ func (m mariadbRepository) ReportAllInboundOrders(ctx context.Context) (*[]domai
 func (m mariadbRepository) ReportInboundOrders(ctx context.Context, employeeId int64) (*domain.InboundOrder, error) {
 	var inboundOrder = domain.InboundOrder{}
 
-	row := m.db.QueryRowContext(ctx, sqlFindInboundOrdersByEmployeeId, employeeId)
+	row := m.db.QueryRowContext(ctx, sqlInboundOrdersCountByEmployeeId, employeeId)
 
 	err := row.Scan(
 		&inboundOrder.ID,

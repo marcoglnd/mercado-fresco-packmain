@@ -20,6 +20,15 @@ var rowsEmployeeStruct = []string{
 	"warehouse_id",
 }
 
+var rowsInboundOrdersStruct = []string{
+	"id",
+	"card_number_id",
+	"first_name",
+	"last_name",
+	"warehouse_id",
+	"inbound_orders_count",
+}
+
 func TestCreateNewEmployee(t *testing.T) {
 	mockEmployee := utils.CreateRandomEmployee()
 
@@ -188,33 +197,6 @@ func TestGetById(t *testing.T) {
 		assert.Error(t, err)
 	})
 }
-func TestGetByCardNumberId(t *testing.T) {
-	t.Run("success to get card_number_id", func(t *testing.T) {
-		db, mock, err := sqlmock.New()
-
-		assert.NoError(t, err)
-
-		defer db.Close()
-
-		mockEmployee := utils.CreateRandomEmployee()
-
-		rows := sqlmock.NewRows(rowsEmployeeStruct).AddRow(
-			mockEmployee.ID,
-			mockEmployee.CardNumberId,
-			mockEmployee.FirstName,
-			mockEmployee.LastName,
-			mockEmployee.WarehouseId,
-		)
-
-		mock.ExpectQuery(regexp.QuoteMeta(sqlGetByCardNumberId)).WillReturnRows(rows)
-
-		repository := NewMariaDBRepository(db)
-		result, err := repository.GetByCardNumberId(context.Background(), "")
-
-		assert.NoError(t, err)
-		assert.Equal(t, result, &mockEmployee)
-	})
-}
 
 func TestUpdateEmployee(t *testing.T) {
 	mockEmployee := utils.CreateRandomEmployee()
@@ -334,5 +316,116 @@ func TestDeleteEmployee(t *testing.T) {
 
 		assert.Error(t, err)
 		assert.Equal(t, domain.ErrIdNotFound, err)
+	})
+}
+
+func TestReportAllInboundOrders(t *testing.T) {
+	t.Run("success to get all inbound orders", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+
+		assert.NoError(t, err)
+
+		defer db.Close()
+
+		mockInboundOrders := utils.CreateRamdomListReportInboundOrders()
+		rows := sqlmock.NewRows(rowsInboundOrdersStruct)
+
+		for _, mockInboundOrders := range mockInboundOrders {
+			rows.AddRow(
+				mockInboundOrders.ID,
+				mockInboundOrders.CardNumberId,
+				mockInboundOrders.FirstName,
+				mockInboundOrders.LastName,
+				mockInboundOrders.WarehouseId,
+				mockInboundOrders.InboundOrdersCount,
+			)
+		}
+
+		mock.ExpectQuery(regexp.QuoteMeta(sqlAllInboundOrdersCount)).WillReturnRows(rows)
+
+		repository := NewMariaDBRepository(db)
+		result, err := repository.ReportAllInboundOrders(context.Background())
+
+		assert.NoError(t, err)
+		assert.Equal(t, result, &mockInboundOrders)
+
+	})
+
+	t.Run("fail to scan inbound orders", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+
+		assert.NoError(t, err)
+
+		defer db.Close()
+
+		rows := sqlmock.NewRows(rowsInboundOrdersStruct).AddRow("", "", "", "", "", "")
+
+		mock.ExpectQuery(regexp.QuoteMeta(sqlAllInboundOrdersCount)).WillReturnRows(rows)
+
+		repository := NewMariaDBRepository(db)
+		_, err = repository.ReportAllInboundOrders(context.Background())
+
+		assert.Error(t, err)
+	})
+
+	t.Run("fail to select inbound orders", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+
+		assert.NoError(t, err)
+
+		defer db.Close()
+
+		mock.ExpectQuery(regexp.QuoteMeta(sqlAllInboundOrdersCount)).WillReturnError(sql.ErrNoRows)
+
+		repository := NewMariaDBRepository(db)
+		_, err = repository.ReportAllInboundOrders(context.Background())
+
+		assert.Error(t, err)
+	})
+}
+
+func TestReportInboundOrders(t *testing.T) {
+	t.Run("success to get inbound orders by employee_id", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+
+		assert.NoError(t, err)
+
+		defer db.Close()
+
+		mockInboundOrder := utils.CreateRandomReportInboundOrder()
+
+		rows := sqlmock.NewRows(rowsInboundOrdersStruct).AddRow(
+			mockInboundOrder.ID,
+			mockInboundOrder.CardNumberId,
+			mockInboundOrder.FirstName,
+			mockInboundOrder.LastName,
+			mockInboundOrder.WarehouseId,
+			mockInboundOrder.InboundOrdersCount,
+		)
+
+		mock.ExpectQuery(regexp.QuoteMeta(sqlInboundOrdersCountByEmployeeId)).WillReturnRows(rows)
+
+		repository := NewMariaDBRepository(db)
+		result, err := repository.ReportInboundOrders(context.Background(), 0)
+
+		assert.NoError(t, err)
+		assert.Equal(t, result, &mockInboundOrder)
+	})
+
+	t.Run("fail to scan inbound order", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+
+		assert.NoError(t, err)
+
+		defer db.Close()
+
+		rows := sqlmock.NewRows(rowsInboundOrdersStruct).AddRow("", "", "", "", "", "")
+
+		mock.ExpectQuery(regexp.QuoteMeta(sqlInboundOrdersCountByEmployeeId)).WillReturnRows(rows)
+
+		repository := NewMariaDBRepository(db)
+		_, err = repository.ReportInboundOrders(context.Background(), 1)
+
+		assert.Error(t, err)
 	})
 }

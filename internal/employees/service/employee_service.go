@@ -35,16 +35,6 @@ func (e employeeService) GetById(ctx context.Context, id int64) (*domain.Employe
 }
 
 func (e employeeService) Create(ctx context.Context, employee *domain.Employee) (*domain.Employee, error) {
-	foundEmployee, err := e.repository.GetByCardNumberId(ctx, employee.CardNumberId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if foundEmployee != nil {
-		return nil, domain.ErrDuplicatedID
-	}
-
 	newEmployee, err := e.repository.Create(ctx, employee)
 
 	if err != nil {
@@ -61,19 +51,19 @@ func (e employeeService) Update(ctx context.Context, employee *domain.Employee) 
 		return employee, err
 	}
 
-	if employee.CardNumberId != "" {
+	if employee.CardNumberId != current.CardNumberId && employee.CardNumberId != "" {
 		current.CardNumberId = employee.CardNumberId
 	}
 
-	if employee.FirstName != "" {
+	if employee.FirstName != current.FirstName && employee.FirstName != "" {
 		current.FirstName = employee.FirstName
 	}
 
-	if employee.LastName != "" {
+	if employee.LastName != current.LastName && employee.LastName != "" {
 		current.LastName = employee.LastName
 	}
 
-	if employee.WarehouseId > 0 {
+	if employee.WarehouseId != current.WarehouseId && employee.WarehouseId != 0 {
 		current.WarehouseId = employee.WarehouseId
 	}
 

@@ -29,6 +29,14 @@ func NewInboundOrderController(service domain.InboundOrderService) (*InboundOrde
 	}, nil
 }
 
+// @Summary List Inbound Orders
+// @Tags Inbound Orders
+// @Description get all inbound orders
+// @Accept json
+// @Produce json
+// @Success 200 {object} schemes.JSONSuccessResult{data=domain.Employee}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Router /inboundOrders [get]
 func (c InboundOrderController) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -42,6 +50,16 @@ func (c InboundOrderController) GetAll() gin.HandlerFunc {
 	}
 }
 
+// @Summary Create inbound order
+// @Tags Inbound Orders
+// @Description Add a new inbound order to the list
+// @Accept json
+// @Produce json
+// @Param inbound order body requestInboundOrder true "Inbound Order to create"
+// @Success 201 {object} domain.InboundOrder
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
+// @Router /inboundOrders [post]
 func (c InboundOrderController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
