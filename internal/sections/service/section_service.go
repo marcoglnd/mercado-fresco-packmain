@@ -32,28 +32,8 @@ func (s service) GetById(ctx context.Context, id int64) (*domain.Section, error)
 	return section, err
 }
 
-func (s service) Create(
-	ctx context.Context,
-	sectionNumber,
-	currentCapacity,
-	minimumCapacity,
-	maximumCapacity,
-	warehouseId,
-	productTypeId int64,
-	currentTemperature,
-	minimumTemperature float64,
-) (*domain.Section, error) {
-	section, err := s.repository.Create(
-		ctx,
-		sectionNumber,
-		currentCapacity,
-		minimumCapacity,
-		maximumCapacity,
-		warehouseId,
-		productTypeId,
-		currentTemperature,
-		minimumTemperature,
-	)
+func (s *service) Create(ctx context.Context, section *domain.Section) (*domain.Section, error) {
+	section, err := s.repository.Create(ctx, section)
 
 	if err != nil {
 		return section, err
@@ -62,30 +42,8 @@ func (s service) Create(
 	return section, nil
 }
 
-func (s service) Update(
-	ctx context.Context,
-	id,
-	sectionNumber,
-	currentCapacity,
-	minimumCapacity,
-	maximumCapacity,
-	warehouseId,
-	productTypeId int64,
-	currentTemperature,
-	minimumTemperature float64,
-) (*domain.Section, error) {
-	section, err := s.repository.Update(
-		ctx,
-		id,
-		sectionNumber,
-		currentCapacity,
-		minimumCapacity,
-		maximumCapacity,
-		warehouseId,
-		productTypeId,
-		currentTemperature,
-		minimumTemperature,
-	)
+func (s *service) Update(ctx context.Context, section *domain.Section) (*domain.Section, error) {
+	section, err := s.repository.Update(ctx, section)
 	if err != nil {
 		return section, err
 	}

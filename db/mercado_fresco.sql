@@ -42,6 +42,7 @@ CREATE TABLE `sections` (
   `current_temperature` DECIMAL(19,2) NOT NULL,
   `minimum_temperature` DECIMAL(19,2) NOT NULL,
   `current_capacity` INT NOT NULL,
+  `minimum_capacity` INT NOT NULL,
   `maximum_capacity` int NOT NULL,
   `warehouse_id` int NOT NULL,
   `product_type_id` int NOT NULL

@@ -3,7 +3,6 @@ package controller
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/sections/domain"
@@ -185,31 +184,35 @@ func (c *SectionsController) Update() gin.HandlerFunc {
 		)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
 		}
+		ctx.JSON(http.StatusOK, section)
 
+		// vraw
 		// id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		// if err != nil {
 		// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
 		// 	return
 		// }
 
-		var req requestSection
-		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-			return
-		}
+		// var req requestSection
+		// if err := ctx.ShouldBindJSON(&req); err != nil {
+		// 	ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		// 	return
+		// }
 
-		b, err := c.service.Update(
-			ctx,
-			int(id),
-			req.SectionNumber, req.CurrentTemperature,
-			req.MinimumTemperature, req.CurrentCapacity, req.MinimumCapacity, req.MaximumCapacity,
-			req.WarehouseId, req.ProductTypeId)
-		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-			return
-		}
-		ctx.JSON(http.StatusOK, b)
+		// b, err := c.service.Update(
+		// 	ctx,
+		// 	int(id),
+		// 	req.SectionNumber, req.CurrentTemperature,
+		// 	req.MinimumTemperature, req.CurrentCapacity, req.MinimumCapacity, req.MaximumCapacity,
+		// 	req.WarehouseId, req.ProductTypeId)
+		// if err != nil {
+		// 	ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		// 	return
+		// }
+		// ctx.JSON(http.StatusOK, b)
+		// vraw
 	}
 }
 
@@ -225,19 +228,32 @@ func (c *SectionsController) Update() gin.HandlerFunc {
 // @Router /sections/{id} [delete]
 func (c *SectionsController) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
-		if err != nil {
+		var req domain.RequestSectionId
+		if err := ctx.ShouldBindUri(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
-			return
 		}
 
-		err = c.service.Delete(ctx, int(id))
+		err := c.service.Delete(ctx.Request.Context(), req.ID)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
 
-		ctx.JSON(http.StatusNoContent, gin.H{"data": fmt.Sprintf("A section %d foi removido", id)})
+		ctx.JSON(http.StatusNoContent, gin.H{"data": fmt.Sprintf("A section %d foi removida", req)})
+
+		// vraw
+		// id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+		// if err != nil {
+		// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
+		// 	return
+		// }
+		// err = c.service.Delete(ctx, int(id))
+		// if err != nil {
+		// 	ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		// 	return
+		// }
+		// ctx.JSON(http.StatusNoContent, gin.H{"data": fmt.Sprintf("A section %d foi removido", id)})
+		// vraw
 	}
 }
 

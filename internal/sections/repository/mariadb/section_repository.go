@@ -76,26 +76,16 @@ func (r *repository) GetById(ctx context.Context, id int64) (*domain.Section, er
 	return &section, nil
 }
 
-func (r *repository) Create(
-	ctx context.Context,
-	sectionNumber,
-	currentCapacity,
-	minimumCapacity,
-	maximumCapacity,
-	warehouseId,
-	productTypeId int64,
-	currentTemperature,
-	minimumTemperature float64,
-) (*domain.Section, error) {
+func (r *repository) Create(ctx context.Context, section *domain.Section) (*domain.Section, error) {
 	newSection := domain.Section{
-		SectionNumber:      sectionNumber,
-		CurrentTemperature: currentTemperature,
-		MinimumTemperature: minimumTemperature,
-		CurrentCapacity:    currentCapacity,
-		MinimumCapacity:    minimumCapacity,
-		MaximumCapacity:    maximumCapacity,
-		WarehouseId:        warehouseId,
-		ProductTypeId:      productTypeId,
+		SectionNumber:      section.SectionNumber,
+		CurrentTemperature: section.CurrentTemperature,
+		MinimumTemperature: section.MinimumTemperature,
+		CurrentCapacity:    section.CurrentCapacity,
+		MinimumCapacity:    section.MinimumCapacity,
+		MaximumCapacity:    section.MaximumCapacity,
+		WarehouseId:        section.WarehouseId,
+		ProductTypeId:      section.ProductTypeId,
 	}
 
 	result, err := r.db.ExecContext(
@@ -121,28 +111,17 @@ func (r *repository) Create(
 	return &newSection, nil
 }
 
-func (r *repository) Update(
-	ctx context.Context,
-	id,
-	sectionNumber,
-	currentCapacity,
-	minimumCapacity,
-	maximumCapacity,
-	warehouseId,
-	productTypeId int64,
-	currentTemperature,
-	minimumTemperature float64,
-) (*domain.Section, error) {
+func (r *repository) Update(ctx context.Context, section *domain.Section) (*domain.Section, error) {
 	newSection := domain.Section{
-		ID:                 id,
-		SectionNumber:      sectionNumber,
-		CurrentTemperature: currentTemperature,
-		MinimumTemperature: minimumTemperature,
-		CurrentCapacity:    currentCapacity,
-		MinimumCapacity:    minimumCapacity,
-		MaximumCapacity:    maximumCapacity,
-		WarehouseId:        warehouseId,
-		ProductTypeId:      productTypeId,
+		ID:                 section.ID,
+		SectionNumber:      section.SectionNumber,
+		CurrentTemperature: section.CurrentTemperature,
+		MinimumTemperature: section.MinimumTemperature,
+		CurrentCapacity:    section.CurrentCapacity,
+		MinimumCapacity:    section.MinimumCapacity,
+		MaximumCapacity:    section.MaximumCapacity,
+		WarehouseId:        section.WarehouseId,
+		ProductTypeId:      section.ProductTypeId,
 	}
 
 	result, err := r.db.ExecContext(

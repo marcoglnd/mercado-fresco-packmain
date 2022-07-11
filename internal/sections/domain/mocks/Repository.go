@@ -5,7 +5,7 @@ package mocks
 import (
 	context "context"
 
-	sections "github.com/marcoglnd/mercado-fresco-packmain/internal/sections/domain"
+	domain "github.com/marcoglnd/mercado-fresco-packmain/internal/sections/domain"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -14,22 +14,22 @@ type Repository struct {
 	mock.Mock
 }
 
-// Create provides a mock function with given fields: ctx, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId
-func (_m *Repository) Create(ctx context.Context, sectionNumber int, currentTemperature int, minimumTemperature int, currentCapacity int, minimumCapacity int, maximumCapacity int, warehouseId int, productTypeId int) (*sections.Section, error) {
-	ret := _m.Called(ctx, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId)
+// Create provides a mock function with given fields: ctx, section
+func (_m *Repository) Create(ctx context.Context, section *domain.Section) (*domain.Section, error) {
+	ret := _m.Called(ctx, section)
 
-	var r0 *sections.Section
-	if rf, ok := ret.Get(0).(func(context.Context, int, int, int, int, int, int, int, int) *sections.Section); ok {
-		r0 = rf(ctx, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId)
+	var r0 *domain.Section
+	if rf, ok := ret.Get(0).(func(context.Context, *domain.Section) *domain.Section); ok {
+		r0 = rf(ctx, section)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*sections.Section)
+			r0 = ret.Get(0).(*domain.Section)
 		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, int, int, int, int, int, int, int, int) error); ok {
-		r1 = rf(ctx, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId)
+	if rf, ok := ret.Get(1).(func(context.Context, *domain.Section) error); ok {
+		r1 = rf(ctx, section)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -38,11 +38,11 @@ func (_m *Repository) Create(ctx context.Context, sectionNumber int, currentTemp
 }
 
 // Delete provides a mock function with given fields: ctx, id
-func (_m *Repository) Delete(ctx context.Context, id int) error {
+func (_m *Repository) Delete(ctx context.Context, id int64) error {
 	ret := _m.Called(ctx, id)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, int) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int64) error); ok {
 		r0 = rf(ctx, id)
 	} else {
 		r0 = ret.Error(0)
@@ -52,15 +52,15 @@ func (_m *Repository) Delete(ctx context.Context, id int) error {
 }
 
 // GetAll provides a mock function with given fields: ctx
-func (_m *Repository) GetAll(ctx context.Context) (*[]sections.Section, error) {
+func (_m *Repository) GetAll(ctx context.Context) (*[]domain.Section, error) {
 	ret := _m.Called(ctx)
 
-	var r0 *[]sections.Section
-	if rf, ok := ret.Get(0).(func(context.Context) *[]sections.Section); ok {
+	var r0 *[]domain.Section
+	if rf, ok := ret.Get(0).(func(context.Context) *[]domain.Section); ok {
 		r0 = rf(ctx)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*[]sections.Section)
+			r0 = ret.Get(0).(*[]domain.Section)
 		}
 	}
 
@@ -75,20 +75,20 @@ func (_m *Repository) GetAll(ctx context.Context) (*[]sections.Section, error) {
 }
 
 // GetById provides a mock function with given fields: ctx, id
-func (_m *Repository) GetById(ctx context.Context, id int) (*sections.Section, error) {
+func (_m *Repository) GetById(ctx context.Context, id int64) (*domain.Section, error) {
 	ret := _m.Called(ctx, id)
 
-	var r0 *sections.Section
-	if rf, ok := ret.Get(0).(func(context.Context, int) *sections.Section); ok {
+	var r0 *domain.Section
+	if rf, ok := ret.Get(0).(func(context.Context, int64) *domain.Section); ok {
 		r0 = rf(ctx, id)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*sections.Section)
+			r0 = ret.Get(0).(*domain.Section)
 		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
 		r1 = rf(ctx, id)
 	} else {
 		r1 = ret.Error(1)
@@ -97,22 +97,22 @@ func (_m *Repository) GetById(ctx context.Context, id int) (*sections.Section, e
 	return r0, r1
 }
 
-// Update provides a mock function with given fields: ctx, id, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId
-func (_m *Repository) Update(ctx context.Context, id int, sectionNumber int, currentTemperature int, minimumTemperature int, currentCapacity int, minimumCapacity int, maximumCapacity int, warehouseId int, productTypeId int) (*sections.Section, error) {
-	ret := _m.Called(ctx, id, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId)
+// Update provides a mock function with given fields: ctx, section
+func (_m *Repository) Update(ctx context.Context, section *domain.Section) (*domain.Section, error) {
+	ret := _m.Called(ctx, section)
 
-	var r0 *sections.Section
-	if rf, ok := ret.Get(0).(func(context.Context, int, int, int, int, int, int, int, int, int) *sections.Section); ok {
-		r0 = rf(ctx, id, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId)
+	var r0 *domain.Section
+	if rf, ok := ret.Get(0).(func(context.Context, *domain.Section) *domain.Section); ok {
+		r0 = rf(ctx, section)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*sections.Section)
+			r0 = ret.Get(0).(*domain.Section)
 		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, int, int, int, int, int, int, int, int, int) error); ok {
-		r1 = rf(ctx, id, sectionNumber, currentTemperature, minimumTemperature, currentCapacity, minimumCapacity, maximumCapacity, warehouseId, productTypeId)
+	if rf, ok := ret.Get(1).(func(context.Context, *domain.Section) error); ok {
+		r1 = rf(ctx, section)
 	} else {
 		r1 = ret.Error(1)
 	}

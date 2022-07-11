@@ -11,9 +11,9 @@ type Section struct {
 	MinimumTemperature float64 `json:"minimum_temperature"`
 	CurrentCapacity    int64   `json:"current_capacity"`
 	MinimumCapacity    int64   `json:"minimum_capacity"`
-	MaximumCapacity    int64   `json:"maximum_capacity"`
-	WarehouseId        int64   `json:"warehouse_id"`
-	ProductTypeId      int64   `json:"product_type_id"`
+	MaximumCapacity    int64 `json:"maximum_capacity"`
+	WarehouseId        int64 `json:"warehouse_id"`
+	ProductTypeId      int64 `json:"product_type_id"`
 }
 
 type Service interface {
@@ -42,9 +42,9 @@ type RequestSections struct {
 	MinimumTemperature float64 `json:"minimum_temperature" binding:"required"`
 	CurrentCapacity    int64   `json:"current_capacity" binding:"required"`
 	MinimumCapacity    int64   `json:"minimum_capacity" binding:"required"`
-	MaximumCapacity    int64   `json:"maximum_capacity" binding:"required"`
-	WarehouseId        int64   `json:"warehouse_id" binding:"required"`
-	ProductTypeId      int64   `json:"product_type_id" binding:"required"`
+	MaximumCapacity int64 `json:"maximum_capacity" binding:"required"`
+	WarehouseId     int64 `json:"warehouse_id" binding:"required"`
+	ProductTypeId   int64 `json:"product_type_id" binding:"required"`
 }
 
 type RequestSectionsUpdated struct {
@@ -53,7 +53,7 @@ type RequestSectionsUpdated struct {
 	MinimumTemperature float64 `json:"minimum_temperature"`
 	CurrentCapacity    int64   `json:"current_capacity"`
 	MinimumCapacity    int64   `json:"minimum_capacity"`
-	MaximumCapacity    int64   `json:"maximum_capacity"`
-	WarehouseId        int64   `json:"warehouse_id"`
-	ProductTypeId      int64   `json:"product_type_id"`
+	MaximumCapacity int64 `json:"maximum_capacity"`
+	WarehouseId     int64 `json:"warehouse_id"`
+	ProductTypeId   int64 `json:"product_type_id"`
 }
