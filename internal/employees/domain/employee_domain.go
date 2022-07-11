@@ -9,6 +9,8 @@ type EmployeeRepository interface {
 	Create(ctx context.Context, employee *Employee) (*Employee, error)
 	Update(ctx context.Context, employee *Employee) (*Employee, error)
 	Delete(ctx context.Context, id int64) error
+	ReportAllInboundOrders(ctx context.Context) (*[]InboundOrder, error)
+	ReportInboundOrders(ctx context.Context, employeeId int64) (*InboundOrder, error)
 }
 
 type EmployeeService interface {
@@ -17,4 +19,6 @@ type EmployeeService interface {
 	Create(ctx context.Context, employee *Employee) (*Employee, error)
 	Update(ctx context.Context, employee *Employee) (*Employee, error)
 	Delete(ctx context.Context, id int64) error
+	ReportAllInboundOrders(ctx context.Context) (*[]InboundOrder, error)
+	ReportInboundOrders(ctx context.Context, employeeId int64) (*InboundOrder, error)
 }

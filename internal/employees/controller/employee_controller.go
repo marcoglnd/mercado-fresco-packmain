@@ -210,3 +210,29 @@ func (c EmployeeController) GetOrdersByEmployeeId() gin.HandlerFunc {
 		ctx.JSON(http.StatusOK, employee)
 	}
 }
+
+func (c EmployeeController) ReportInboundOrders() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		id, _ := strconv.ParseInt(ctx.Query("id"), 10, 64)
+
+		if id == 0 {
+			inboundOrders, err := c.service.ReportAllInboundOrders(ctx)
+
+			if err != nil {
+				ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+				return
+			}
+			ctx.JSON(http.StatusOK, gin.H{"data": inboundOrders})
+			return
+		}
+
+		inboundOrder, err := c.service.ReportInboundOrders(ctx, id)
+
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(http.StatusOK, gin.H{"data": inboundOrder})
+	}
+}

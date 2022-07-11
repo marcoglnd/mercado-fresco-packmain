@@ -94,3 +94,23 @@ func (e employeeService) Delete(ctx context.Context, id int64) error {
 
 	return nil
 }
+
+func (e employeeService) ReportAllInboundOrders(ctx context.Context) (*[]domain.InboundOrder, error) {
+	inboundOrders, err := e.repository.ReportAllInboundOrders(ctx)
+
+	if err != nil {
+		return inboundOrders, err
+	}
+
+	return inboundOrders, nil
+}
+
+func (e employeeService) ReportInboundOrders(ctx context.Context, employeeId int64) (*domain.InboundOrder, error) {
+	inboundOrder, err := e.repository.ReportInboundOrders(ctx, employeeId)
+
+	if err != nil {
+		return inboundOrder, err
+	}
+
+	return inboundOrder, nil
+}

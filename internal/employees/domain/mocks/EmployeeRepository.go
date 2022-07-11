@@ -120,6 +120,52 @@ func (_m *EmployeeRepository) GetById(ctx context.Context, id int64) (*domain.Em
 	return r0, r1
 }
 
+// ReportAllInboundOrders provides a mock function with given fields: ctx
+func (_m *EmployeeRepository) ReportAllInboundOrders(ctx context.Context) (*[]domain.InboundOrder, error) {
+	ret := _m.Called(ctx)
+
+	var r0 *[]domain.InboundOrder
+	if rf, ok := ret.Get(0).(func(context.Context) *[]domain.InboundOrder); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*[]domain.InboundOrder)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ReportInboundOrders provides a mock function with given fields: ctx, employeeId
+func (_m *EmployeeRepository) ReportInboundOrders(ctx context.Context, employeeId int64) (*domain.InboundOrder, error) {
+	ret := _m.Called(ctx, employeeId)
+
+	var r0 *domain.InboundOrder
+	if rf, ok := ret.Get(0).(func(context.Context, int64) *domain.InboundOrder); ok {
+		r0 = rf(ctx, employeeId)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*domain.InboundOrder)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, employeeId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Update provides a mock function with given fields: ctx, employee
 func (_m *EmployeeRepository) Update(ctx context.Context, employee *domain.Employee) (*domain.Employee, error) {
 	ret := _m.Called(ctx, employee)
