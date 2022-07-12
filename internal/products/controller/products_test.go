@@ -575,24 +575,18 @@ func TestCreateProductRecords(t *testing.T) {
 	})
 }
 
-func TestGetQtyOfRecordsById(t *testing.T) {
-	t.Run("success", func(t *testing.T) {
-		mockQtyOfRecords := utils.CreateRandomQtyOfRecords()
-		mockQtyOfRecordsId := utils.RandomInt64()
+func TestGetQtyOfRecords(t *testing.T) {
+	t.Run("success - GetQtyOfAllRecords", func(t *testing.T) {
 		productsServiceMock := mocks.NewService(t)
+		mockQtyOfRecords := utils.CreateRandomListQtyOfRecords()
 
-		productsServiceMock.On("GetQtyOfRecordsById",
+		productsServiceMock.On("GetQtyOfAllRecords",
 			mock.Anything,
-			mock.AnythingOfType("int64"),
-		).Return(&mockQtyOfRecords, nil).Once().
-			On("GetQtyOfAllRecords",
-				mock.Anything,
-			).Return(nil, nil).Maybe()
+		).Return(&mockQtyOfRecords, nil).Once()
 
 		payload, err := json.Marshal(mockQtyOfRecords)
 		assert.NoError(t, err)
-
-		PATH := fmt.Sprintf("/api/v1/products/reportRecords?id=%v", mockQtyOfRecordsId)
+		PATH := "/api/v1/products/reportRecords"
 		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
 		rec := httptest.NewRecorder()
 
@@ -600,7 +594,7 @@ func TestGetQtyOfRecordsById(t *testing.T) {
 
 		productController := Controller{service: productsServiceMock}
 
-		engine.GET("/api/v1/products/reportRecords", productController.GetQtyOfRecordsById())
+		engine.GET("/api/v1/localities/reportSellers", productController.GetQtyOfRecords())
 
 		engine.ServeHTTP(rec, req)
 
@@ -609,34 +603,26 @@ func TestGetQtyOfRecordsById(t *testing.T) {
 		productsServiceMock.AssertExpectations(t)
 	})
 
-	t.Run("In case of empty id", func(t *testing.T) {
+	t.Run("internal sever error - GetAllQtyOfSellers", func(t *testing.T) {
 		productsServiceMock := mocks.NewService(t)
-		mockListQtyOfRecords := utils.CreateRandomListQtyOfRecords()
 
-		productsServiceMock.On("GetQtyOfRecordsById",
+		productsServiceMock.On("GetQtyOfAllRecords",
 			mock.Anything,
-			mock.AnythingOfType("string"),
-		).Return(&mockListQtyOfRecords, nil).Maybe().
-			On("GetQtyOfAllRecords",
-				mock.Anything,
-			).Return(&mockListQtyOfRecords, nil).Once()
+		).Return(nil, errors.New("couldn`t return a list")).Once()
 
-		payload, err := json.Marshal(mockListQtyOfRecords)
-		assert.NoError(t, err)
-
-		PATH := fmt.Sprintf("/api/v1/products/reportRecords?id=%v", "")
-		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
+		PATH := "/api/v1/products/reportRecords"
+		req := httptest.NewRequest(http.MethodGet, PATH, nil)
 		rec := httptest.NewRecorder()
 
 		_, engine := gin.CreateTestContext(rec)
 
-		productController := Controller{service: productsServiceMock}
+		localityController := Controller{service: productsServiceMock}
 
-		engine.GET("/api/v1/products/reportRecords", productController.GetQtyOfRecordsById())
+		engine.GET("/api/v1/localities/reportSellers", localityController.GetQtyOfRecords())
 
 		engine.ServeHTTP(rec, req)
 
-		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 
 		productsServiceMock.AssertExpectations(t)
 	})
@@ -672,6 +658,34 @@ func TestGetQtyOfRecordsById(t *testing.T) {
 		assert.Equal(t, http.StatusNotFound, rec.Code)
 
 		productsServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("success - GetQtyOfRecordsById", func(t *testing.T) {
+		localityServiceMock := mocks.NewLocalityService(t)
+		mockQtyOfSellers := utils.CreateRandomQtyOfSellers()
+
+		localityServiceMock.On("GetQtyOfRecordsById",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(&mockQtyOfSellers, nil).Once()
+
+		payload, err := json.Marshal(mockQtyOfSellers)
+		assert.NoError(t, err)
+		PATH := fmt.Sprintf("/api/v1/localities/reportSellers?id=%v", utils.RandomInt64())
+		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		localityController := LocalityController{service: localityServiceMock}
+
+		engine.GET("/api/v1/localities/reportSellers", localityController.GetAllQtyOfSellers())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+
+		localityServiceMock.AssertExpectations(t)
 	})
 
 	t.Run("In case of internal server error", func(t *testing.T) {
