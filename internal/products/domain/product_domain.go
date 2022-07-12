@@ -106,12 +106,24 @@ type QtyOfRecords struct {
 	RecordsCount int64  `json:"records_count"`
 }
 
+// type RequestProductBatches struct {
+// 	BatchNumber        int64   `json:"batch_number"`
+// 	CurrentQuantity    int64   `json:"current_quantity"`
+// 	CurrentTemperature float64 `json:"current_temperature"`
+// 	InitialQuantity    int64   `json:"initial_quantity"`
+// 	MinumumTemperature float64 `json:"minumum_temperature"`
+// 	ProductId          int64   `json:"product_id"`
+// 	SectionId          int64   `json:"section_id"`
+// }
 type RequestProductBatches struct {
 	BatchNumber        int64   `json:"batch_number"`
 	CurrentQuantity    int64   `json:"current_quantity"`
 	CurrentTemperature float64 `json:"current_temperature"`
+	DueDate            string  `json:"due_date"`
 	InitialQuantity    int64   `json:"initial_quantity"`
-	MinumumTemperature float64 `json:"minumum_temperature"`
+	ManufacturingDate  string  `json:"manufacturing_date"`
+	ManufacturingHour  string  `json:"manufacturing_hour"`
+	MinimumTemperature float64 `json:"minimum_temperature"`
 	ProductId          int64   `json:"product_id"`
 	SectionId          int64   `json:"section_id"`
 }
@@ -124,7 +136,7 @@ type ProductBatches struct {
 	InitialQuantity    int64   `json:"initial_quantity"`
 	ManufacturingDate  string  `json:"manufacturing_date"`
 	ManufacturingHour  string  `json:"manufacturing_hour"`
-	MinumumTemperature float64 `json:"minumum_temperature"`
+	MinimumTemperature float64 `json:"minimum_temperature"`
 	ProductId          int64   `json:"product_id"`
 	SectionId          int64   `json:"section_id"`
 }

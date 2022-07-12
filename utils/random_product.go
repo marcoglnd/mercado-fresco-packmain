@@ -58,7 +58,7 @@ func CreateRandomProductBatches() domain.ProductBatches {
 		InitialQuantity: RandomInt64(),
 		ManufacturingDate: RandomString(10),
 		ManufacturingHour: RandomString(10),
-		MinumumTemperature: RandomFloat64(),
+		MinimumTemperature: RandomFloat64(),
 		ProductId: RandomInt64(),
 		SectionId: RandomInt64(),
 	}

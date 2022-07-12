@@ -53,7 +53,7 @@ type RequestSectionsUpdated struct {
 	MinimumTemperature float64 `json:"minimum_temperature"`
 	CurrentCapacity    int64   `json:"current_capacity"`
 	MinimumCapacity    int64   `json:"minimum_capacity"`
-	MaximumCapacity int64 `json:"maximum_capacity"`
-	WarehouseId     int64 `json:"warehouse_id"`
-	ProductTypeId   int64 `json:"product_type_id"`
+	MaximumCapacity    int64 `json:"maximum_capacity"`
+	WarehouseId        int64 `json:"warehouse_id"`
+	ProductTypeId      int64 `json:"product_type_id"`
 }

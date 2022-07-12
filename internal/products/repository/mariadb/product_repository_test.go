@@ -14,19 +14,19 @@ import (
 )
 
 var (
-	queryInsertProduct       = regexp.QuoteMeta(sqlInsertProduct)
-	queryGetAllProducts      = regexp.QuoteMeta(sqlGetAllProducts)
-	queryGetProductById      = regexp.QuoteMeta(sqlGetProductById)
-	queryUpdateProduct       = regexp.QuoteMeta(sqlUpdateProduct)
-	queryDeleteProduct       = regexp.QuoteMeta(sqlDeleteProduct)
-	
-	queryInsertRecord        = regexp.QuoteMeta(sqlCreateRecord)
-	queryGetRecordsById      = regexp.QuoteMeta(sqlGetRecord)
-	
+	queryInsertProduct  = regexp.QuoteMeta(sqlInsertProduct)
+	queryGetAllProducts = regexp.QuoteMeta(sqlGetAllProducts)
+	queryGetProductById = regexp.QuoteMeta(sqlGetProductById)
+	queryUpdateProduct  = regexp.QuoteMeta(sqlUpdateProduct)
+	queryDeleteProduct  = regexp.QuoteMeta(sqlDeleteProduct)
+
+	queryInsertRecord   = regexp.QuoteMeta(sqlCreateRecord)
+	queryGetRecordsById = regexp.QuoteMeta(sqlGetRecord)
+
 	queryGetQtyOfRecordsById = regexp.QuoteMeta(sqlGetQtyOfRecordsById)
-	
-	queryInsertBatch        = regexp.QuoteMeta(sqlCreateBatch)
-	queryGetBatchesById      = regexp.QuoteMeta(sqlGetBatch)
+
+	queryInsertBatch    = regexp.QuoteMeta(sqlCreateBatch)
+	queryGetBatchesById = regexp.QuoteMeta(sqlGetBatch)
 )
 
 var rowsProductStruct = []string{
@@ -528,7 +528,7 @@ func TestCreateProductBatches(t *testing.T) {
 				mockProductBatches.CurrentQuantity,
 				mockProductBatches.CurrentTemperature,
 				mockProductBatches.InitialQuantity,
-				mockProductBatches.MinumumTemperature,
+				mockProductBatches.MinimumTemperature,
 				mockProductBatches.ProductId,
 				mockProductBatches.SectionId,
 			).WillReturnResult(sqlmock.NewResult(1, 1))
@@ -573,7 +573,7 @@ func TestGetProductBatchesById(t *testing.T) {
 			mockProductBatches.InitialQuantity,
 			mockProductBatches.ManufacturingDate,
 			mockProductBatches.ManufacturingHour,
-			mockProductBatches.MinumumTemperature,
+			mockProductBatches.MinimumTemperature,
 			mockProductBatches.ProductId,
 			mockProductBatches.SectionId,
 		)

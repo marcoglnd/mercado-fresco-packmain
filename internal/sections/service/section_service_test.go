@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"errors"
-	"testing"
+	"testing" 
 
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/sections/domain"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/sections/domain/mocks"
@@ -62,38 +62,37 @@ func TestCreateNewSection(t *testing.T) {
 	})
 }
 
-// func TestGetAll(t *testing.T) {
-// 	mockSectionRepo := mocks.NewRepository(t)
+func TestGetAll(t *testing.T) {
+	mockSectionRepo := mocks.NewRepository(t)
+	mockSections := utils.CreateRandomListBuyers()
 
-// 	mockSections := utils.CreateRandomListBuyers()
+	t.Run("In case of success", func(t *testing.T) {
+		mockSectionRepo.On("GetAll", mock.Anything).
+			Return(&mockSections, nil).Once()
 
-// 	t.Run("In case of success", func(t *testing.T) {
-// 		mockSectionRepo.On("GetAll", mock.Anything).
-// 			Return(&mockSections, nil).Once()
+		s := NewService(mockSectionRepo)
+		list, err := s.GetAll(context.Background())
 
-// 		s := NewBuyerService(mockSectionRepo)
-// 		list, err := s.GetAll(context.Background())
+		assert.NoError(t, err)
 
-// 		assert.NoError(t, err)
+		assert.Equal(t, &mockSections, list)
 
-// 		assert.Equal(t, &mockSections, list)
+		mockSectionRepo.AssertExpectations(t)
+	})
 
-// 		mockSectionRepo.AssertExpectations(t)
-// 	})
+	t.Run("In case of error", func(t *testing.T) {
+		mockSectionRepo.On("GetAll", mock.Anything).
+			Return(nil, errors.New("failed to retrieve buyers")).
+			Once()
 
-// 	t.Run("In case of error", func(t *testing.T) {
-// 		mockSectionRepo.On("GetAll", mock.Anything).
-// 			Return(nil, errors.New("failed to retrieve buyers")).
-// 			Once()
+		s := NewService(mockSectionRepo)
+		_, err := s.GetAll(context.Background())
 
-// 		s := NewBuyerService(mockSectionRepo)
-// 		_, err := s.GetAll(context.Background())
+		assert.NotNil(t, err)
 
-// 		assert.NotNil(t, err)
-
-// 		mockSectionRepo.AssertExpectations(t)
-// 	})
-// }
+		mockSectionRepo.AssertExpectations(t)
+	})
+}
 
 // func TestGetById(t *testing.T) {
 // 	mockSectionRepo := mocks.NewRepository(t)

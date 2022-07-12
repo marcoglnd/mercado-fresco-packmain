@@ -259,12 +259,12 @@ func (c *Controller) GetQtyOfRecordsById() gin.HandlerFunc {
 // @Description Create a new product records
 // @Accept json
 // @Produce json
-// @Param product body domain.RequestProductBatches true "Product record to create"
+// @Param product body domain.RequestProductBatches true "Product Batche to create"
 // @Success 201 {object} domain.ProductBatches
 // @Failure 409 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 500 {object} schemes.JSONBadReqResult{error=string}
-// @Router /productRecords [post]
+// @Router /productBatches [post]
 func (c *Controller) CreateProductBatches() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req domain.RequestProductBatches
@@ -279,7 +279,7 @@ func (c *Controller) CreateProductBatches() gin.HandlerFunc {
 				CurrentQuantity:    req.CurrentQuantity,
 				CurrentTemperature: req.CurrentTemperature,
 				InitialQuantity:    req.InitialQuantity,
-				MinumumTemperature: req.MinumumTemperature,
+				MinimumTemperature: req.MinimumTemperature,
 				ProductId:          req.ProductId,
 				SectionId:          req.SectionId,
 			},
