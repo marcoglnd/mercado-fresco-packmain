@@ -48,7 +48,6 @@ CREATE TABLE `sections` (
 );
 
 CREATE TABLE `employees` (
-
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `card_number_id` VARCHAR(255) NOT NULL UNIQUE,
   `first_name` VARCHAR(255) NOT NULL,
@@ -126,10 +125,10 @@ CREATE TABLE `carriers` (
 CREATE TABLE `inbound_orders` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
     `order_date` DATETIME(6),
-    `order_number` VARCHAR(255) NOT NULL,
-    `employe_id` INT NOT NULL,
+    `order_number` VARCHAR(255) NOT NULL UNIQUE,
+    `employee_id` INT NOT NULL,
     `product_batch_id` INT NOT NULL,
-    `wareHouse_id` INT NOT NULL
+    `warehouse_id` INT NOT NULL
 );
 
 CREATE TABLE `product_batches` (
@@ -206,8 +205,8 @@ ALTER TABLE `purchase_orders` ADD FOREIGN KEY (`wareHouse_id`) REFERENCES `wareh
 ALTER TABLE `carriers` ADD FOREIGN KEY (`locality_id`) REFERENCES `localities` (`id`);
 
 
-ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`employe_id`) REFERENCES `employees` (`id`);
+ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`);
 
 ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`product_batch_id`) REFERENCES `product_batches` (`id`);
 
-ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`wareHouse_id`) REFERENCES `warehouse` (`id`);
+ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouse` (`id`);

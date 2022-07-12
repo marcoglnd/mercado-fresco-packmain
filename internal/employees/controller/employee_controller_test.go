@@ -442,3 +442,95 @@ func TestDelete(t *testing.T) {
 		mockEmployeeService.AssertExpectations(t)
 	})
 }
+
+func TestReportInboundOrders(t *testing.T) {
+	mockInboundOrder := utils.CreateRandomReportInboundOrder()
+	employeeServiceMock := mocks.NewEmployeeService(t)
+
+	t.Run("success", func(t *testing.T) {
+
+		employeeServiceMock.On("ReportInboundOrders",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(&mockInboundOrder, nil).Once()
+
+		payload, err := json.Marshal(mockInboundOrder)
+		assert.NoError(t, err)
+
+		PATH := fmt.Sprintf("/api/v1/employees/reportInboundOrders?id=%v", mockInboundOrder.ID)
+		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		employeeController := EmployeeController{service: employeeServiceMock}
+
+		engine.GET("/api/v1/employees/reportInboundOrders", employeeController.ReportInboundOrders())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+
+		employeeServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("In case of empty id", func(t *testing.T) {
+		mockListReportInboundOrders := utils.CreateRamdomListReportInboundOrders()
+
+		employeeServiceMock.On("ReportInboundOrders",
+			mock.Anything,
+			mock.AnythingOfType("string"),
+		).Return(&mockListReportInboundOrders, errors.New("bad request")).Maybe().On("ReportAllInboundOrders",
+			mock.Anything,
+		).Return(&mockListReportInboundOrders, nil).Once()
+
+		payload, err := json.Marshal(mockListReportInboundOrders)
+		assert.NoError(t, err)
+
+		PATH := fmt.Sprintf("/api/v1/employees/reportInboundOrders?id=%v", "")
+		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		employeeController := EmployeeController{service: employeeServiceMock}
+
+		engine.GET("/api/v1/employees/reportInboundOrders", employeeController.ReportInboundOrders())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+
+		employeeServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("In case of internal server error", func(t *testing.T) {
+		mockListReportInboundOrders := utils.CreateRandomListInboundOrders()
+		employeeServiceMock := mocks.NewEmployeeService(t)
+
+		employeeServiceMock.On("ReportInboundOrders",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(&mockListReportInboundOrders, nil).Maybe().On("ReportAllInboundOrders",
+			mock.Anything,
+		).Return(nil, errors.New("Internal server error")).Maybe()
+
+		payload, err := json.Marshal(mockListReportInboundOrders)
+		assert.NoError(t, err)
+
+		req := httptest.NewRequest(http.MethodGet, "/api/v1/employees/reportInboundOrders", bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		employeeController := EmployeeController{service: employeeServiceMock}
+
+		engine.GET("/api/v1/employees/reportInboundOrders", employeeController.ReportInboundOrders())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
+
+		employeeServiceMock.AssertExpectations(t)
+	})
+}
