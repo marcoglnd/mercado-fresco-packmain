@@ -64,7 +64,7 @@ CREATE TABLE `buyers` (
 
 CREATE TABLE `localities` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
-    `locality_name` VARCHAR(255) NOT NULL,
+    `locality_name` VARCHAR(255) NOT NULL UNIQUE,
     `province_id` INT NOT NULL
 );
 
@@ -203,7 +203,6 @@ ALTER TABLE `purchase_orders` ADD FOREIGN KEY (`order_status_id`) REFERENCES `or
 ALTER TABLE `purchase_orders` ADD FOREIGN KEY (`wareHouse_id`) REFERENCES `warehouse` (`id`);
 
 ALTER TABLE `carriers` ADD FOREIGN KEY (`locality_id`) REFERENCES `localities` (`id`);
-
 
 ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`);
 
