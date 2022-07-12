@@ -191,6 +191,7 @@ func (c *Controller) Delete() gin.HandlerFunc {
 // @Description Create a new product records
 // @Accept json
 // @Produce json
+// @Param product body domain.RequestProductRecords true "Create a new product record"
 // @Success 201 {object} domain.ProductRecords
 // @Failure 409 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}

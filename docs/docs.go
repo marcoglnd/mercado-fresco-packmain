@@ -24,264 +24,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/buyers": {
-            "get": {
-                "description": "get all buyers",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Buyers"
-                ],
-                "summary": "List buyers",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/schemes.Buyer"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/schemes.JSONBadReqResult"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Add a new buyer to the list",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Buyers"
-                ],
-                "summary": "Create buyer",
-                "parameters": [
-                    {
-                        "description": "Buyer to create",
-                        "name": "buyer",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/controllers.requestBuyer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/schemes.Buyer"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/schemes.JSONBadReqResult"
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocessable Entity",
-                        "schema": {
-                            "$ref": "#/definitions/schemes.JSONBadReqResult"
-                        }
-                    }
-                }
-            }
-        },
-        "/buyers/{id}": {
-            "get": {
-                "description": "get buyer by its id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Buyers"
-                ],
-                "summary": "Buyer by id",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Buyer ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/schemes.Buyer"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/schemes.JSONBadReqResult"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/schemes.JSONBadReqResult"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete existing buyer in list",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Buyers"
-                ],
-                "summary": "Delete buyer",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Buyer ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No Content",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "description": "Update existing buyer in list",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Buyers"
-                ],
-                "summary": "Update buyer",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Buyer ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Buyer to update",
-                        "name": "buyer",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/controllers.requestBuyer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/schemes.Buyer"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/schemes.JSONBadReqResult"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/schemes.JSONBadReqResult"
-                        }
-                    }
-                }
-            }
-        },
         "/employees": {
             "get": {
                 "description": "get all employees",
@@ -637,6 +379,17 @@ const docTemplate = `{
                     "Products"
                 ],
                 "summary": "Create product records",
+                "parameters": [
+                    {
+                        "description": "Create a new product record",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.RequestProductRecords"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -2194,20 +1947,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.requestBuyer": {
-            "type": "object",
-            "properties": {
-                "card_number_id": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "last_name": {
-                    "type": "string"
-                }
-            }
-        },
         "controllers.requestEmployee": {
             "type": "object",
             "properties": {
@@ -2302,7 +2041,7 @@ const docTemplate = `{
                 "length": {
                     "type": "number"
                 },
-                "netweight": {
+                "net_weight": {
                     "type": "number"
                 },
                 "product_code": {
@@ -2339,6 +2078,25 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.RequestProductRecords": {
+            "type": "object",
+            "required": [
+                "product_id",
+                "purchase_price",
+                "sale_price"
+            ],
+            "properties": {
+                "product_id": {
+                    "type": "integer"
+                },
+                "purchase_price": {
+                    "type": "number"
+                },
+                "sale_price": {
+                    "type": "number"
+                }
+            }
+        },
         "domain.RequestProductsUpdated": {
             "type": "object",
             "properties": {
@@ -2357,7 +2115,7 @@ const docTemplate = `{
                 "length": {
                     "type": "number"
                 },
-                "netweight": {
+                "net_weight": {
                     "type": "number"
                 },
                 "product_code": {
@@ -2374,23 +2132,6 @@ const docTemplate = `{
                 },
                 "width": {
                     "type": "number"
-                }
-            }
-        },
-        "schemes.Buyer": {
-            "type": "object",
-            "properties": {
-                "card_number_id": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "last_name": {
-                    "type": "string"
                 }
             }
         },

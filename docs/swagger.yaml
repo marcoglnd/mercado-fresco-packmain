@@ -1,13 +1,4 @@
 definitions:
-  controllers.requestBuyer:
-    properties:
-      card_number_id:
-        type: string
-      first_name:
-        type: string
-      last_name:
-        type: string
-    type: object
   controllers.requestEmployee:
     properties:
       card_number_id:
@@ -72,7 +63,7 @@ definitions:
         type: integer
       length:
         type: number
-      netweight:
+      net_weight:
         type: number
       product_code:
         type: string
@@ -96,6 +87,19 @@ definitions:
       sale_price:
         type: number
     type: object
+  domain.RequestProductRecords:
+    properties:
+      product_id:
+        type: integer
+      purchase_price:
+        type: number
+      sale_price:
+        type: number
+    required:
+    - product_id
+    - purchase_price
+    - sale_price
+    type: object
   domain.RequestProductsUpdated:
     properties:
       description:
@@ -108,7 +112,7 @@ definitions:
         type: number
       length:
         type: number
-      netweight:
+      net_weight:
         type: number
       product_code:
         type: string
@@ -120,17 +124,6 @@ definitions:
         type: integer
       width:
         type: number
-    type: object
-  schemes.Buyer:
-    properties:
-      card_number_id:
-        type: string
-      first_name:
-        type: string
-      id:
-        type: integer
-      last_name:
-        type: string
     type: object
   schemes.Employee:
     properties:
@@ -261,165 +254,6 @@ info:
   title: MERCADO FRESCOS
   version: "1.0"
 paths:
-  /buyers:
-    get:
-      consumes:
-      - application/json
-      description: get all buyers
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  $ref: '#/definitions/schemes.Buyer'
-              type: object
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/schemes.JSONBadReqResult'
-      summary: List buyers
-      tags:
-      - Buyers
-    post:
-      consumes:
-      - application/json
-      description: Add a new buyer to the list
-      parameters:
-      - description: Buyer to create
-        in: body
-        name: buyer
-        required: true
-        schema:
-          $ref: '#/definitions/controllers.requestBuyer'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/schemes.Buyer'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/schemes.JSONBadReqResult'
-        "422":
-          description: Unprocessable Entity
-          schema:
-            $ref: '#/definitions/schemes.JSONBadReqResult'
-      summary: Create buyer
-      tags:
-      - Buyers
-  /buyers/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Delete existing buyer in list
-      parameters:
-      - description: Buyer ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: No Content
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
-            - properties:
-                error:
-                  type: string
-              type: object
-        "404":
-          description: Not Found
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
-            - properties:
-                error:
-                  type: string
-              type: object
-      summary: Delete buyer
-      tags:
-      - Buyers
-    get:
-      consumes:
-      - application/json
-      description: get buyer by its id
-      parameters:
-      - description: Buyer ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schemes.Buyer'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/schemes.JSONBadReqResult'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/schemes.JSONBadReqResult'
-      summary: Buyer by id
-      tags:
-      - Buyers
-    patch:
-      consumes:
-      - application/json
-      description: Update existing buyer in list
-      parameters:
-      - description: Buyer ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Buyer to update
-        in: body
-        name: buyer
-        required: true
-        schema:
-          $ref: '#/definitions/controllers.requestBuyer'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schemes.Buyer'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/schemes.JSONBadReqResult'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/schemes.JSONBadReqResult'
-      summary: Update buyer
-      tags:
-      - Buyers
   /employees:
     get:
       consumes:
@@ -619,6 +453,13 @@ paths:
       consumes:
       - application/json
       description: Create a new product records
+      parameters:
+      - description: Create a new product record
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/domain.RequestProductRecords'
       produces:
       - application/json
       responses:
