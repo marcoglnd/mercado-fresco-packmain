@@ -594,7 +594,7 @@ func TestGetQtyOfRecords(t *testing.T) {
 
 		productController := Controller{service: productsServiceMock}
 
-		engine.GET("/api/v1/localities/reportSellers", productController.GetQtyOfRecords())
+		engine.GET("/api/v1/products/reportRecords", productController.GetQtyOfRecords())
 
 		engine.ServeHTTP(rec, req)
 
@@ -618,104 +618,64 @@ func TestGetQtyOfRecords(t *testing.T) {
 
 		localityController := Controller{service: productsServiceMock}
 
-		engine.GET("/api/v1/localities/reportSellers", localityController.GetQtyOfRecords())
+		engine.GET("/api/v1/products/reportRecords", localityController.GetQtyOfRecords())
 
 		engine.ServeHTTP(rec, req)
 
 		assert.Equal(t, http.StatusInternalServerError, rec.Code)
-
-		productsServiceMock.AssertExpectations(t)
-	})
-
-	t.Run("In case of nonexisting id qty of records in database", func(t *testing.T) {
-		mockQtyOfRecords := utils.CreateRandomQtyOfRecords()
-		mockQtyOfRecordsId := utils.RandomInt64()
-		productsServiceMock := mocks.NewService(t)
-
-		productsServiceMock.On("GetQtyOfRecordsById",
-			mock.Anything,
-			mock.AnythingOfType("int64"),
-		).Return(nil, errors.New("expected conflict error")).Maybe().
-			On("GetQtyOfAllRecords",
-				mock.Anything,
-			).Return(nil, nil).Maybe()
-
-		payload, err := json.Marshal(mockQtyOfRecords)
-		assert.NoError(t, err)
-
-		PATH := fmt.Sprintf("/api/v1/products/reportRecords?id=%v", mockQtyOfRecordsId)
-		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
-		rec := httptest.NewRecorder()
-
-		_, engine := gin.CreateTestContext(rec)
-
-		productController := Controller{service: productsServiceMock}
-
-		engine.GET("/api/v1/products/reportRecords", productController.GetQtyOfRecordsById())
-
-		engine.ServeHTTP(rec, req)
-
-		assert.Equal(t, http.StatusNotFound, rec.Code)
 
 		productsServiceMock.AssertExpectations(t)
 	})
 
 	t.Run("success - GetQtyOfRecordsById", func(t *testing.T) {
-		localityServiceMock := mocks.NewLocalityService(t)
-		mockQtyOfSellers := utils.CreateRandomQtyOfSellers()
+		productsServiceMock := mocks.NewService(t)
+		mockQtyOfRecords := utils.CreateRandomQtyOfRecords()
 
-		localityServiceMock.On("GetQtyOfRecordsById",
+		productsServiceMock.On("GetQtyOfRecordsById",
 			mock.Anything,
 			mock.AnythingOfType("int64"),
-		).Return(&mockQtyOfSellers, nil).Once()
+		).Return(&mockQtyOfRecords, nil).Once()
 
-		payload, err := json.Marshal(mockQtyOfSellers)
+		payload, err := json.Marshal(mockQtyOfRecords)
 		assert.NoError(t, err)
-		PATH := fmt.Sprintf("/api/v1/localities/reportSellers?id=%v", utils.RandomInt64())
+		PATH := fmt.Sprintf("/api/v1/products/reportRecords?id=%v", utils.RandomInt64())
 		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
 		rec := httptest.NewRecorder()
 
 		_, engine := gin.CreateTestContext(rec)
 
-		localityController := LocalityController{service: localityServiceMock}
+		localityController := Controller{service: productsServiceMock}
 
-		engine.GET("/api/v1/localities/reportSellers", localityController.GetAllQtyOfSellers())
+		engine.GET("/api/v1/products/reportRecords", localityController.GetQtyOfRecords())
 
 		engine.ServeHTTP(rec, req)
 
 		assert.Equal(t, http.StatusOK, rec.Code)
 
-		localityServiceMock.AssertExpectations(t)
+		productsServiceMock.AssertExpectations(t)
 	})
 
-	t.Run("In case of internal server error", func(t *testing.T) {
-		mockQtyOfRecords := utils.CreateRandomQtyOfRecords()
+	t.Run("not found - GetQtyOfRecordsById", func(t *testing.T) {
 		productsServiceMock := mocks.NewService(t)
 
 		productsServiceMock.On("GetQtyOfRecordsById",
 			mock.Anything,
 			mock.AnythingOfType("int64"),
-		).Return(&mockQtyOfRecords, nil).Maybe().
-			On("GetQtyOfAllRecords",
-				mock.Anything,
-			).Return(nil, errors.New("Internal server error")).Maybe()
+		).Return(nil, errors.New("id not found")).Once()
 
-		payload, err := json.Marshal(mockQtyOfRecords)
-		assert.NoError(t, err)
-
-		PATH := "/api/v1/products/reportRecords"
-		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
+		PATH := fmt.Sprintf("/api/v1/products/reportRecords?id=%v", utils.RandomInt64())
+		req := httptest.NewRequest(http.MethodGet, PATH, nil)
 		rec := httptest.NewRecorder()
 
 		_, engine := gin.CreateTestContext(rec)
 
-		productController := Controller{service: productsServiceMock}
+		localityController := Controller{service: productsServiceMock}
 
-		engine.GET("/api/v1/products/reportRecords", productController.GetQtyOfRecordsById())
+		engine.GET("/api/v1/products/reportRecords", localityController.GetQtyOfRecords())
 
 		engine.ServeHTTP(rec, req)
 
-		assert.Equal(t, http.StatusInternalServerError, rec.Code)
+		assert.Equal(t, http.StatusNotFound, rec.Code)
 
 		productsServiceMock.AssertExpectations(t)
 	})
