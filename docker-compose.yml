@@ -1,4 +1,4 @@
-version: "3.9"
+version: “3.9”
 services:
   mariadb:
     image: mariadb:10.8.3
@@ -13,7 +13,7 @@ services:
     environment:
       - MARIADB_ROOT_PASSWORD=${DB_PASS}
     healthcheck:
-      test: ["CMD", "mysqladmin", "-u$DB_USER", "-p$DB_PASS", "ping", "-h", "localhost"]
+      test: [“CMD”, “mysqladmin”, “-u$DB_USER”, “-p$DB_PASS”, “ping”, “-h”, “localhost”]
       interval: 20s
       timeout: 30s
       retries: 3

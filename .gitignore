@@ -29,9 +29,16 @@ go.work
 /Godeps/
 
 # Environment variables
-.env
+*.env
 
 # Database persistent volume
 db/.data
+
+# IDE
+\.idea/
+\.vscode/
+
+# MacOS
+.DS_Store
 
 # End of https://www.toptal.com/developers/gitignore/api/go

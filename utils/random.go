@@ -12,12 +12,10 @@ func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
-// RandomInt generates a random integer between min and max
 func RandomInt(min, max int64) int64 {
 	return min + rand.Int63n(max-min+1)
 }
 
-// RandomString generates a random string of length n
 func RandomString(n int) string {
 	var sb strings.Builder
 	k := len(alphabet)
@@ -30,12 +28,9 @@ func RandomString(n int) string {
 	return sb.String()
 }
 
-//  RandomCategory generates a random owner name
 func RandomCategory() string {
 	return RandomString(6)
 }
-
-// RandomCode generates a random amount of number
 
 func RandomCode() int {
 	return int(RandomInt(0, 1000))
@@ -43,4 +38,8 @@ func RandomCode() int {
 
 func RandomInt64() int64 {
 	return RandomInt(0, 1000)
+}
+
+func RandomFloat64() float64 {
+	return float64(RandomInt(0, 1000))
 }

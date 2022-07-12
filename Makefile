@@ -16,4 +16,7 @@ dockerup:
 dockerdown:
 	docker compose down
 
-.PRONY: server swag test coverage dockerup dockerdown
+mockery:
+	mockery --all --keeptree
+
+.PRONY: server swag test coverage dockerup dockerdown mockery
