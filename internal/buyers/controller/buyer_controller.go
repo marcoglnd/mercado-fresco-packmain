@@ -153,3 +153,38 @@ func (c BuyerController) Delete() gin.HandlerFunc {
 		ctx.JSON(http.StatusNoContent, nil)
 	}
 }
+
+func (c BuyerController) ReportPurchaseOrders() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		id, _ := strconv.ParseInt(ctx.Query("id"), 10, 64)
+
+		if id == 0 {
+			report, err := c.buyer.ReportAllPurchaseOrders(ctx)
+
+			if err != nil {
+				ctx.JSON(http.StatusInternalServerError, gin.H{
+					"message": err.Error(),
+				})
+				return
+			}
+
+			ctx.JSON(http.StatusOK, gin.H{
+				"data": report,
+			})
+			return
+		}
+
+		report, err := c.buyer.ReportPurchaseOrders(ctx, id)
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, gin.H{
+			"data": report,
+		})
+	}
+}

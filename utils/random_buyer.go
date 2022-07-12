@@ -21,3 +21,24 @@ func CreateRandomListBuyers() []domain.Buyer {
 	}
 	return listOfBuyers
 }
+
+func CreateRandomReportPurchaseOrder() domain.PurchaseOrdersResponse {
+	report := domain.PurchaseOrdersResponse{
+		ID:                  1,
+		CardNumberID:        RandomString(3),
+		FirstName:           RandomString(6),
+		LastName:            RandomString(6),
+		PurchaseOrdersCount: RandomInt(0, 10),
+	}
+	return report
+}
+
+func CreateRandomListReportPurchaseOrder() []domain.PurchaseOrdersResponse {
+	var listOfReports []domain.PurchaseOrdersResponse
+	for i := 1; i <= 5; i++ {
+		report := CreateRandomReportPurchaseOrder()
+		report.ID = int64(i)
+		listOfReports = append(listOfReports, report)
+	}
+	return listOfReports
+}

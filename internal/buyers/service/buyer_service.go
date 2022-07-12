@@ -67,3 +67,21 @@ func (s buyerService) Delete(ctx context.Context, id int64) error {
 
 	return nil
 }
+
+func (s buyerService) ReportAllPurchaseOrders(ctx context.Context) (*[]domain.PurchaseOrdersResponse, error) {
+	report, err := s.repository.ReportAllPurchaseOrders(ctx)
+	if err != nil {
+		return report, err
+	}
+
+	return report, nil
+}
+
+func (s buyerService) ReportPurchaseOrders(ctx context.Context, buyerId int64) (*domain.PurchaseOrdersResponse, error) {
+	report, err := s.repository.ReportPurchaseOrders(ctx, buyerId)
+	if err != nil {
+		return report, err
+	}
+
+	return report, nil
+}
