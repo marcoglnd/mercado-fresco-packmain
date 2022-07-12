@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"errors"
-	"testing" 
+	"testing"
 
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/sections/domain"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/sections/domain/mocks"
@@ -63,10 +63,10 @@ func TestCreateNewSection(t *testing.T) {
 }
 
 func TestGetAll(t *testing.T) {
-	mockSectionRepo := mocks.NewRepository(t)
-	mockSections := utils.CreateRandomListBuyers()
-
 	t.Run("In case of success", func(t *testing.T) {
+		mockSectionRepo := mocks.NewRepository(t)
+		mockSections := utils.CreateRandomListSection()
+
 		mockSectionRepo.On("GetAll", mock.Anything).
 			Return(&mockSections, nil).Once()
 
@@ -81,8 +81,10 @@ func TestGetAll(t *testing.T) {
 	})
 
 	t.Run("In case of error", func(t *testing.T) {
+		mockSectionRepo := mocks.NewRepository(t)
+
 		mockSectionRepo.On("GetAll", mock.Anything).
-			Return(nil, errors.New("failed to retrieve buyers")).
+			Return(nil, errors.New("failed to retrieve sections")).
 			Once()
 
 		s := NewService(mockSectionRepo)
@@ -94,122 +96,132 @@ func TestGetAll(t *testing.T) {
 	})
 }
 
-// func TestGetById(t *testing.T) {
-// 	mockSectionRepo := mocks.NewRepository(t)
+func TestGetById(t *testing.T) {
+	t.Run("In case of success", func(t *testing.T) {
+		mockSectionRepo := mocks.NewRepository(t)
+		mockSection := utils.CreateRandomSection()
 
-// 	mockSection := utils.CreateRandomSection()
+		mockSectionRepo.On("GetById", mock.Anything, mock.AnythingOfType("int64")).Return(&mockSection, nil).Once()
 
-// 	t.Run("In case of success", func(t *testing.T) {
-// 		mockSectionRepo.On("GetById", mock.Anything, mock.AnythingOfType("int64")).Return(&mockSection, nil).Once()
+		service := NewService(mockSectionRepo)
 
-// 		service := NewBuyerService(mockSectionRepo)
+		section, err := service.GetById(context.Background(), mockSection.ID)
 
-// 		buyer, err := service.GetById(context.Background(), mockSection.ID)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, section)
 
-// 		assert.NoError(t, err)
-// 		assert.NotEmpty(t, buyer)
+		assert.Equal(t, &mockSection, section)
 
-// 		assert.Equal(t, &mockSection, buyer)
+		mockSectionRepo.AssertExpectations(t)
 
-// 		mockSectionRepo.AssertExpectations(t)
+	})
 
-// 	})
+	t.Run("In case of error", func(t *testing.T) {
+		mockSectionRepo := mocks.NewRepository(t)
+		mockSection := utils.CreateRandomSection()
 
-// 	t.Run("In case of error", func(t *testing.T) {
-// 		mockSectionRepo.On("GetById", mock.Anything, mock.AnythingOfType("int64")).
-// 			Return(nil, errors.New("failed to retrieve product")).Once()
+		mockSectionRepo.On("GetById", mock.Anything, mock.AnythingOfType("int64")).
+			Return(nil, errors.New("failed to retrieve product")).Once()
 
-// 		service := NewBuyerService(mockSectionRepo)
+		service := NewService(mockSectionRepo)
 
-// 		buyer, err := service.GetById(context.Background(), mockSection.ID)
+		section, err := service.GetById(context.Background(), mockSection.ID)
 
-// 		assert.Error(t, err)
-// 		assert.Empty(t, buyer)
+		assert.Error(t, err)
+		assert.Empty(t, section)
 
-// 		mockSectionRepo.AssertExpectations(t)
-// 	})
-// }
+		mockSectionRepo.AssertExpectations(t)
+	})
+}
 
-// func TestUpdate(t *testing.T) {
-// 	mockSectionRepo := mocks.NewRepository(t)
+func TestUpdate(t *testing.T) {
+	t.Run("In case of success", func(t *testing.T) {
+		mockSectionRepo := mocks.NewRepository(t)
+		mockSection := utils.CreateRandomSection()
 
-// 	mockSection := utils.CreateRandomSection()
+		mockSectionRepo.On(
+			"GetById",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).
+			Return(&mockSection, nil).On(
+			"Update",
+			mock.Anything,
+			mock.Anything,
+		).Return(&mockSection, nil).Once()
 
-// 	t.Run("In case of success", func(t *testing.T) {
-// 		mockSectionRepo.On(
-// 			"Update",
-// 			mock.Anything,
-// 			mock.Anything,
-// 			mock.Anything,
-// 			mock.Anything,
-// 			mock.Anything,
-// 		).Return(&mockSection, nil).Once()
+		service := NewService(mockSectionRepo)
+		section, err := service.Update(
+			context.Background(), &mockSection,
+		)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, section)
 
-// 		service := NewBuyerService(mockSectionRepo)
-// 		buyer, err := service.Update(
-// 			context.Background(), mockSection.ID, mockSection.CardNumberID, mockSection.FirstName, mockSection.LastName,
-// 		)
-// 		assert.NoError(t, err)
-// 		assert.NotEmpty(t, buyer)
+		assert.Equal(t, &mockSection, section)
 
-// 		assert.Equal(t, &mockSection, buyer)
+		mockSectionRepo.AssertExpectations(t)
+	})
 
-// 		mockSectionRepo.AssertExpectations(t)
-// 	})
+	t.Run("In case of error", func(t *testing.T) {
+		mockSectionRepo := mocks.NewRepository(t)
+		mockSection := utils.CreateRandomSection()
 
-// 	t.Run("In case of error", func(t *testing.T) {
-// 		mockSectionRepo.On(
-// 			"Update",
-// 			mock.Anything,
-// 			mock.Anything,
-// 			mock.Anything,
-// 			mock.Anything,
-// 			mock.Anything,
-// 		).Return(nil, errors.New("failed to update buyer")).Once()
+		mockSectionRepo.On(
+			"GetById",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).
+			Return(&mockSection, nil).On(
+			"Update",
+			mock.Anything,
+			mock.Anything,
+		).Return(nil, errors.New("failed to update section")).Once()
 
-// 		service := NewBuyerService(mockSectionRepo)
-// 		product, err := service.Update(
-// 			context.Background(), mockSection.ID, mockSection.CardNumberID, mockSection.FirstName, mockSection.LastName,
-// 		)
-// 		assert.Error(t, err)
-// 		assert.Empty(t, product)
+		service := NewService(mockSectionRepo)
+		product, err := service.Update(
+			context.Background(), &mockSection,
+		)
+		assert.Error(t, err)
+		assert.Empty(t, product)
 
-// 		mockSectionRepo.AssertExpectations(t)
-// 	})
-// }
+		mockSectionRepo.AssertExpectations(t)
+	})
+}
 
-// func TestDelete(t *testing.T) {
-// 	mockSectionRepo := mocks.NewRepository(t)
+func TestDelete(t *testing.T) {
+	t.Run("Delete in case of success", func(t *testing.T) {
+		mockSectionRepo := mocks.NewRepository(t)
+		mockSection := utils.CreateRandomSection()
 
-// 	mockSection := utils.CreateRandomSection()
+		mockSectionRepo.On("Delete",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(nil).Once()
 
-// 	t.Run("Delete in case of success", func(t *testing.T) {
-// 		mockSectionRepo.On("Delete",
-// 			mock.Anything,
-// 			mock.AnythingOfType("int64"),
-// 		).Return(nil).Once()
+		service := NewService(mockSectionRepo)
 
-// 		service := NewBuyerService(mockSectionRepo)
+		err := service.Delete(
+			context.Background(), mockSection.ID,
+		)
+		assert.NoError(t, err)
+		mockSectionRepo.AssertExpectations(t)
 
-// 		err := service.Delete(
-// 			context.Background(), mockSection.ID,
-// 		)
-// 		assert.NoError(t, err)
-// 		mockSectionRepo.AssertExpectations(t)
+	})
 
-// 	})
+	t.Run("Delete in case of error", func(t *testing.T) {
+		mockSectionRepo := mocks.NewRepository(t)
+		mockSection := utils.CreateRandomSection()
 
-// 	t.Run("Delete in case of error", func(t *testing.T) {
-// 		mockSectionRepo.On("Delete",
-// 			mock.Anything, mock.AnythingOfType("int64"),
-// 		).Return(errors.New("buyer's ID not founded")).Once()
+		mockSectionRepo.On("Delete",
+			mock.Anything, mock.AnythingOfType("int64"),
+		).Return(errors.New("buyer's ID not founded")).Once()
 
-// 		service := NewBuyerService(mockSectionRepo)
+		service := NewService(mockSectionRepo)
 
-// 		err := service.Delete(context.Background(), mockSection.ID)
+		err := service.Delete(context.Background(), mockSection.ID)
 
-// 		assert.Error(t, err)
+		assert.Error(t, err)
 
-// 		mockSectionRepo.AssertExpectations(t)
-// 	})
-// }
+		mockSectionRepo.AssertExpectations(t)
+	})
+}
