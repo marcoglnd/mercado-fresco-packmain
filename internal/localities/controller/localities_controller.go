@@ -48,10 +48,6 @@ func (c *LocalityController) CreateLocality() gin.HandlerFunc {
 			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 			return
 		}
-		// if err != nil {
-		// 	ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		// 	return
-		// }
 
 		locality, err := c.service.GetLocalityByID(ctx, localId)
 		if err != nil {

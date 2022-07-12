@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -81,90 +82,169 @@ func TestCreateLocality(t *testing.T) {
 		localityServiceMock.AssertExpectations(t)
 	})
 
-	// t.Run("conflict", func(t *testing.T) {
-	// 	localityServiceMock := mocks.NewLocalityService(t)
-	// 	mockLocality := utils.CreateRandomLocality()
+	t.Run("conflict", func(t *testing.T) {
+		localityServiceMock := mocks.NewLocalityService(t)
+		mockLocality := utils.CreateRandomLocality()
 
-	// 	localityServiceMock.On("CreateLocality",
-	// 		mock.Anything,
-	// 		mock.Anything,
-	// 	).Return(nil, domain.ErrIDNotFound).Maybe()
+		localityServiceMock.On("CreateLocality",
+			mock.Anything,
+			mock.Anything,
+		).Return(int64(0), domain.ErrIDNotFound).Maybe()
 
-	// 	payload, err := json.Marshal(mockLocality)
-	// 	assert.NoError(t, err)
+		payload, err := json.Marshal(mockLocality)
+		assert.NoError(t, err)
 
-	// 	req := httptest.NewRequest(http.MethodPost, "/api/v1/localities", bytes.NewBuffer(payload))
-	// 	rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/localities", bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
 
-	// 	_, engine := gin.CreateTestContext(rec)
+		_, engine := gin.CreateTestContext(rec)
 
-	// 	localityController := LocalityController{service: localityServiceMock}
+		localityController := LocalityController{service: localityServiceMock}
 
-	// 	engine.POST("/api/v1/localities", localityController.CreateLocality())
+		engine.POST("/api/v1/localities", localityController.CreateLocality())
 
-	// 	engine.ServeHTTP(rec, req)
+		engine.ServeHTTP(rec, req)
 
-	// 	assert.Equal(t, http.StatusConflict, rec.Code)
+		assert.Equal(t, http.StatusConflict, rec.Code)
 
-	// 	localityServiceMock.AssertExpectations(t)
-	// })
+		localityServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("internal error", func(t *testing.T) {
+		localityServiceMock := mocks.NewLocalityService(t)
+		mockLocality := utils.CreateRandomLocality()
+
+		localityServiceMock.On("CreateLocality",
+			mock.Anything,
+			mock.Anything,
+		).Return(utils.RandomInt64(), nil).Maybe()
+		localityServiceMock.On("GetLocalityByID",
+			mock.Anything,
+			mock.Anything,
+		).Return(nil, errors.New("internal error")).Once()
+
+		payload, err := json.Marshal(mockLocality)
+		assert.NoError(t, err)
+
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/localities", bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		localityController := LocalityController{service: localityServiceMock}
+
+		engine.POST("/api/v1/localities", localityController.CreateLocality())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
+
+		localityServiceMock.AssertExpectations(t)
+	})
 }
 
-// func TestGetAllQtyOfSellers(t *testing.T) {
-// 	// 	t.Run("success", func(t *testing.T) {
-// 	// 		localityServiceMock := mocks.NewLocalityService(t)
-// 	// 		mockQtyOfSellers := utils.CreateRandomQtyOfSellers()
-// 	// 		mockQtyOfRecordsId := utils.RandomInt64()
+func TestGetAllQtyOfSellers(t *testing.T) {
+	t.Run("success - GetAllQtyOfSellers", func(t *testing.T) {
+		localityServiceMock := mocks.NewLocalityService(t)
+		mockQtyOfSellers := utils.CreateRandomListQtyOfSellers()
 
-// 	// 		localityServiceMock.On("GetQtyOfSellers",
-// 	// 			mock.Anything,
-// 	// 			mock.AnythingOfType("int64"),
-// 	// 		).Return(&mockQtyOfSellers, nil).Once()
+		localityServiceMock.On("GetAllQtyOfSellers",
+			mock.Anything,
+		).Return(&mockQtyOfSellers, nil).Once()
 
-// 	// 		payload, err := json.Marshal(mockQtyOfSellers)
-// 	// 		assert.NoError(t, err)
-// 	// 		PATH := fmt.Sprintf("/api/v1/localities/reportSellers?id=%v", mockQtyOfRecordsId)
-// 	// 		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
-// 	// 		rec := httptest.NewRecorder()
+		payload, err := json.Marshal(mockQtyOfSellers)
+		assert.NoError(t, err)
+		PATH := "/api/v1/localities/reportSellers"
+		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
 
-// 	// 		_, engine := gin.CreateTestContext(rec)
+		_, engine := gin.CreateTestContext(rec)
 
-// 	// 		localityController := LocalityController{service: localityServiceMock}
+		localityController := LocalityController{service: localityServiceMock}
 
-// 	// 		engine.GET("/api/v1/localities/reportSellers", localityController.service.GetLocalityByID())
+		engine.GET("/api/v1/localities/reportSellers", localityController.GetAllQtyOfSellers())
 
-// 	// 		engine.ServeHTTP(rec, req)
+		engine.ServeHTTP(rec, req)
 
-// 	// 		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.Equal(t, http.StatusOK, rec.Code)
 
-// 	// 		localityServiceMock.AssertExpectations(t)
-// 	// 	})
-// 	t.Run("In case of invalid qty of records id", func(t *testing.T) {
-// 		localityServiceMock := mocks.NewLocalityService(t)
-// 		mockQtyOfSellersBad := &domain.QtyOfSellers{}
+		localityServiceMock.AssertExpectations(t)
+	})
 
-// 		localityServiceMock.On("GetQtyOfSellers",
-// 			mock.Anything,
-// 			mock.AnythingOfType("string"),
-// 		).Return(mockQtyOfSellersBad, errors.New("bad request")).Maybe()
+	t.Run("internal sever error - GetAllQtyOfSellers", func(t *testing.T) {
+		localityServiceMock := mocks.NewLocalityService(t)
 
-// 		payload, err := json.Marshal(mockQtyOfSellersBad)
-// 		assert.NoError(t, err)
+		localityServiceMock.On("GetAllQtyOfSellers",
+			mock.Anything,
+		).Return(nil, errors.New("couldn`t return a list")).Once()
 
-// 		PATH := fmt.Sprintf("/api/v1/products/reportRecords?id=%v", "a")
-// 		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
-// 		rec := httptest.NewRecorder()
+		PATH := "/api/v1/localities/reportSellers"
+		req := httptest.NewRequest(http.MethodGet, PATH, nil)
+		rec := httptest.NewRecorder()
 
-// 		_, engine := gin.CreateTestContext(rec)
+		_, engine := gin.CreateTestContext(rec)
 
-// 		localityController := LocalityController{service: localityServiceMock}
+		localityController := LocalityController{service: localityServiceMock}
 
-// 		engine.GET("/api/v1/products/reportRecords", localityController.GetAllQtyOfSellers())
+		engine.GET("/api/v1/localities/reportSellers", localityController.GetAllQtyOfSellers())
 
-// 		engine.ServeHTTP(rec, req)
+		engine.ServeHTTP(rec, req)
 
-// 		assert.Equal(t, http.StatusBadRequest, rec.Code)
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 
-// 		localityServiceMock.AssertExpectations(t)
-// 	})
-// }
+		localityServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("success - GetQtyOfSellersByLocalityId", func(t *testing.T) {
+		localityServiceMock := mocks.NewLocalityService(t)
+		mockQtyOfSellers := utils.CreateRandomQtyOfSellers()
+
+		localityServiceMock.On("GetQtyOfSellersByLocalityId",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(&mockQtyOfSellers, nil).Once()
+
+		payload, err := json.Marshal(mockQtyOfSellers)
+		assert.NoError(t, err)
+		PATH := fmt.Sprintf("/api/v1/localities/reportSellers?id=%v", utils.RandomInt64())
+		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		localityController := LocalityController{service: localityServiceMock}
+
+		engine.GET("/api/v1/localities/reportSellers", localityController.GetAllQtyOfSellers())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+
+		localityServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("not found - GetQtyOfSellersByLocalityId", func(t *testing.T) {
+		localityServiceMock := mocks.NewLocalityService(t)
+
+		localityServiceMock.On("GetQtyOfSellersByLocalityId",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(nil, errors.New("id not found")).Once()
+
+		PATH := fmt.Sprintf("/api/v1/localities/reportSellers?id=%v", utils.RandomInt64())
+		req := httptest.NewRequest(http.MethodGet, PATH, nil)
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		localityController := LocalityController{service: localityServiceMock}
+
+		engine.GET("/api/v1/localities/reportSellers", localityController.GetAllQtyOfSellers())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusNotFound, rec.Code)
+
+		localityServiceMock.AssertExpectations(t)
+	})
+}
