@@ -126,7 +126,7 @@ func (r *repository) Update(ctx context.Context, section *domain.Section) (*doma
 
 	result, err := r.db.ExecContext(
 		ctx,
-		sqlInsertSection,
+		sqlUpdateSection,
 		&newSection.SectionNumber,
 		&newSection.CurrentTemperature,
 		&newSection.MinimumTemperature,
@@ -150,7 +150,7 @@ func (r *repository) Update(ctx context.Context, section *domain.Section) (*doma
 		return &newSection, err
 	}
 
-	return &newSection, nil
+	return section, nil
 }
 
 func (r *repository) Delete(ctx context.Context, id int64) error {

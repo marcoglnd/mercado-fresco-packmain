@@ -43,12 +43,12 @@ func (s *service) Create(ctx context.Context, section *domain.Section) (*domain.
 }
 
 func (s *service) Update(ctx context.Context, section *domain.Section) (*domain.Section, error) {
-	current, err := s.GetById(ctx, section.ID)
+	_, err := s.GetById(ctx, section.ID)
 	if err != nil {
 		return section, err
 	}
 
-	section, err = s.repository.Update(ctx, current)
+	section, err = s.repository.Update(ctx, section)
 	if err != nil {
 		return section, err
 	}

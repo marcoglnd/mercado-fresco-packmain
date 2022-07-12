@@ -156,8 +156,6 @@ func (c *SectionsController) Create() gin.HandlerFunc {
 func (c *SectionsController) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req domain.RequestSectionsUpdated
-
-		// vraw if duvidoso
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid inputs"})
 			return
@@ -182,6 +180,7 @@ func (c *SectionsController) Update() gin.HandlerFunc {
 				MinimumTemperature: req.MinimumTemperature,
 			},
 		)
+
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
