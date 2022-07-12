@@ -22,6 +22,7 @@ var (
 	queryInsertRecord        = regexp.QuoteMeta(sqlCreateRecord)
 	queryGetRecordsById      = regexp.QuoteMeta(sqlGetRecord)
 	queryGetQtyOfRecordsById = regexp.QuoteMeta(sqlGetQtyOfRecordsById)
+	queryGetQtyOfAllRecords = regexp.QuoteMeta(sqlGetQtyOfRecords)
 )
 
 var rowsProductStruct = []string{
@@ -493,6 +494,62 @@ func TestGetQtyOfRecordsById(t *testing.T) {
 		productsRepo := NewMariaDBRepository(db)
 
 		_, err = productsRepo.GetQtyOfRecordsById(context.Background(), 0)
+		assert.Error(t, err)
+	})
+}
+
+func TestGetQtyOfAllRecords(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mockQtyOfAllRecords := utils.CreateRandomListQtyOfRecords()
+
+		rows := sqlmock.NewRows(rowsQtyOfRecordsStruct)
+		for _, mockQtyOfAllRecord := range mockQtyOfAllRecords {
+			rows.AddRow(
+				mockQtyOfAllRecord.ProductId,
+				mockQtyOfAllRecord.Description,
+				mockQtyOfAllRecord.RecordsCount,
+			)
+		}
+
+		mock.ExpectQuery(queryGetQtyOfAllRecords).WillReturnRows(rows)
+
+		productsRepo := NewMariaDBRepository(db)
+
+		result, err := productsRepo.GetQtyOfAllRecords(context.Background())
+		assert.NoError(t, err)
+
+		assert.Equal(t, result, &mockQtyOfAllRecords)
+	})
+
+	t.Run("fail to scan qty of all records", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		rows := sqlmock.NewRows(rowsQtyOfRecordsStruct).AddRow("", "", "")
+
+		mock.ExpectQuery(queryGetQtyOfAllRecords).WillReturnRows(rows)
+
+		productsRepo := NewMariaDBRepository(db)
+
+		_, err = productsRepo.GetQtyOfAllRecords(context.Background())
+		assert.Error(t, err)
+	})
+
+	t.Run("fail to select qty of all records", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mock.ExpectQuery(queryGetQtyOfAllRecords).WillReturnError(sql.ErrNoRows)
+
+		productsRepo := NewMariaDBRepository(db)
+
+		_, err = productsRepo.GetQtyOfAllRecords(context.Background())
 		assert.Error(t, err)
 	})
 }

@@ -252,3 +252,30 @@ func (r *repository) GetQtyOfRecordsById(ctx context.Context, id int64) (*domain
 
 	return &report, nil
 }
+
+func (r *repository) GetQtyOfAllRecords(ctx context.Context) (*[]domain.QtyOfRecords, error) {
+	reports := []domain.QtyOfRecords{}
+
+	rows, err := r.db.QueryContext(ctx, sqlGetQtyOfRecords)
+	if err != nil {
+		return &reports, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var report domain.QtyOfRecords
+
+		if err := rows.Scan(
+			&report.ProductId,
+			&report.Description,
+			&report.RecordsCount,
+		); err != nil {
+			return &reports, err
+		}
+
+		reports = append(reports, report)
+	}
+
+	return &reports, nil
+}

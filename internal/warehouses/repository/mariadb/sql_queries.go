@@ -17,7 +17,7 @@ const (
 		minimum_temperature, 
 		locality_id
 	) 
-	VALUES (?, ?, ?, ?, ?, 1)`
+	VALUES (?, ?, ?, ?, ?, ?)`
 
 	sqlUpdate = `
 	UPDATE warehouses SET
