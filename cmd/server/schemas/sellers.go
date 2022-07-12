@@ -1,4 +1,4 @@
-package schemes
+package schemas
 
 type Seller struct {
 	ID           int    `json:"id"`

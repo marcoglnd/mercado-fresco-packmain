@@ -43,13 +43,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/schemes.Employee"
+                                            "$ref": "#/definitions/schemas.Employee"
                                         }
                                     }
                                 }
@@ -61,7 +61,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -103,7 +103,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Employee"
+                            "$ref": "#/definitions/schemas.Employee"
                         }
                     },
                     "404": {
@@ -111,7 +111,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -129,7 +129,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -171,7 +171,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Employee"
+                            "$ref": "#/definitions/schemas.Employee"
                         }
                     },
                     "400": {
@@ -179,7 +179,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -197,7 +197,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -239,7 +239,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
@@ -257,7 +257,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -275,7 +275,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -324,7 +324,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Employee"
+                            "$ref": "#/definitions/schemas.Employee"
                         }
                     },
                     "400": {
@@ -332,7 +332,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -350,7 +350,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -402,7 +402,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -420,7 +420,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -438,7 +438,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -473,7 +473,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
@@ -491,7 +491,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -541,7 +541,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -559,7 +559,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -609,7 +609,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -627,7 +627,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -677,7 +677,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -695,7 +695,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -737,7 +737,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
@@ -755,7 +755,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -773,7 +773,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -830,7 +830,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -848,7 +848,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -866,7 +866,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -901,13 +901,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/schemes.Section"
+                                            "$ref": "#/definitions/schemas.Section"
                                         }
                                     }
                                 }
@@ -919,7 +919,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -961,7 +961,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Section"
+                            "$ref": "#/definitions/schemas.Section"
                         }
                     },
                     "404": {
@@ -969,7 +969,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -987,7 +987,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1029,7 +1029,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Section"
+                            "$ref": "#/definitions/schemas.Section"
                         }
                     },
                     "400": {
@@ -1037,7 +1037,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1055,7 +1055,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1097,7 +1097,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
@@ -1115,7 +1115,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1133,7 +1133,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1182,7 +1182,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Section"
+                            "$ref": "#/definitions/schemas.Section"
                         }
                     },
                     "400": {
@@ -1190,7 +1190,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1208,7 +1208,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1252,13 +1252,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/schemes.Seller"
+                                            "$ref": "#/definitions/schemas.Seller"
                                         }
                                     }
                                 }
@@ -1270,7 +1270,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1319,7 +1319,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Seller"
+                            "$ref": "#/definitions/schemas.Seller"
                         }
                     },
                     "404": {
@@ -1327,7 +1327,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1345,7 +1345,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1394,7 +1394,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Seller"
+                            "$ref": "#/definitions/schemas.Seller"
                         }
                     },
                     "400": {
@@ -1402,7 +1402,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1420,7 +1420,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1469,7 +1469,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
@@ -1487,7 +1487,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1505,7 +1505,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1561,7 +1561,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Seller"
+                            "$ref": "#/definitions/schemas.Seller"
                         }
                     },
                     "400": {
@@ -1569,7 +1569,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1587,7 +1587,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1622,7 +1622,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
@@ -1640,7 +1640,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1690,7 +1690,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1740,7 +1740,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1758,7 +1758,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1800,7 +1800,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
@@ -1818,7 +1818,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1836,7 +1836,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1893,7 +1893,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1911,7 +1911,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1929,7 +1929,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -2135,7 +2135,7 @@ const docTemplate = `{
                 }
             }
         },
-        "schemes.Employee": {
+        "schemas.Employee": {
             "type": "object",
             "properties": {
                 "card_number_id": {
@@ -2155,19 +2155,19 @@ const docTemplate = `{
                 }
             }
         },
-        "schemes.JSONBadReqResult": {
+        "schemas.JSONBadReqResult": {
             "type": "object",
             "properties": {
                 "error": {}
             }
         },
-        "schemes.JSONSuccessResult": {
+        "schemas.JSONSuccessResult": {
             "type": "object",
             "properties": {
                 "data": {}
             }
         },
-        "schemes.Section": {
+        "schemas.Section": {
             "type": "object",
             "properties": {
                 "current_capacity": {
@@ -2199,7 +2199,7 @@ const docTemplate = `{
                 }
             }
         },
-        "schemes.Seller": {
+        "schemas.Seller": {
             "type": "object",
             "properties": {
                 "address": {

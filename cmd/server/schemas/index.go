@@ -1,4 +1,4 @@
-package schemes
+package schemas
 
 type JSONSuccessResult struct {
 	Data interface{} `json:"data"`

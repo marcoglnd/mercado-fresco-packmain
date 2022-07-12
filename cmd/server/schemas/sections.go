@@ -1,4 +1,4 @@
-package schemes
+package schemas
 
 type Section struct {
 	ID                 int `json:"id"`

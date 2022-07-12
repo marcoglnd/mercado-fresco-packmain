@@ -1,4 +1,4 @@
-package schemes
+package schemas
 
 //Modelo de produtos
 type Buyer struct {

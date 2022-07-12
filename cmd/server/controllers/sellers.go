@@ -26,8 +26,8 @@ func NewSeller(s sellers.Service) *SellerController {
 // @Accept json
 // @Produce json
 // @Param token header string true "token"
-// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Seller}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Success 200 {object} schemas.JSONSuccessResult{data=schemas.Seller}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sellers [get]
 func (c *SellerController) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -55,9 +55,9 @@ func (c *SellerController) GetAll() gin.HandlerFunc {
 // @Produce json
 // @Param id path int true "Seller ID"
 // @Param token header string true "token"
-// @Success 200 {object} schemes.Seller
-// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Success 200 {object} schemas.Seller
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sellers/{id} [get]
 func (c *SellerController) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -90,9 +90,9 @@ type requestSellers struct {
 // @Produce json
 // @Param token header string true "token"
 // @Param Seller body requestSellers true "seller to create"
-// @Success 201 {object} schemes.Seller
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
+// @Success 201 {object} schemas.Seller
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sellers [post]
 func (c *SellerController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -140,9 +140,9 @@ func (c *SellerController) Create() gin.HandlerFunc {
 // @Param id path int true "Seller ID"
 // @Param token header string true "token"
 // @Param seller body requestSellers true "Seller to update"
-// @Success 200 {object} schemes.Seller
-// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Success 200 {object} schemas.Seller
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sellers/{id} [patch]
 func (c *SellerController) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -175,9 +175,9 @@ func (c *SellerController) Update() gin.HandlerFunc {
 // @Produce json
 // @Param id path int true "Seller ID"
 // @Param token header string true "token"
-// @Success 204 {object} schemes.JSONSuccessResult{data=string}
-// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Success 204 {object} schemas.JSONSuccessResult{data=string}
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sellers/{id} [delete]
 func (c *SellerController) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
