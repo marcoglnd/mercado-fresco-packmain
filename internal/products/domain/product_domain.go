@@ -30,6 +30,7 @@ type Repository interface {
 	GetProductRecordsById(ctx context.Context, id int64) (*ProductRecords, error)
 
 	GetQtyOfRecordsById(ctx context.Context, id int64) (*QtyOfRecords, error)
+	GetQtyOfAllRecords(ctx context.Context) (*[]QtyOfRecords, error)
 
 	CreateProductBatches(ctx context.Context, batch *ProductBatches) (int64, error)
 	GetProductBatchesById(ctx context.Context, id int64) (*ProductBatches, error)
@@ -46,6 +47,7 @@ type Service interface {
 	GetProductRecordsById(ctx context.Context, id int64) (*ProductRecords, error)
 
 	GetQtyOfRecordsById(ctx context.Context, id int64) (*QtyOfRecords, error)
+	GetQtyOfAllRecords(ctx context.Context) (*[]QtyOfRecords, error)
 
 	CreateProductBatches(ctx context.Context, batch *ProductBatches) (int64, error)
 	GetProductBatchesById(ctx context.Context, id int64) (*ProductBatches, error)
@@ -99,7 +101,6 @@ type RequestProductRecords struct {
 type RequestProductRecordId struct {
 	Id int64 `form:"id" binding:"required,min=1"`
 }
-
 type QtyOfRecords struct {
 	ProductId    int64  `json:"product_id"`
 	Description  string `json:"description"`

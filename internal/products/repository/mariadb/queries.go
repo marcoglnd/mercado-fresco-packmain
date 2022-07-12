@@ -11,12 +11,8 @@ const (
 	sqlGetRecord    = "SELECT `last_update_date`, `purchase_price`, `sale_price`, `product_id` FROM `mercado_fresco`.`product_records` WHERE ID = ?;"
 
 	sqlGetQtyOfRecordsById = "SELECT p.id, p.description, COUNT(r.id) records_count FROM mercado_fresco.products p INNER JOIN product_records r ON p.id = r.product_id WHERE p.id = ? GROUP BY p.id;"
-
+	sqlGetQtyOfRecords     = "SELECT p.id, p.description, COUNT(r.id) records_count FROM mercado_fresco.products p INNER JOIN product_records r ON p.id = r.product_id GROUP BY p.id;"
+	
 	sqlCreateBatch = "INSERT INTO mercado_fresco.product_batches (`batch_number`, `current_quantity`, `current_temperature`, `due_date`, `initial_quantity`, `manufacturing_date`, `manufacturing_hour`, `minimum_temperature`, `product_id`, `section_id`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
-
-
-
-
-
 	sqlGetBatch    = "SELECT batch_number, current_quantity, current_temperature, due_date, initial_quantity, manufacturing_date, manufacturing_hour, minimum_temperature, product_id, section_id FROM mercado_fresco.product_batches;"
 )

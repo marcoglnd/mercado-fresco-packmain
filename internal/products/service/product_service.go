@@ -134,6 +134,15 @@ func (s service) GetQtyOfRecordsById(ctx context.Context, id int64) (*domain.Qty
 	return report, nil
 }
 
+func (s service) GetQtyOfAllRecords(ctx context.Context) (*[]domain.QtyOfRecords, error) {
+	report, err := s.repository.GetQtyOfAllRecords(ctx)
+	if err != nil {
+		return report, err
+	}
+
+	return report, nil
+}
+
 func (s *service) CreateProductBatches(ctx context.Context, batche *domain.ProductBatches) (int64, error) {
 	newBatchId, err := s.repository.CreateProductBatches(ctx, batche)
 	if err != nil {

@@ -17,7 +17,7 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func TestCreateNewProduct(t *testing.T) {
+func TestCreateNewBuyer(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		mockBuyer := utils.CreateRandomBuyer()
 		buyerServiceMock := mocks.NewBuyerService(t)
@@ -229,7 +229,7 @@ func TestGetById(t *testing.T) {
 		buyerServiceMock.AssertExpectations(t)
 	})
 
-	t.Run("In case of invalid product id", func(t *testing.T) {
+	t.Run("In case of invalid buyer id", func(t *testing.T) {
 		mockBuyerBad := &domain.Buyer{}
 
 		buyerServiceMock.On("GetById",
@@ -257,7 +257,7 @@ func TestGetById(t *testing.T) {
 		buyerServiceMock.AssertExpectations(t)
 	})
 
-	t.Run("In case of nonexisting product", func(t *testing.T) {
+	t.Run("In case of nonexisting buyer", func(t *testing.T) {
 		buyerServiceMock.On("GetById",
 			mock.Anything,
 			mock.AnythingOfType("int64"),
@@ -371,7 +371,7 @@ func TestUpdate(t *testing.T) {
 		buyerServiceMock.AssertExpectations(t)
 	})
 
-	t.Run("In case of nonexisting product", func(t *testing.T) {
+	t.Run("In case of nonexisting buyer", func(t *testing.T) {
 		buyerServiceMock.On("Update",
 			mock.Anything,
 			mock.Anything,
@@ -471,6 +471,99 @@ func TestDelete(t *testing.T) {
 		engine.ServeHTTP(rec, req)
 
 		assert.Equal(t, http.StatusNotFound, rec.Code)
+
+		buyerServiceMock.AssertExpectations(t)
+	})
+}
+
+func TestReportPurchaseOrders(t *testing.T) {
+	mockReport := utils.CreateRandomReportPurchaseOrder()
+
+	buyerServiceMock := mocks.NewBuyerService(t)
+
+	t.Run("success", func(t *testing.T) {
+
+		buyerServiceMock.On("ReportPurchaseOrders",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(&mockReport, nil).Once()
+
+		payload, err := json.Marshal(mockReport)
+		assert.NoError(t, err)
+
+		PATH := fmt.Sprintf("/api/v1/buyers/reportPurchaseOrders?id=%v", mockReport.ID)
+		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		buyerController := BuyerController{buyer: buyerServiceMock}
+
+		engine.GET("/api/v1/buyers/reportPurchaseOrders", buyerController.ReportPurchaseOrders())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+
+		buyerServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("In case of empty id", func(t *testing.T) {
+		mockListOfReportPurchaseOrders := utils.CreateRandomListReportPurchaseOrder()
+
+		buyerServiceMock.On("ReportPurchaseOrders",
+			mock.Anything,
+			mock.AnythingOfType("string"),
+		).Return(&mockListOfReportPurchaseOrders, errors.New("bad request")).Maybe().On("ReportAllPurchaseOrders",
+			mock.Anything,
+		).Return(&mockListOfReportPurchaseOrders, nil).Once()
+
+		payload, err := json.Marshal(mockListOfReportPurchaseOrders)
+		assert.NoError(t, err)
+
+		PATH := fmt.Sprintf("/api/v1/buyers/reportPurchaseOrders?id=%v", "")
+		req := httptest.NewRequest(http.MethodGet, PATH, bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		buyerController := BuyerController{buyer: buyerServiceMock}
+
+		engine.GET("/api/v1/buyers/reportPurchaseOrders", buyerController.ReportPurchaseOrders())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+
+		buyerServiceMock.AssertExpectations(t)
+	})
+
+	t.Run("In case of internal server error", func(t *testing.T) {
+		mockListOfReportPurchaseOrders := utils.CreateRandomListReportPurchaseOrder()
+		buyerServiceMock := mocks.NewBuyerService(t)
+
+		buyerServiceMock.On("ReportPurchaseOrders",
+			mock.Anything,
+			mock.AnythingOfType("int64"),
+		).Return(&mockListOfReportPurchaseOrders, nil).Maybe().On("ReportAllPurchaseOrders",
+			mock.Anything,
+		).Return(nil, errors.New("Internal server error")).Maybe()
+
+		payload, err := json.Marshal(mockListOfReportPurchaseOrders)
+		assert.NoError(t, err)
+
+		req := httptest.NewRequest(http.MethodGet, "/api/v1/buyers/reportPurchaseOrders", bytes.NewBuffer(payload))
+		rec := httptest.NewRecorder()
+
+		_, engine := gin.CreateTestContext(rec)
+
+		buyerController := BuyerController{buyer: buyerServiceMock}
+
+		engine.GET("/api/v1/buyers/reportPurchaseOrders", buyerController.ReportPurchaseOrders())
+
+		engine.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 
 		buyerServiceMock.AssertExpectations(t)
 	})

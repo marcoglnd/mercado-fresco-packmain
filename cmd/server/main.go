@@ -40,5 +40,10 @@ func main() {
 	routes.AddRoutes(routerGroup, dbConnection)
 	docs.SwaggerInfo.BasePath = PATH
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	router.Run()
+
+	err = router.Run()
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }
