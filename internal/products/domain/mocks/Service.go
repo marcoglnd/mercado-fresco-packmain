@@ -37,6 +37,27 @@ func (_m *Service) CreateNewProduct(ctx context.Context, product *domain.Product
 	return r0, r1
 }
 
+// CreateProductBatches provides a mock function with given fields: ctx, batch
+func (_m *Service) CreateProductBatches(ctx context.Context, batch *domain.ProductBatches) (int64, error) {
+	ret := _m.Called(ctx, batch)
+
+	var r0 int64
+	if rf, ok := ret.Get(0).(func(context.Context, *domain.ProductBatches) int64); ok {
+		r0 = rf(ctx, batch)
+	} else {
+		r0 = ret.Get(0).(int64)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *domain.ProductBatches) error); ok {
+		r1 = rf(ctx, batch)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // CreateProductRecords provides a mock function with given fields: ctx, record
 func (_m *Service) CreateProductRecords(ctx context.Context, record *domain.ProductRecords) (int64, error) {
 	ret := _m.Called(ctx, record)
@@ -118,6 +139,29 @@ func (_m *Service) GetById(ctx context.Context, id int64) (*domain.Product, erro
 	return r0, r1
 }
 
+// GetProductBatchesById provides a mock function with given fields: ctx, id
+func (_m *Service) GetProductBatchesById(ctx context.Context, id int64) (*domain.ProductBatches, error) {
+	ret := _m.Called(ctx, id)
+
+	var r0 *domain.ProductBatches
+	if rf, ok := ret.Get(0).(func(context.Context, int64) *domain.ProductBatches); ok {
+		r0 = rf(ctx, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*domain.ProductBatches)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetProductRecordsById provides a mock function with given fields: ctx, id
 func (_m *Service) GetProductRecordsById(ctx context.Context, id int64) (*domain.ProductRecords, error) {
 	ret := _m.Called(ctx, id)
@@ -141,7 +185,53 @@ func (_m *Service) GetProductRecordsById(ctx context.Context, id int64) (*domain
 	return r0, r1
 }
 
-// GetQtyOfRecords provides a mock function with given fields: ctx
+// GetQtdOfAllProducts provides a mock function with given fields: ctx
+func (_m *Service) GetQtdOfAllProducts(ctx context.Context) (*[]domain.QtdOfProducts, error) {
+	ret := _m.Called(ctx)
+
+	var r0 *[]domain.QtdOfProducts
+	if rf, ok := ret.Get(0).(func(context.Context) *[]domain.QtdOfProducts); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*[]domain.QtdOfProducts)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetQtdProductsBySectionId provides a mock function with given fields: ctx, id
+func (_m *Service) GetQtdProductsBySectionId(ctx context.Context, id int64) (*domain.QtdOfProducts, error) {
+	ret := _m.Called(ctx, id)
+
+	var r0 *domain.QtdOfProducts
+	if rf, ok := ret.Get(0).(func(context.Context, int64) *domain.QtdOfProducts); ok {
+		r0 = rf(ctx, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*domain.QtdOfProducts)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetQtyOfAllRecords provides a mock function with given fields: ctx
 func (_m *Service) GetQtyOfAllRecords(ctx context.Context) (*[]domain.QtyOfRecords, error) {
 	ret := _m.Called(ctx)
 

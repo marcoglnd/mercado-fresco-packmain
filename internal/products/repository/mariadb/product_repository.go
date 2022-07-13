@@ -253,6 +253,71 @@ func (r *repository) GetQtyOfRecordsById(ctx context.Context, id int64) (*domain
 	return &report, nil
 }
 
+func (r *repository) CreateProductBatches(ctx context.Context, batch *domain.ProductBatches) (int64, error) {
+	newBatch := domain.ProductBatches{
+		BatchNumber:        batch.BatchNumber,
+		CurrentQuantity:    batch.CurrentQuantity,
+		CurrentTemperature: batch.CurrentTemperature,
+		DueDate:            batch.DueDate,
+		InitialQuantity:    batch.InitialQuantity,
+		ManufacturingDate:  batch.ManufacturingDate,
+		ManufacturingHour:  batch.ManufacturingHour,
+		MinimumTemperature: batch.MinimumTemperature,
+		ProductId:          batch.ProductId,
+		SectionId:          batch.SectionId,
+	}
+	result, err := r.db.ExecContext(
+		ctx,
+		sqlCreateBatch,
+		&newBatch.BatchNumber,
+		&newBatch.CurrentQuantity,
+		&newBatch.CurrentTemperature,
+		&newBatch.DueDate,
+		&newBatch.InitialQuantity,
+		&newBatch.ManufacturingDate,
+		&newBatch.ManufacturingHour,
+		&newBatch.MinimumTemperature,
+		&newBatch.ProductId,
+		&newBatch.SectionId,
+	)
+	if err != nil {
+		return 0, err
+	}
+	insertedId, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+	return insertedId, nil
+}
+
+func (r *repository) GetProductBatchesById(ctx context.Context, id int64) (*domain.ProductBatches, error) {
+	row := r.db.QueryRowContext(ctx, sqlGetBatch, id)
+
+	batch := domain.ProductBatches{}
+
+	err := row.Scan(
+		&batch.BatchNumber,
+		&batch.CurrentQuantity,
+		&batch.CurrentTemperature,
+		&batch.DueDate,
+		&batch.InitialQuantity,
+		&batch.ManufacturingDate,
+		&batch.ManufacturingHour,
+		&batch.MinimumTemperature,
+		&batch.ProductId,
+		&batch.SectionId,
+	)
+	if errors.Is(err, sql.ErrNoRows) {
+		return &batch, domain.ErrIDNotFound
+	}
+
+	if err != nil {
+		return &batch, err
+	}
+
+	return &batch, nil
+}
+
 func (r *repository) GetQtyOfAllRecords(ctx context.Context) (*[]domain.QtyOfRecords, error) {
 	reports := []domain.QtyOfRecords{}
 
@@ -270,6 +335,54 @@ func (r *repository) GetQtyOfAllRecords(ctx context.Context) (*[]domain.QtyOfRec
 			&report.ProductId,
 			&report.Description,
 			&report.RecordsCount,
+		); err != nil {
+			return &reports, err
+		}
+
+		reports = append(reports, report)
+	}
+
+	return &reports, nil
+}
+
+func (r *repository) GetQtdProductsBySectionId(ctx context.Context, id int64) (*domain.QtdOfProducts, error) {
+	row := r.db.QueryRowContext(ctx, sqlGetQtdProductsBySectionId, id)
+
+	report := domain.QtdOfProducts{}
+
+	err := row.Scan(
+		&report.SectionId,
+		&report.SectionNumber,
+		&report.ProductsCount,
+	)
+	if errors.Is(err, sql.ErrNoRows) {
+		return &report, domain.ErrIDNotFound
+	}
+
+	if err != nil {
+		return &report, err
+	}
+
+	return &report, nil
+}
+
+func (r *repository) GetQtdOfAllProducts(ctx context.Context) (*[]domain.QtdOfProducts, error) {
+	reports := []domain.QtdOfProducts{}
+
+	rows, err := r.db.QueryContext(ctx, sqlGetQtdProductsInSection)
+	if err != nil {
+		return &reports, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var report domain.QtdOfProducts
+
+		if err := rows.Scan(
+			&report.SectionId,
+			&report.SectionNumber,
+			&report.ProductsCount,
 		); err != nil {
 			return &reports, err
 		}
