@@ -163,8 +163,7 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "buyer ID",
                         "name": "id",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -1582,7 +1581,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.RequestProductsUpdated"
+                            "$ref": "#/definitions/domain.RequestProducts"
                         }
                     }
                 ],
@@ -1650,8 +1649,7 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "section ID",
                         "name": "id",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -1718,8 +1716,7 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "records ID",
                         "name": "id",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -3776,6 +3773,57 @@ const docTemplate = `{
                     "type": "number"
                 },
                 "sale_price": {
+                    "type": "number"
+                }
+            }
+        },
+        "domain.RequestProducts": {
+            "type": "object",
+            "required": [
+                "description",
+                "expiration_rate",
+                "freezing_rate",
+                "height",
+                "length",
+                "net_weight",
+                "product_code",
+                "product_type_id",
+                "recommended_freezing_temperature",
+                "seller_id",
+                "width"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "expiration_rate": {
+                    "type": "integer"
+                },
+                "freezing_rate": {
+                    "type": "integer"
+                },
+                "height": {
+                    "type": "number"
+                },
+                "length": {
+                    "type": "number"
+                },
+                "net_weight": {
+                    "type": "number"
+                },
+                "product_code": {
+                    "type": "string"
+                },
+                "product_type_id": {
+                    "type": "integer"
+                },
+                "recommended_freezing_temperature": {
+                    "type": "number"
+                },
+                "seller_id": {
+                    "type": "integer"
+                },
+                "width": {
                     "type": "number"
                 }
             }
