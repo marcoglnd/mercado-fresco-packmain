@@ -1,22 +1,20 @@
-package controllers
+package controller
 
 import (
 	"fmt"
 	"net/http"
-	"strconv"
-
-	"github.com/marcoglnd/mercado-fresco-packmain/internal/sections"
 
 	"github.com/gin-gonic/gin"
+	"github.com/marcoglnd/mercado-fresco-packmain/internal/sections/domain"
 )
 
 type SectionsController struct {
-	service sections.Service
+	service domain.Service
 }
 
-func NewSection(b sections.Service) *SectionsController {
+func NewSection(s domain.Service) *SectionsController {
 	return &SectionsController{
-		service: b,
+		service: s,
 	}
 }
 
@@ -30,15 +28,15 @@ func NewSection(b sections.Service) *SectionsController {
 // @Router /sections [get]
 func (c *SectionsController) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		b, err := c.service.GetAll()
+		data, err := c.service.GetAll(ctx.Request.Context())
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{
+			ctx.JSON(http.StatusInternalServerError, gin.H{
 				"error": err.Error(),
 			})
 			return
 		}
 		ctx.JSON(http.StatusOK, gin.H{
-			"data": b,
+			"data": data,
 		})
 	}
 }
@@ -55,19 +53,17 @@ func (c *SectionsController) GetAll() gin.HandlerFunc {
 // @Router /sections/{id} [get]
 func (c *SectionsController) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		sectionId, err := strconv.Atoi(ctx.Param("id"))
-		if err != nil {
+		var req domain.RequestSectionId
+		if err := ctx.ShouldBindUri(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
 			return
 		}
-		b, err := c.service.GetById(sectionId)
+		section, err := c.service.GetById(ctx.Request.Context(), req.ID)
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusOK, b)
+		ctx.JSON(http.StatusOK, section)
 	}
 }
 
@@ -83,22 +79,29 @@ func (c *SectionsController) GetById() gin.HandlerFunc {
 // @Router /sections [post]
 func (c *SectionsController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var req requestSection
+		var req domain.RequestSections
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{
-				"error": err.Error(),
-			})
+			ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 			return
 		}
-		b, err := c.service.Create(
-			req.SectionNumber, req.CurrentTemperature,
-			req.MinimumTemperature, req.CurrentCapacity, req.MinimumCapacity, req.MaximumCapacity,
-			req.WarehouseId, req.ProductTypeId)
+		section, err := c.service.Create(
+			ctx.Request.Context(),
+			&domain.Section{
+				SectionNumber:      req.SectionNumber,
+				CurrentCapacity:    req.CurrentCapacity,
+				MinimumCapacity:    req.MinimumCapacity,
+				MaximumCapacity:    req.MaximumCapacity,
+				WarehouseId:        req.WarehouseId,
+				ProductTypeId:      req.ProductTypeId,
+				CurrentTemperature: req.CurrentTemperature,
+				MinimumTemperature: req.MinimumTemperature,
+			},
+		)
 		if err != nil {
 			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusCreated, b)
+		ctx.JSON(http.StatusCreated, section)
 	}
 }
 
@@ -115,27 +118,37 @@ func (c *SectionsController) Create() gin.HandlerFunc {
 // @Router /sections/{id} [patch]
 func (c *SectionsController) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
-		if err != nil {
+		var req domain.RequestSectionsUpdated
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid inputs"})
+			return
+		}
+		var reqId domain.RequestSectionId
+		if err := ctx.ShouldBindUri(&reqId); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
 			return
 		}
 
-		var req requestSection
-		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-			return
-		}
+		section, err := c.service.Update(
+			ctx.Request.Context(),
+			&domain.Section{
+				ID:                 reqId.ID,
+				SectionNumber:      req.SectionNumber,
+				CurrentCapacity:    req.CurrentCapacity,
+				MinimumCapacity:    req.MinimumCapacity,
+				MaximumCapacity:    req.MaximumCapacity,
+				WarehouseId:        req.WarehouseId,
+				ProductTypeId:      req.ProductTypeId,
+				CurrentTemperature: req.CurrentTemperature,
+				MinimumTemperature: req.MinimumTemperature,
+			},
+		)
 
-		b, err := c.service.Update(int(id),
-			req.SectionNumber, req.CurrentTemperature,
-			req.MinimumTemperature, req.CurrentCapacity, req.MinimumCapacity, req.MaximumCapacity,
-			req.WarehouseId, req.ProductTypeId)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusOK, b)
+		ctx.JSON(http.StatusOK, section)
 	}
 }
 
@@ -151,29 +164,17 @@ func (c *SectionsController) Update() gin.HandlerFunc {
 // @Router /sections/{id} [delete]
 func (c *SectionsController) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
-		if err != nil {
+		var req domain.RequestSectionId
+		if err := ctx.ShouldBindUri(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
-			return
 		}
 
-		err = c.service.Delete(int(id))
+		err := c.service.Delete(ctx.Request.Context(), req.ID)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
 
-		ctx.JSON(http.StatusNoContent, gin.H{"data": fmt.Sprintf("A section %d foi removido", id)})
+		ctx.JSON(http.StatusNoContent, gin.H{"data": fmt.Sprintf("A section %d foi removida", req.ID)})
 	}
-}
-
-type requestSection struct {
-	SectionNumber      int `json:"section_number" binding:"required"`
-	CurrentTemperature int `json:"current_temperature" binding:"required"`
-	MinimumTemperature int `json:"minimum_temperature" binding:"required"`
-	CurrentCapacity    int `json:"current_capacity" binding:"required"`
-	MinimumCapacity    int `json:"minimum_capacity" binding:"required"`
-	MaximumCapacity    int `json:"maximum_capacity" binding:"required"`
-	WarehouseId        int `json:"warehouse_id" binding:"required"`
-	ProductTypeId      int `json:"product_type_id" binding:"required"`
 }

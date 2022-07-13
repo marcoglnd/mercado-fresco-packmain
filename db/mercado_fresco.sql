@@ -42,6 +42,7 @@ CREATE TABLE `sections` (
   `current_temperature` DECIMAL(19,2) NOT NULL,
   `minimum_temperature` DECIMAL(19,2) NOT NULL,
   `current_capacity` INT NOT NULL,
+  `minimum_capacity` INT NOT NULL,
   `maximum_capacity` int NOT NULL,
   `warehouse_id` int NOT NULL,
   `product_type_id` int NOT NULL
@@ -133,13 +134,13 @@ CREATE TABLE `inbound_orders` (
 
 CREATE TABLE `product_batches` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
-    `batch_number` VARCHAR(255) NOT NULL UNIQUE,
+    `batch_number` INT NOT NULL UNIQUE,
     `current_quantity` INT,
     `current_temperature` DECIMAL(19,2),
     `due_date` DATETIME(6),
     `initial_quantity` INT NOT NULL,
     `manufacturing_date` DATETIME(6),
-    `manufacturing_hour` DATETIME(6),
+    `manufacturing_hour` INT,
     `minimum_temperature` DECIMAL(19,2),
     `product_id` INT NOT NULL,
     `section_id` INT NOT NULL,
