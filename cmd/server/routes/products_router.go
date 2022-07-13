@@ -15,6 +15,7 @@ func productsRouter(superRouter *gin.RouterGroup, conn *sql.DB) {
 	controller := controller.NewProduct(service)
 
 	superRouter.POST("/productRecords", controller.CreateProductRecords())
+	superRouter.POST("/productBatches", controller.CreateProductBatches())
 
 	pr := superRouter.Group("/products")
 	{
@@ -23,6 +24,7 @@ func productsRouter(superRouter *gin.RouterGroup, conn *sql.DB) {
 		pr.POST("/", controller.CreateNewProduct())
 		pr.PATCH("/:id", controller.Update())
 		pr.DELETE("/:id", controller.Delete())
-		pr.GET("/reportRecords", controller.GetQtyOfRecordsById())
+		pr.GET("/reportRecords", controller.GetQtyOfRecords())
+		pr.GET("/reportProducts", controller.GetQtdProductsBySectionId())
 	}
 }

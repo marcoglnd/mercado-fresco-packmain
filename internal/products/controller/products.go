@@ -191,6 +191,7 @@ func (c *Controller) Delete() gin.HandlerFunc {
 // @Description Create a new product records
 // @Accept json
 // @Produce json
+// @Param product body domain.RequestProductRecords true "Create a new product record"
 // @Success 201 {object} domain.ProductRecords
 // @Failure 409 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
@@ -237,7 +238,7 @@ func (c *Controller) CreateProductRecords() gin.HandlerFunc {
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products/reportRecords [get]
-func (c *Controller) GetQtyOfRecordsById() gin.HandlerFunc {
+func (c *Controller) GetQtyOfRecords() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req domain.RequestProductRecordId
 		if err := ctx.ShouldBindQuery(&req); err != nil {
@@ -255,5 +256,85 @@ func (c *Controller) GetQtyOfRecordsById() gin.HandlerFunc {
 			return
 		}
 		ctx.JSON(http.StatusOK, gin.H{"data": product})
+	}
+}
+
+// @Summary Create product records
+// @Tags Products
+// @Description Create a new product records
+// @Accept json
+// @Produce json
+// @Param product body domain.RequestProductBatches true "Product Batche to create"
+// @Success 201 {object} domain.ProductBatches
+// @Failure 409 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 500 {object} schemes.JSONBadReqResult{error=string}
+// @Router /productBatches [post]
+func (c *Controller) CreateProductBatches() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req domain.RequestProductBatches
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid inputs"})
+			return
+		}
+		batchId, err := c.service.CreateProductBatches(
+			ctx.Request.Context(),
+			&domain.ProductBatches{
+				BatchNumber:        req.BatchNumber,
+				CurrentQuantity:    req.CurrentQuantity,
+				CurrentTemperature: req.CurrentTemperature,
+				DueDate:            req.DueDate,
+				InitialQuantity:    req.InitialQuantity,
+				ManufacturingDate:  req.ManufacturingDate,
+				ManufacturingHour:  req.ManufacturingHour,
+				MinimumTemperature: req.MinimumTemperature,
+				ProductId:          req.ProductId,
+				SectionId:          req.SectionId,
+			},
+		)
+		if err != nil {
+			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+			return
+		}
+		batch, err := c.service.GetProductBatchesById(
+			ctx.Request.Context(),
+			batchId,
+		)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(http.StatusCreated, gin.H{"data": batch})
+	}
+}
+
+// @Summary Quantity of products report
+// @Tags Products
+// @Description Get quantity of product in sections
+// @Accept json
+// @Produce json
+// @Param id query int true "section ID"
+// @Success 200 {object} domain.ProductReports
+// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Router /products/reportProducts [get]
+func (c *Controller) GetQtdProductsBySectionId() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req domain.RequestQtdProductsBySectionId
+		if err := ctx.ShouldBindQuery(&req); err != nil {
+			products, err := c.service.GetQtdOfAllProducts(ctx.Request.Context())
+			if err != nil {
+				ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+				return
+			}
+			ctx.JSON(http.StatusOK, gin.H{"data": products})
+			return
+		}
+		batch, err := c.service.GetQtdProductsBySectionId(ctx.Request.Context(), req.Id)
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "invalid id"})
+			return
+		}
+		ctx.JSON(http.StatusOK, gin.H{"data": batch})
 	}
 }
