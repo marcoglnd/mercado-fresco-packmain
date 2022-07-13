@@ -35,7 +35,7 @@ type requestCreateLocality struct {
 // @Description Add a new Locality to the list
 // @Accept json
 // @Produce json
-// @Param Locality body requestCreateLocality true "locality to create"
+// @Param Locality body requestCreateLocality false "locality to create"
 // @Success 201 {object} schemas.JSONSuccessResult{data=domain.GetLocality}
 // @Failure 409 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemas.JSONBadReqResult{error=string}
