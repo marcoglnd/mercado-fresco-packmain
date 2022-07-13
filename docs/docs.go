@@ -153,7 +153,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Buyer"
+                    "Buyers"
                 ],
                 "summary": "Create buyer",
                 "parameters": [
@@ -595,7 +595,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_employees_controller.requestEmployeeCreate"
+                            "$ref": "#/definitions/controller.requestEmployeeCreate"
                         }
                     }
                 ],
@@ -671,7 +671,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_employees_domain.InboundOrder"
+                            "$ref": "#/definitions/domain.InboundOrderE"
                         }
                     },
                     "404": {
@@ -884,7 +884,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_employees_controller.requestEmployeeUpdate"
+                            "$ref": "#/definitions/controller.requestEmployeeUpdate"
                         }
                     }
                 ],
@@ -959,7 +959,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_inbound_orders_domain.InboundOrder"
+                                            "$ref": "#/definitions/domain.InboundOrder"
                                         }
                                     }
                                 }
@@ -1005,7 +1005,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_inbound_orders_controller.requestInboundOrderCreate"
+                            "$ref": "#/definitions/controller.requestInboundOrderCreate"
                         }
                     }
                 ],
@@ -1013,7 +1013,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_inbound_orders_domain.InboundOrder"
+                            "$ref": "#/definitions/domain.InboundOrder"
                         }
                     },
                     "409": {
@@ -1075,7 +1075,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_localities_controller.requestCreateLocality"
+                            "$ref": "#/definitions/controller.requestCreateLocality"
                         }
                     }
                 ],
@@ -2512,7 +2512,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_sellers_controller.requestCreate"
+                            "$ref": "#/definitions/controller.requestCreate"
                         }
                     }
                 ],
@@ -2747,7 +2747,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_sellers_controller.requestUpdate"
+                            "$ref": "#/definitions/controller.requestUpdate"
                         }
                     }
                 ],
@@ -3162,6 +3162,135 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "controller.requestCreate": {
+            "type": "object",
+            "required": [
+                "address",
+                "cid",
+                "company_name",
+                "locality_id",
+                "telephone"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "cid": {
+                    "type": "integer"
+                },
+                "company_name": {
+                    "type": "string"
+                },
+                "locality_id": {
+                    "type": "integer"
+                },
+                "telephone": {
+                    "type": "string"
+                }
+            }
+        },
+        "controller.requestCreateLocality": {
+            "type": "object",
+            "required": [
+                "locality_name",
+                "province_id"
+            ],
+            "properties": {
+                "locality_name": {
+                    "type": "string"
+                },
+                "province_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controller.requestEmployeeCreate": {
+            "type": "object",
+            "required": [
+                "card_number_id",
+                "first_name",
+                "last_name",
+                "warehouse_id"
+            ],
+            "properties": {
+                "card_number_id": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "warehouse_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controller.requestEmployeeUpdate": {
+            "type": "object",
+            "properties": {
+                "card_number_id": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "warehouse_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controller.requestInboundOrderCreate": {
+            "type": "object",
+            "required": [
+                "employee_id",
+                "order_date",
+                "order_number",
+                "product_batch_id",
+                "warehouse_id"
+            ],
+            "properties": {
+                "employee_id": {
+                    "type": "integer"
+                },
+                "order_date": {
+                    "type": "string"
+                },
+                "order_number": {
+                    "type": "string"
+                },
+                "product_batch_id": {
+                    "type": "integer"
+                },
+                "warehouse_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controller.requestUpdate": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "cid": {
+                    "type": "integer"
+                },
+                "company_name": {
+                    "type": "string"
+                },
+                "locality_id": {
+                    "type": "integer"
+                },
+                "telephone": {
+                    "type": "string"
+                }
+            }
+        },
         "domain.Buyer": {
             "type": "object",
             "properties": {
@@ -3313,6 +3442,52 @@ const docTemplate = `{
                 },
                 "province_name": {
                     "type": "string"
+                }
+            }
+        },
+        "domain.InboundOrder": {
+            "type": "object",
+            "properties": {
+                "employee_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "order_date": {
+                    "type": "string"
+                },
+                "order_number": {
+                    "type": "string"
+                },
+                "product_batch_id": {
+                    "type": "integer"
+                },
+                "warehouse_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "domain.InboundOrderE": {
+            "type": "object",
+            "properties": {
+                "card_number_id": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "inbound_orders_count": {
+                    "type": "integer"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "warehouse_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -3764,310 +3939,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "warehouse_code": {
-                    "type": "string"
-                }
-            }
-        },
-        "github.com_marcoglnd_mercado-fresco-packmain_internal_employees_controller.requestEmployeeCreate": {
-            "type": "object",
-            "required": [
-                "card_number_id",
-                "first_name",
-                "last_name",
-                "warehouse_id"
-            ],
-            "properties": {
-                "card_number_id": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "last_name": {
-                    "type": "string"
-                },
-                "warehouse_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "github.com_marcoglnd_mercado-fresco-packmain_internal_employees_controller.requestEmployeeUpdate": {
-            "type": "object",
-            "properties": {
-                "card_number_id": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "last_name": {
-                    "type": "string"
-                },
-                "warehouse_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "github.com_marcoglnd_mercado-fresco-packmain_internal_employees_domain.InboundOrder": {
-            "type": "object",
-            "properties": {
-                "card_number_id": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "inbound_orders_count": {
-                    "type": "integer"
-                },
-                "last_name": {
-                    "type": "string"
-                },
-                "warehouse_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "github.com_marcoglnd_mercado-fresco-packmain_internal_inbound_orders_controller.requestInboundOrderCreate": {
-            "type": "object",
-            "required": [
-                "employee_id",
-                "order_date",
-                "order_number",
-                "product_batch_id",
-                "warehouse_id"
-            ],
-            "properties": {
-                "employee_id": {
-                    "type": "integer"
-                },
-                "order_date": {
-                    "type": "string"
-                },
-                "order_number": {
-                    "type": "string"
-                },
-                "product_batch_id": {
-                    "type": "integer"
-                },
-                "warehouse_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "github.com_marcoglnd_mercado-fresco-packmain_internal_inbound_orders_domain.InboundOrder": {
-            "type": "object",
-            "properties": {
-                "employee_id": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "order_date": {
-                    "type": "string"
-                },
-                "order_number": {
-                    "type": "string"
-                },
-                "product_batch_id": {
-                    "type": "integer"
-                },
-                "warehouse_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "github.com_marcoglnd_mercado-fresco-packmain_internal_localities_controller.requestCreateLocality": {
-            "type": "object",
-            "required": [
-                "locality_name",
-                "province_id"
-            ],
-            "properties": {
-                "locality_name": {
-                    "type": "string"
-                },
-                "province_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "github.com_marcoglnd_mercado-fresco-packmain_internal_sellers_controller.requestCreate": {
-            "type": "object",
-            "required": [
-                "address",
-                "cid",
-                "company_name",
-                "locality_id",
-                "telephone"
-            ],
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "cid": {
-                    "type": "integer"
-                },
-                "company_name": {
-                    "type": "string"
-                },
-                "locality_id": {
-                    "type": "integer"
-                },
-                "telephone": {
-                    "type": "string"
-                }
-            }
-        },
-        "github.com_marcoglnd_mercado-fresco-packmain_internal_sellers_controller.requestUpdate": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "cid": {
-                    "type": "integer"
-                },
-                "company_name": {
-                    "type": "string"
-                },
-                "locality_id": {
-                    "type": "integer"
-                },
-                "telephone": {
-                    "type": "string"
-                }
-            }
-        },
-        "internal_employees_controller.requestEmployeeCreate": {
-            "type": "object",
-            "required": [
-                "card_number_id",
-                "first_name",
-                "last_name",
-                "warehouse_id"
-            ],
-            "properties": {
-                "card_number_id": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "last_name": {
-                    "type": "string"
-                },
-                "warehouse_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "internal_employees_controller.requestEmployeeUpdate": {
-            "type": "object",
-            "properties": {
-                "card_number_id": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "last_name": {
-                    "type": "string"
-                },
-                "warehouse_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "internal_inbound_orders_controller.requestInboundOrderCreate": {
-            "type": "object",
-            "required": [
-                "employee_id",
-                "order_date",
-                "order_number",
-                "product_batch_id",
-                "warehouse_id"
-            ],
-            "properties": {
-                "employee_id": {
-                    "type": "integer"
-                },
-                "order_date": {
-                    "type": "string"
-                },
-                "order_number": {
-                    "type": "string"
-                },
-                "product_batch_id": {
-                    "type": "integer"
-                },
-                "warehouse_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "internal_localities_controller.requestCreateLocality": {
-            "type": "object",
-            "required": [
-                "locality_name",
-                "province_id"
-            ],
-            "properties": {
-                "locality_name": {
-                    "type": "string"
-                },
-                "province_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "internal_sellers_controller.requestCreate": {
-            "type": "object",
-            "required": [
-                "address",
-                "cid",
-                "company_name",
-                "locality_id",
-                "telephone"
-            ],
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "cid": {
-                    "type": "integer"
-                },
-                "company_name": {
-                    "type": "string"
-                },
-                "locality_id": {
-                    "type": "integer"
-                },
-                "telephone": {
-                    "type": "string"
-                }
-            }
-        },
-        "internal_sellers_controller.requestUpdate": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "cid": {
-                    "type": "integer"
-                },
-                "company_name": {
-                    "type": "string"
-                },
-                "locality_id": {
-                    "type": "integer"
-                },
-                "telephone": {
                     "type": "string"
                 }
             }

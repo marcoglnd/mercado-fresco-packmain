@@ -92,7 +92,7 @@ func (c BuyerController) GetById() gin.HandlerFunc {
 }
 
 // @Summary Create buyer
-// @Tags Buyer
+// @Tags Buyers
 // @Description Add a new buyer to the list
 // @Accept json
 // @Produce json

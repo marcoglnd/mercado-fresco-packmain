@@ -1,4 +1,92 @@
 definitions:
+  controller.requestCreate:
+    properties:
+      address:
+        type: string
+      cid:
+        type: integer
+      company_name:
+        type: string
+      locality_id:
+        type: integer
+      telephone:
+        type: string
+    required:
+    - address
+    - cid
+    - company_name
+    - locality_id
+    - telephone
+    type: object
+  controller.requestCreateLocality:
+    properties:
+      locality_name:
+        type: string
+      province_id:
+        type: integer
+    required:
+    - locality_name
+    - province_id
+    type: object
+  controller.requestEmployeeCreate:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      warehouse_id:
+        type: integer
+    required:
+    - card_number_id
+    - first_name
+    - last_name
+    - warehouse_id
+    type: object
+  controller.requestEmployeeUpdate:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      warehouse_id:
+        type: integer
+    type: object
+  controller.requestInboundOrderCreate:
+    properties:
+      employee_id:
+        type: integer
+      order_date:
+        type: string
+      order_number:
+        type: string
+      product_batch_id:
+        type: integer
+      warehouse_id:
+        type: integer
+    required:
+    - employee_id
+    - order_date
+    - order_number
+    - product_batch_id
+    - warehouse_id
+    type: object
+  controller.requestUpdate:
+    properties:
+      address:
+        type: string
+      cid:
+        type: integer
+      company_name:
+        type: string
+      locality_id:
+        type: integer
+      telephone:
+        type: string
+    type: object
   domain.Buyer:
     properties:
       card_number_id:
@@ -103,6 +191,36 @@ definitions:
         type: string
       province_name:
         type: string
+    type: object
+  domain.InboundOrder:
+    properties:
+      employee_id:
+        type: integer
+      id:
+        type: integer
+      order_date:
+        type: string
+      order_number:
+        type: string
+      product_batch_id:
+        type: integer
+      warehouse_id:
+        type: integer
+    type: object
+  domain.InboundOrderE:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      inbound_orders_count:
+        type: integer
+      last_name:
+        type: string
+      warehouse_id:
+        type: integer
     type: object
   domain.Product:
     properties:
@@ -411,212 +529,6 @@ definitions:
     - telephone
     - warehouse_code
     type: object
-  github.com_marcoglnd_mercado-fresco-packmain_internal_employees_controller.requestEmployeeCreate:
-    properties:
-      card_number_id:
-        type: string
-      first_name:
-        type: string
-      last_name:
-        type: string
-      warehouse_id:
-        type: integer
-    required:
-    - card_number_id
-    - first_name
-    - last_name
-    - warehouse_id
-    type: object
-  github.com_marcoglnd_mercado-fresco-packmain_internal_employees_controller.requestEmployeeUpdate:
-    properties:
-      card_number_id:
-        type: string
-      first_name:
-        type: string
-      last_name:
-        type: string
-      warehouse_id:
-        type: integer
-    type: object
-  github.com_marcoglnd_mercado-fresco-packmain_internal_employees_domain.InboundOrder:
-    properties:
-      card_number_id:
-        type: string
-      first_name:
-        type: string
-      id:
-        type: integer
-      inbound_orders_count:
-        type: integer
-      last_name:
-        type: string
-      warehouse_id:
-        type: integer
-    type: object
-  github.com_marcoglnd_mercado-fresco-packmain_internal_inbound_orders_controller.requestInboundOrderCreate:
-    properties:
-      employee_id:
-        type: integer
-      order_date:
-        type: string
-      order_number:
-        type: string
-      product_batch_id:
-        type: integer
-      warehouse_id:
-        type: integer
-    required:
-    - employee_id
-    - order_date
-    - order_number
-    - product_batch_id
-    - warehouse_id
-    type: object
-  github.com_marcoglnd_mercado-fresco-packmain_internal_inbound_orders_domain.InboundOrder:
-    properties:
-      employee_id:
-        type: integer
-      id:
-        type: integer
-      order_date:
-        type: string
-      order_number:
-        type: string
-      product_batch_id:
-        type: integer
-      warehouse_id:
-        type: integer
-    type: object
-  github.com_marcoglnd_mercado-fresco-packmain_internal_localities_controller.requestCreateLocality:
-    properties:
-      locality_name:
-        type: string
-      province_id:
-        type: integer
-    required:
-    - locality_name
-    - province_id
-    type: object
-  github.com_marcoglnd_mercado-fresco-packmain_internal_sellers_controller.requestCreate:
-    properties:
-      address:
-        type: string
-      cid:
-        type: integer
-      company_name:
-        type: string
-      locality_id:
-        type: integer
-      telephone:
-        type: string
-    required:
-    - address
-    - cid
-    - company_name
-    - locality_id
-    - telephone
-    type: object
-  github.com_marcoglnd_mercado-fresco-packmain_internal_sellers_controller.requestUpdate:
-    properties:
-      address:
-        type: string
-      cid:
-        type: integer
-      company_name:
-        type: string
-      locality_id:
-        type: integer
-      telephone:
-        type: string
-    type: object
-  internal_employees_controller.requestEmployeeCreate:
-    properties:
-      card_number_id:
-        type: string
-      first_name:
-        type: string
-      last_name:
-        type: string
-      warehouse_id:
-        type: integer
-    required:
-    - card_number_id
-    - first_name
-    - last_name
-    - warehouse_id
-    type: object
-  internal_employees_controller.requestEmployeeUpdate:
-    properties:
-      card_number_id:
-        type: string
-      first_name:
-        type: string
-      last_name:
-        type: string
-      warehouse_id:
-        type: integer
-    type: object
-  internal_inbound_orders_controller.requestInboundOrderCreate:
-    properties:
-      employee_id:
-        type: integer
-      order_date:
-        type: string
-      order_number:
-        type: string
-      product_batch_id:
-        type: integer
-      warehouse_id:
-        type: integer
-    required:
-    - employee_id
-    - order_date
-    - order_number
-    - product_batch_id
-    - warehouse_id
-    type: object
-  internal_localities_controller.requestCreateLocality:
-    properties:
-      locality_name:
-        type: string
-      province_id:
-        type: integer
-    required:
-    - locality_name
-    - province_id
-    type: object
-  internal_sellers_controller.requestCreate:
-    properties:
-      address:
-        type: string
-      cid:
-        type: integer
-      company_name:
-        type: string
-      locality_id:
-        type: integer
-      telephone:
-        type: string
-    required:
-    - address
-    - cid
-    - company_name
-    - locality_id
-    - telephone
-    type: object
-  internal_sellers_controller.requestUpdate:
-    properties:
-      address:
-        type: string
-      cid:
-        type: integer
-      company_name:
-        type: string
-      locality_id:
-        type: integer
-      telephone:
-        type: string
-    type: object
   schemas.JSONBadReqResult:
     properties:
       error: {}
@@ -744,7 +656,7 @@ paths:
               type: object
       summary: Create buyer
       tags:
-      - Buyer
+      - Buyers
   /buyers/{id}:
     delete:
       consumes:
@@ -960,7 +872,7 @@ paths:
         name: employee
         required: true
         schema:
-          $ref: '#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_employees_controller.requestEmployeeCreate'
+          $ref: '#/definitions/controller.requestEmployeeCreate'
       produces:
       - application/json
       responses:
@@ -1086,7 +998,7 @@ paths:
         name: employee
         required: true
         schema:
-          $ref: '#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_employees_controller.requestEmployeeUpdate'
+          $ref: '#/definitions/controller.requestEmployeeUpdate'
       produces:
       - application/json
       responses:
@@ -1132,7 +1044,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_employees_domain.InboundOrder'
+            $ref: '#/definitions/domain.InboundOrderE'
         "404":
           description: Not Found
           schema:
@@ -1169,7 +1081,7 @@ paths:
             - $ref: '#/definitions/schemas.JSONSuccessResult'
             - properties:
                 data:
-                  $ref: '#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_inbound_orders_domain.InboundOrder'
+                  $ref: '#/definitions/domain.InboundOrder'
               type: object
         "500":
           description: Internal Server Error
@@ -1193,14 +1105,14 @@ paths:
         name: order
         required: true
         schema:
-          $ref: '#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_inbound_orders_controller.requestInboundOrderCreate'
+          $ref: '#/definitions/controller.requestInboundOrderCreate'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_inbound_orders_domain.InboundOrder'
+            $ref: '#/definitions/domain.InboundOrder'
         "409":
           description: Conflict
           schema:
@@ -1233,7 +1145,7 @@ paths:
         name: Locality
         required: true
         schema:
-          $ref: '#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_localities_controller.requestCreateLocality'
+          $ref: '#/definitions/controller.requestCreateLocality'
       produces:
       - application/json
       responses:
@@ -2032,7 +1944,7 @@ paths:
         name: Seller
         required: true
         schema:
-          $ref: '#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_sellers_controller.requestCreate'
+          $ref: '#/definitions/controller.requestCreate'
       produces:
       - application/json
       responses:
@@ -2168,7 +2080,7 @@ paths:
         name: seller
         required: true
         schema:
-          $ref: '#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_sellers_controller.requestUpdate'
+          $ref: '#/definitions/controller.requestUpdate'
       produces:
       - application/json
       responses:
