@@ -49,6 +49,22 @@ func CreateRandomQtyOfRecords() domain.QtyOfRecords {
 	return qtyOfRecords
 }
 
+func CreateRandomProductBatches() domain.ProductBatches {
+	batch := domain.ProductBatches{
+		BatchNumber:        RandomInt64(),
+		CurrentQuantity:    RandomInt64(),
+		CurrentTemperature: RandomFloat64(),
+		DueDate:            RandomString(10),
+		InitialQuantity:    RandomInt64(),
+		ManufacturingDate:  RandomString(10),
+		ManufacturingHour:  RandomInt(0, 24),
+		MinimumTemperature: RandomFloat64(),
+		ProductId:          RandomInt64(),
+		SectionId:          RandomInt64(),
+	}
+	return batch
+}
+
 func CreateRandomListQtyOfRecords() []domain.QtyOfRecords {
 	var listOfQtyOfRecords []domain.QtyOfRecords
 	for i := 1; i <= 5; i++ {
@@ -56,4 +72,22 @@ func CreateRandomListQtyOfRecords() []domain.QtyOfRecords {
 		listOfQtyOfRecords = append(listOfQtyOfRecords, qtyOfRecords)
 	}
 	return listOfQtyOfRecords
+}
+
+func CreateRandomQtdOfProducts() domain.QtdOfProducts {
+	qtdOfProducts := domain.QtdOfProducts{
+		SectionId:     RandomInt64(),
+		SectionNumber: RandomInt64(),
+		ProductsCount: RandomInt64(),
+	}
+	return qtdOfProducts
+}
+
+func CreateRandomListQtdOfProducts() []domain.QtdOfProducts {
+	var listOfQtdOfProducts []domain.QtdOfProducts
+	for i := 1; i <= 5; i++ {
+		qtdOfProducts := CreateRandomQtdOfProducts()
+		listOfQtdOfProducts = append(listOfQtdOfProducts, qtdOfProducts)
+	}
+	return listOfQtdOfProducts
 }
