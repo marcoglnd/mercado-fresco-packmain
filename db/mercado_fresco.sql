@@ -155,7 +155,7 @@ CREATE TABLE `products_types` (
 
 CREATE TABLE `product_records` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
-    `last_update_date` DATETIME(6) NOT NULL DEFAULT NOW(),
+    `last_update_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `purchase_price` DECIMAL(19,2) NOT NULL,
     `sale_price` DECIMAL(19,2) NOT NULL,
     `product_id` INT NOT NULL,

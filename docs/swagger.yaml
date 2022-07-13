@@ -398,6 +398,43 @@ definitions:
     - purchase_price
     - sale_price
     type: object
+  domain.RequestProducts:
+    properties:
+      description:
+        type: string
+      expiration_rate:
+        type: integer
+      freezing_rate:
+        type: integer
+      height:
+        type: number
+      length:
+        type: number
+      net_weight:
+        type: number
+      product_code:
+        type: string
+      product_type_id:
+        type: integer
+      recommended_freezing_temperature:
+        type: number
+      seller_id:
+        type: integer
+      width:
+        type: number
+    required:
+    - description
+    - expiration_rate
+    - freezing_rate
+    - height
+    - length
+    - net_weight
+    - product_code
+    - product_type_id
+    - recommended_freezing_temperature
+    - seller_id
+    - width
+    type: object
   domain.RequestProductsUpdated:
     properties:
       description:
@@ -1422,7 +1459,7 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/domain.RequestProductsUpdated'
+          $ref: '#/definitions/domain.RequestProducts'
       produces:
       - application/json
       responses:
@@ -1595,7 +1632,6 @@ paths:
       - description: section ID
         in: query
         name: id
-        required: true
         type: integer
       produces:
       - application/json
@@ -1634,7 +1670,6 @@ paths:
       - description: records ID
         in: query
         name: id
-        required: true
         type: integer
       produces:
       - application/json
