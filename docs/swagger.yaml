@@ -311,6 +311,31 @@ definitions:
     - tracking_code
     - warehouse_id
     type: object
+  domain.PurchaseOrderRequest:
+    properties:
+      buyer_id:
+        type: integer
+      carrier_id:
+        type: integer
+      order_date:
+        type: string
+      order_number:
+        type: string
+      order_status_id:
+        type: integer
+      tracking_code:
+        type: string
+      warehouse_id:
+        type: integer
+    required:
+    - buyer_id
+    - carrier_id
+    - order_date
+    - order_number
+    - order_status_id
+    - tracking_code
+    - warehouse_id
+    type: object
   domain.PurchaseOrdersResponse:
     properties:
       card_number_id:
@@ -587,45 +612,6 @@ info:
   title: MERCADO FRESCOS
   version: "1.0"
 paths:
-  /buyer/{id}:
-    get:
-      consumes:
-      - application/json
-      description: get buyer by it's id
-      parameters:
-      - description: Buyer ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/domain.Buyer'
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemas.JSONBadReqResult'
-            - properties:
-                error:
-                  type: string
-              type: object
-        "404":
-          description: Not Found
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemas.JSONBadReqResult'
-            - properties:
-                error:
-                  type: string
-              type: object
-      summary: Buyer by id
-      tags:
-      - Buyers
   /buyers:
     get:
       consumes:
@@ -738,6 +724,44 @@ paths:
       summary: Delete buyer
       tags:
       - Buyers
+    get:
+      consumes:
+      - application/json
+      description: get buyer by it's id
+      parameters:
+      - description: Buyer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Buyer'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Buyer by id
+      tags:
+      - Buyers
     patch:
       consumes:
       - application/json
@@ -800,7 +824,6 @@ paths:
       - description: buyer ID
         in: query
         name: id
-        required: true
         type: integer
       produces:
       - application/json
@@ -1709,6 +1732,13 @@ paths:
       consumes:
       - application/json
       description: Create a new purchase order
+      parameters:
+      - description: Purchase Order to create
+        in: body
+        name: purchaseOrder
+        required: true
+        schema:
+          $ref: '#/definitions/domain.PurchaseOrderRequest'
       produces:
       - application/json
       responses:
@@ -2019,11 +2049,6 @@ paths:
         name: id
         required: true
         type: integer
-      - description: token
-        in: header
-        name: token
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -2105,11 +2130,6 @@ paths:
         name: id
         required: true
         type: integer
-      - description: token
-        in: header
-        name: token
-        required: true
-        type: string
       - description: Seller to update
         in: body
         name: seller

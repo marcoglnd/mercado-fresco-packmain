@@ -24,74 +24,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/buyer/{id}": {
-            "get": {
-                "description": "get buyer by it's id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Buyers"
-                ],
-                "summary": "Buyer by id",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Buyer ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/domain.Buyer"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
         "/buyers": {
             "get": {
                 "description": "get all buyers",
@@ -231,8 +163,7 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "buyer ID",
                         "name": "id",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -282,6 +213,72 @@ const docTemplate = `{
             }
         },
         "/buyers/{id}": {
+            "get": {
+                "description": "get buyer by it's id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Buyers"
+                ],
+                "summary": "Buyer by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Buyer ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Buyer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
             "delete": {
                 "description": "Delete existing buyer in list",
                 "consumes": [
@@ -2033,6 +2030,17 @@ const docTemplate = `{
                     "Purchase Orders"
                 ],
                 "summary": "Create purchase order",
+                "parameters": [
+                    {
+                        "description": "Purchase Order to create",
+                        "name": "purchaseOrder",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.PurchaseOrderRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -2646,13 +2654,6 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "header",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -2730,13 +2731,6 @@ const docTemplate = `{
                         "description": "Seller ID",
                         "name": "id",
                         "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "header",
                         "required": true
                     },
                     {
@@ -3602,6 +3596,41 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "id": {
+                    "type": "integer"
+                },
+                "order_date": {
+                    "type": "string"
+                },
+                "order_number": {
+                    "type": "string"
+                },
+                "order_status_id": {
+                    "type": "integer"
+                },
+                "tracking_code": {
+                    "type": "string"
+                },
+                "warehouse_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "domain.PurchaseOrderRequest": {
+            "type": "object",
+            "required": [
+                "buyer_id",
+                "carrier_id",
+                "order_date",
+                "order_number",
+                "order_status_id",
+                "tracking_code",
+                "warehouse_id"
+            ],
+            "properties": {
+                "buyer_id": {
+                    "type": "integer"
+                },
+                "carrier_id": {
                     "type": "integer"
                 },
                 "order_date": {

@@ -42,6 +42,7 @@ func NewPurchaseOrderController(purchaseOrder domain.PurchaseOrderService) (*Pur
 // @Description Create a new purchase order
 // @Accept json
 // @Produce json
+// @Param purchaseOrder body domain.PurchaseOrderRequest true "Purchase Order to create"
 // @Success 201 {object} domain.PurchaseOrder
 // @Failure 409 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemas.JSONBadReqResult{error=string}
