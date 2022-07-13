@@ -2648,13 +2648,6 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "header",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -2732,13 +2725,6 @@ const docTemplate = `{
                         "description": "Seller ID",
                         "name": "id",
                         "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "header",
                         "required": true
                     },
                     {
