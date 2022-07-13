@@ -209,7 +209,7 @@ func (c BuyerController) Delete() gin.HandlerFunc {
 // @Description Get quantity of purchase orders for buyer
 // @Accept json
 // @Produce json
-// @Param id query int true "buyer ID"
+// @Param id query int false "buyer ID"
 // @Success 201 {object} domain.PurchaseOrdersResponse
 // @Failure 400 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemas.JSONBadReqResult{error=string}
