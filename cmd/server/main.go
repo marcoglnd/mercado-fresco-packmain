@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -39,6 +40,11 @@ func main() {
 	routerGroup := router.Group(PATH)
 	routes.AddRoutes(routerGroup, dbConnection)
 	docs.SwaggerInfo.BasePath = PATH
+
+	router.GET("/ping", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, "pong")
+	})
+
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	err = router.Run()
