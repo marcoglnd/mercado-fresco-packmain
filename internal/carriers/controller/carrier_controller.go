@@ -20,9 +20,10 @@ func NewCarrierController(cs domain.CarrierService) *CarrierController {
 // @Description Add a new carrier checking for duplicate carriers cid before
 // @Accept json
 // @Produce json
-// @Param carrier body carriers.CreateCarrierInput true "Carrier to create"
-// @Success 201 {object} carriers.Carrier
-// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
+// @Param carrier body domain.CreateCarrierInput true "Carrier to create"
+// @Success 201 {object} domain.Carrier
+// @Failure 422 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 409 {object} schemas.JSONBadReqResult{error=string}
 // @Router /carriers [post]
 func (cc *CarrierController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -72,8 +73,12 @@ func (cc *CarrierController) Create() gin.HandlerFunc {
 // @Description Get quantity of carriers by locality id
 // @Accept json
 // @Produce json
-// @Param id query int true "locality ID"
-// @Router /reportCarriers [get]
+// @Param id query int false "locality ID"
+// @Success 200 {object} schemas.JSONSuccessResult{data=[]domain.CarrierReport}
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
+// @Router /localities/reportCarriers [get]
 func (cc *CarrierController) ReportCarriers() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var reportCarriersInput struct {
