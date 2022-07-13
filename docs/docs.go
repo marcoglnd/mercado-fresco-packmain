@@ -163,8 +163,7 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "buyer ID",
                         "name": "id",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     }
                 ],
                 "responses": {
