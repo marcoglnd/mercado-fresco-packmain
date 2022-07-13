@@ -1,12 +1,20 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"database/sql"
 
-func AddRoutes(superRouter *gin.RouterGroup) {
-	productsRouter(superRouter)
-	buyersRouter(superRouter)
-	employeesRouter(superRouter)
-	sectionsRouter(superRouter)
-	warehousesRouter(superRouter)
-	sellersRouter(superRouter)
+	"github.com/gin-gonic/gin"
+)
+
+func AddRoutes(superRouter *gin.RouterGroup, dbConnection *sql.DB) {
+	buyersRouter(superRouter, dbConnection)
+	purchaseOrdersRouter(superRouter, dbConnection)
+	productsRouter(superRouter, dbConnection)
+	employeesRouter(superRouter, dbConnection)
+	inboundOrderRouter(superRouter, dbConnection)
+	sectionsRouter(superRouter, dbConnection)
+	warehousesRouter(superRouter, dbConnection)
+	sellersRouter(superRouter, dbConnection)
+	localitiesRouter(superRouter, dbConnection)
+	carriersRouter(superRouter, dbConnection)
 }
