@@ -8,7 +8,7 @@ type Employee struct {
 	WarehouseId  int64  `json:"warehouse_id"`
 }
 
-type InboundOrder struct {
+type InboundOrderE struct {
 	ID                 int64  `json:"id"`
 	CardNumberId       string `json:"card_number_id"`
 	FirstName          string `json:"first_name"`
