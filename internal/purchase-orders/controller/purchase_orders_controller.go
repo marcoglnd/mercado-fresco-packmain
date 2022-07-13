@@ -37,6 +37,17 @@ func NewPurchaseOrderController(purchaseOrder domain.PurchaseOrderService) (*Pur
 	}, nil
 }
 
+// @Summary Create purchase order
+// @Tags Purchase Orders
+// @Description Create a new purchase order
+// @Accept json
+// @Produce json
+// @Param purchaseOrder body domain.PurchaseOrderRequest true "Purchase Order to create"
+// @Success 201 {object} domain.PurchaseOrder
+// @Failure 409 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 500 {object} schemas.JSONBadReqResult{error=string}
+// @Router /purchaseOrders [post]
 func (c PurchaseOrderController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req request

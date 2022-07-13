@@ -23,8 +23,8 @@ func CreateRandomListEmployees() []domain.Employee {
 	return listOfEmployees
 }
 
-func CreateRandomReportInboundOrder() domain.InboundOrder {
-	inboundOrder := domain.InboundOrder{
+func CreateRandomReportInboundOrder() domain.InboundOrderResponse {
+	inboundOrder := domain.InboundOrderResponse{
 		ID:                 1,
 		CardNumberId:       RandomString(3),
 		FirstName:          RandomString(6),
@@ -35,8 +35,8 @@ func CreateRandomReportInboundOrder() domain.InboundOrder {
 	return inboundOrder
 }
 
-func CreateRamdomListReportInboundOrders() []domain.InboundOrder {
-	var listOfInboundOrders []domain.InboundOrder
+func CreateRamdomListReportInboundOrders() []domain.InboundOrderResponse {
+	var listOfInboundOrders []domain.InboundOrderResponse
 	for i := 1; i <= 5; i++ {
 		inboundOrder := CreateRandomReportInboundOrder()
 		inboundOrder.ID = int64(i)

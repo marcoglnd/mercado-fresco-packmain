@@ -9,7 +9,7 @@ CREATE TABLE `sellers` (
   `address` VARCHAR(255) NOT NULL,
   `telephone` VARCHAR(255) NOT NULL,
   `locality_id` INT NOT NULL
-);
+)ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `products` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -24,9 +24,9 @@ CREATE TABLE `products` (
   `width` decimal(19, 2) NOT NULL,
   `product_type_id` int NOT NULL,
   `seller_id` int NOT NULL
-);
+)ROW_FORMAT=DYNAMIC ;
 
-CREATE TABLE `warehouse` (
+CREATE TABLE `warehouses` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `address` varchar(255) NOT NULL,
   `telephone` varchar(255) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `warehouse` (
   `minimum_capacity` int NOT NULL,
   `minimum_temperature` DECIMAL(19,2) NOT NULL,
   `locality_id` INT NOT NULL
-);
+)ROW_FORMAT=DYNAMIC ;
 
 CREATE TABLE `sections` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -46,7 +46,7 @@ CREATE TABLE `sections` (
   `maximum_capacity` int NOT NULL,
   `warehouse_id` int NOT NULL,
   `product_type_id` int NOT NULL
-);
+)ROW_FORMAT=DYNAMIC ;
 
 CREATE TABLE `employees` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -54,49 +54,49 @@ CREATE TABLE `employees` (
   `first_name` VARCHAR(255) NOT NULL,
   `last_name` VARCHAR(255) NOT NULL,
   `warehouse_id` int NOT NULL
-);
+)ROW_FORMAT=DYNAMIC ;
 
 CREATE TABLE `buyers` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `card_number_id` int NOT NULL UNIQUE,
+  `card_number_id` VARCHAR(255) NOT NULL UNIQUE,
   `first_name` VARCHAR(255) NOT NULL,
   `last_name` VARCHAR(255) NOT NULL
-);
+)ROW_FORMAT=DYNAMIC ;
 
 CREATE TABLE `localities` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
     `locality_name` VARCHAR(255) NOT NULL UNIQUE,
     `province_id` INT NOT NULL
-);
+)ROW_FORMAT=DYNAMIC ;
 
 CREATE TABLE `provinces` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
     `province_name` VARCHAR(255) NOT NULL,
     `id_country_fk` INT NOT NULL
-);
+)ROW_FORMAT=DYNAMIC ;
 
 CREATE TABLE `countries` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
     `country_name` VARCHAR(255) NOT NULL
-);
+)ROW_FORMAT=DYNAMIC ;
 
 CREATE TABLE `users` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
     `password` VARCHAR(255) NOT NULL,
     `username` VARCHAR(255) NOT NULL
-);
+)ROW_FORMAT=DYNAMIC ;
 
 CREATE TABLE `users_rol` (
 	`usuario_id` INT NOT NULL,
     `rol_id` INT NOT NULL,
     PRIMARY KEY (`usuario_id`, `rol_id`)
-);
+)ROW_FORMAT=DYNAMIC ;
 
 CREATE TABLE `rol` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
     `description` VARCHAR(255) NOT NULL,
     `rol_name` VARCHAR(255) NOT NULL
-);
+)ROW_FORMAT=DYNAMIC ;
 
 CREATE TABLE `purchase_orders` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -106,13 +106,13 @@ CREATE TABLE `purchase_orders` (
     `buyer_id` INT NOT NULL,
     `carrier_id` INT NOT NULL,
     `order_status_id` INT NOT NULL,
-    `wareHouse_id` INT NOT NULL
-);
+    `warehouse_id` INT NOT NULL
+)ROW_FORMAT=DYNAMIC ;
 
 CREATE TABLE `order_status` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
     `description` VARCHAR(255) NOT NULL
-);
+)ROW_FORMAT=DYNAMIC ;
 
 CREATE TABLE `carriers` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -121,16 +121,16 @@ CREATE TABLE `carriers` (
     `address` VARCHAR(255) NOT NULL,
     `telephone` VARCHAR(255) NOT NULL,
     `locality_id` INT NOT NULL
-);
+)ROW_FORMAT=DYNAMIC ;
 
 CREATE TABLE `inbound_orders` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
-    `order_date` DATETIME(6),
+    `order_date` DATETIME(6) NOT NULL,
     `order_number` VARCHAR(255) NOT NULL UNIQUE,
     `employee_id` INT NOT NULL,
     `product_batch_id` INT NOT NULL,
     `warehouse_id` INT NOT NULL
-);
+)ROW_FORMAT=DYNAMIC ;
 
 CREATE TABLE `product_batches` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -146,21 +146,21 @@ CREATE TABLE `product_batches` (
     `section_id` INT NOT NULL,
     FOREIGN KEY (`product_id`) REFERENCES `products`(`id`),
     FOREIGN KEY (`section_id`) REFERENCES `sections`(`id`)
-);
+)ROW_FORMAT=DYNAMIC ;
 
 CREATE TABLE `products_types` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
     `description` VARCHAR(255) NOT NULL
-);
+)ROW_FORMAT=DYNAMIC ;
 
 CREATE TABLE `product_records` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
-    `last_update_date` DATETIME(6) NOT NULL DEFAULT NOW(),
+    `last_update_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `purchase_price` DECIMAL(19,2) NOT NULL,
     `sale_price` DECIMAL(19,2) NOT NULL,
     `product_id` INT NOT NULL,
     FOREIGN KEY (`product_id`) REFERENCES `products`(`id`)
-);
+)ROW_FORMAT=DYNAMIC ;
 
 CREATE TABLE `order_details` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -171,19 +171,19 @@ CREATE TABLE `order_details` (
     `purchase_order_id` INT NOT NULL,
     FOREIGN KEY (`product_record_id`) REFERENCES `product_records`(`id`),
     FOREIGN KEY (`purchase_order_id`) REFERENCES `purchase_orders`(`id`)
-);
+)ROW_FORMAT=DYNAMIC ;
 
 ALTER TABLE `products` ADD FOREIGN KEY (`seller_id`) REFERENCES `sellers` (`id`);
 
 ALTER TABLE `products` ADD FOREIGN KEY (`product_type_id`) REFERENCES `products_types` (`id`);
 
-ALTER TABLE `sections` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouse` (`id`);
+ALTER TABLE `sections` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`id`);
 
 ALTER TABLE `sections` ADD FOREIGN KEY (`product_type_id`) REFERENCES `products_types` (`id`);
 
-ALTER TABLE `employees` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouse` (`id`);
+ALTER TABLE `employees` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`id`);
 
-ALTER TABLE `warehouse` ADD FOREIGN KEY (`locality_id`) REFERENCES `localities` (`id`);
+ALTER TABLE `warehouses` ADD FOREIGN KEY (`locality_id`) REFERENCES `localities` (`id`);
 
 ALTER TABLE `sellers` ADD FOREIGN KEY (`locality_id`) REFERENCES `localities` (`id`);
 
@@ -201,7 +201,7 @@ ALTER TABLE `purchase_orders` ADD FOREIGN KEY (`carrier_id`) REFERENCES `carrier
 
 ALTER TABLE `purchase_orders` ADD FOREIGN KEY (`order_status_id`) REFERENCES `order_status` (`id`);
 
-ALTER TABLE `purchase_orders` ADD FOREIGN KEY (`wareHouse_id`) REFERENCES `warehouse` (`id`);
+ALTER TABLE `purchase_orders` ADD FOREIGN KEY (`wareHouse_id`) REFERENCES `warehouses` (`id`);
 
 ALTER TABLE `carriers` ADD FOREIGN KEY (`locality_id`) REFERENCES `localities` (`id`);
 
@@ -209,4 +209,4 @@ ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`employee_id`) REFERENCES `employe
 
 ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`product_batch_id`) REFERENCES `product_batches` (`id`);
 
-ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouse` (`id`);
+ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`id`);

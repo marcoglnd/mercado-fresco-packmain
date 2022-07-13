@@ -1,27 +1,9 @@
 package mariadb
 
 const (
-	sqlInsertSeller  = "INSERT INTO mercado_fresco.sellers (cid, company_name, address, telephone, locality_id) VALUES(?, ?, ?, ?, ?);"
-	sqlGetAllSellers = "SELECT * FROM mercado_fresco.sellers;"
-	sqlGetSellerById = "SELECT * FROM mercado_fresco.sellers WHERE ID = ?;"
-	sqlUpdateSeller  = "UPDATE mercado_fresco.sellers SET cid=?, company_name=?, address=?, telephone=?, locality_id=? WHERE id=?;"
-	sqlDeleteSeller  = "DELETE FROM mercado_fresco.sellers WHERE id=?"
-	// sqlCreateLocality  = "INSERT INTO mercado_fresco.localities (locality_name, province_id) VALUES(?, ?);"
-	// sqlGetLocalityById = `SELECT localities.id, localities.locality_name, provinces.province_name, countries.country_name
-	// FROM mercado_fresco.countries countries, mercado_fresco.localities localities, mercado_fresco.provinces provinces
-	// WHERE
-	// 	provinces.id = localities.province_id
-	// 	AND countries.id = provinces.id_country_fk
-	// 	AND localities.id = ?;`
-	// sqlGetQtyOfSellersByLocalityId = `SELECT localities.id, localities.locality_name , COUNT(localities.id) sellers_count
-	// FROM mercado_fresco.localities localities, mercado_fresco.sellers sellers
-	// WHERE
-	// 	localities.id = sellers.locality_id
-	// 	AND localities.id = ?
-	// 		GROUP BY localities.id `
-	// sqlGetQtyOfSellersLocalityId = `SELECT localities.id, localities.locality_name , COUNT(localities.id) sellers_count
-	// 		FROM mercado_fresco.localities localities, mercado_fresco.sellers sellers
-	// 		WHERE
-	// 			localities.id = sellers.locality_id
-	// 				GROUP BY localities.id `
+	sqlInsertSeller  = "INSERT INTO sellers (cid, company_name, address, telephone, locality_id) VALUES(?, ?, ?, ?, ?);"
+	sqlGetAllSellers = "SELECT * FROM sellers;"
+	sqlGetSellerById = "SELECT * FROM sellers WHERE ID = ?;"
+	sqlUpdateSeller  = "UPDATE sellers SET cid=?, company_name=?, address=?, telephone=?, locality_id=? WHERE id=?;"
+	sqlDeleteSeller  = "DELETE FROM sellers WHERE id=?"
 )

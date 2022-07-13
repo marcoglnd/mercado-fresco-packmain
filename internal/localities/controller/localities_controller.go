@@ -30,6 +30,17 @@ type requestCreateLocality struct {
 	ProvinceID   int64  `json:"province_id" binding:"required"`
 }
 
+// @Summary Create locality
+// @Tags Localities
+// @Description Add a new Locality to the list
+// @Accept json
+// @Produce json
+// @Param Locality body requestCreateLocality false "locality to create"
+// @Success 201 {object} schemas.JSONSuccessResult{data=domain.GetLocality}
+// @Failure 409 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 500 {object} schemas.JSONBadReqResult{error=string}
+// @Router /localities [post]
 func (c *LocalityController) CreateLocality() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req requestCreateLocality
@@ -57,10 +68,19 @@ func (c *LocalityController) CreateLocality() gin.HandlerFunc {
 			return
 		}
 
-		ctx.JSON(http.StatusCreated, locality)
+		ctx.JSON(http.StatusCreated, gin.H{"data": locality})
 	}
 }
 
+// @Summary List of reports AllQtyOfSellers
+// @Tags Localities
+// @Description get AllQtyOfSellers
+// @Accept json
+// @Produce json
+// @Success 200 {object} schemas.JSONSuccessResult{data=domain.QtyOfSellers}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 500 {object} schemas.JSONBadReqResult{error=string}
+// @Router /localities/reportSellers [get]
 func (c LocalityController) GetAllQtyOfSellers() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -85,6 +105,6 @@ func (c LocalityController) GetAllQtyOfSellers() gin.HandlerFunc {
 			})
 			return
 		}
-		ctx.JSON(http.StatusOK, sellersByLocality)
+		ctx.JSON(http.StatusOK, gin.H{"data": sellersByLocality})
 	}
 }

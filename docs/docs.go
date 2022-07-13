@@ -43,23 +43,35 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/schemes.Buyer"
+                                            "$ref": "#/definitions/domain.Buyer"
                                         }
                                     }
                                 }
                             ]
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/schemes.JSONBadReqResult"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -83,7 +95,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.requestBuyer"
+                            "$ref": "#/definitions/domain.RequestBuyer"
                         }
                     }
                 ],
@@ -91,19 +103,110 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Buyer"
+                            "$ref": "#/definitions/domain.Buyer"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "409": {
+                        "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/schemes.JSONBadReqResult"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "422": {
                         "description": "Unprocessable Entity",
                         "schema": {
-                            "$ref": "#/definitions/schemes.JSONBadReqResult"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/buyers/reportPurchaseOrders": {
+            "get": {
+                "description": "Get quantity of purchase orders for buyer",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Buyers"
+                ],
+                "summary": "Report purchase orders",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "buyer ID",
+                        "name": "id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.PurchaseOrdersResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -111,7 +214,7 @@ const docTemplate = `{
         },
         "/buyers/{id}": {
             "get": {
-                "description": "get buyer by its id",
+                "description": "get buyer by it's id",
                 "consumes": [
                     "application/json"
                 ],
@@ -135,19 +238,43 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Buyer"
+                            "$ref": "#/definitions/domain.Buyer"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/schemes.JSONBadReqResult"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/schemes.JSONBadReqResult"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -167,7 +294,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Buyer ID",
+                        "description": "buyer ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -179,7 +306,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
@@ -197,7 +324,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -215,7 +342,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -256,7 +383,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.requestBuyer"
+                            "$ref": "#/definitions/domain.RequestBuyer"
                         }
                     }
                 ],
@@ -264,19 +391,131 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Buyer"
+                            "$ref": "#/definitions/domain.Buyer"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/schemes.JSONBadReqResult"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/schemes.JSONBadReqResult"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/carriers": {
+            "post": {
+                "description": "Add a new carrier checking for duplicate carriers cid before",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Carriers"
+                ],
+                "summary": "Create carrier",
+                "parameters": [
+                    {
+                        "description": "Carrier to create",
+                        "name": "carrier",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.CreateCarrierInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Carrier"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -301,25 +540,25 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/schemes.Employee"
+                                            "$ref": "#/definitions/domain.Employee"
                                         }
                                     }
                                 }
                             ]
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -353,7 +592,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.requestEmployee"
+                            "$ref": "#/definitions/controller.requestEmployeeCreate"
                         }
                     }
                 ],
@@ -361,15 +600,15 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Employee"
+                            "$ref": "#/definitions/domain.Employee"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "409": {
+                        "description": "Conflict",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -387,7 +626,74 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/employees/reportInboundOrders": {
+            "get": {
+                "description": "Get quantity of inbound orders",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Quantity of inbound orders",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "employee ID",
+                        "name": "id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.InboundOrderResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -429,7 +735,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Employee"
+                            "$ref": "#/definitions/domain.Employee"
                         }
                     },
                     "400": {
@@ -437,7 +743,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -455,7 +761,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -497,7 +803,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
@@ -515,7 +821,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -533,7 +839,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -574,7 +880,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.requestEmployee"
+                            "$ref": "#/definitions/controller.requestEmployeeUpdate"
                         }
                     }
                 ],
@@ -582,7 +888,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Employee"
+                            "$ref": "#/definitions/domain.Employee"
                         }
                     },
                     "400": {
@@ -590,7 +896,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -608,7 +914,487 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/inboundOrders": {
+            "get": {
+                "description": "get all inbound orders",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Inbound Orders"
+                ],
+                "summary": "List Inbound Orders",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/domain.InboundOrder"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Add a new inbound order to the list",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Inbound Orders"
+                ],
+                "summary": "Create inbound order",
+                "parameters": [
+                    {
+                        "description": "Inbound Order to create",
+                        "name": "order",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.requestInboundOrderCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.InboundOrder"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/localities": {
+            "post": {
+                "description": "Add a new Locality to the list",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Localities"
+                ],
+                "summary": "Create locality",
+                "parameters": [
+                    {
+                        "description": "locality to create",
+                        "name": "Locality",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.requestCreateLocality"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/domain.GetLocality"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/localities/reportCarriers": {
+            "get": {
+                "description": "Get quantity of carriers by locality id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Carriers"
+                ],
+                "summary": "Report Carriers",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "locality ID",
+                        "name": "id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/domain.CarrierReport"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/localities/reportSellers": {
+            "get": {
+                "description": "get AllQtyOfSellers",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Localities"
+                ],
+                "summary": "List of reports AllQtyOfSellers",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/domain.QtyOfSellers"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/productBatches": {
+            "post": {
+                "description": "Create a new product records",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Create product records",
+                "parameters": [
+                    {
+                        "description": "Product Batche to create",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.RequestProductBatches"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ProductBatches"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -637,11 +1423,34 @@ const docTemplate = `{
                     "Products"
                 ],
                 "summary": "Create product records",
+                "parameters": [
+                    {
+                        "description": "Create a new product record",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.RequestProductRecords"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/domain.ProductRecords"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/domain.ProductRecords"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "409": {
@@ -649,7 +1458,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -667,7 +1476,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -685,7 +1494,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -720,7 +1529,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
@@ -738,7 +1547,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -772,7 +1581,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.RequestProductsUpdated"
+                            "$ref": "#/definitions/domain.RequestProducts"
                         }
                     }
                 ],
@@ -788,7 +1597,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -806,7 +1615,74 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/products/reportProducts": {
+            "get": {
+                "description": "Get quantity of product in sections",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Quantity of products report",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "section ID",
+                        "name": "id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ProductRecords"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -840,23 +1716,34 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "records ID",
                         "name": "id",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/domain.ProductRecords"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/domain.QtyOfRecords"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
+                    "404": {
+                        "description": "Not Found",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -869,12 +1756,12 @@ const docTemplate = `{
                             ]
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -924,7 +1811,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -942,7 +1829,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -984,7 +1871,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
@@ -1002,7 +1889,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1020,7 +1907,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1077,7 +1964,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1095,7 +1982,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1113,7 +2000,95 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/purchaseOrders": {
+            "post": {
+                "description": "Create a new purchase order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Purchase Orders"
+                ],
+                "summary": "Create purchase order",
+                "parameters": [
+                    {
+                        "description": "Purchase Order to create",
+                        "name": "purchaseOrder",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.PurchaseOrderRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.PurchaseOrder"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1148,13 +2123,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/schemes.Section"
+                                            "$ref": "#/definitions/domain.Section"
                                         }
                                     }
                                 }
@@ -1166,7 +2141,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1200,7 +2175,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.requestSection"
+                            "$ref": "#/definitions/domain.RequestSections"
                         }
                     }
                 ],
@@ -1208,7 +2183,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Section"
+                            "$ref": "#/definitions/domain.Section"
                         }
                     },
                     "404": {
@@ -1216,7 +2191,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1234,7 +2209,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1276,7 +2251,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Section"
+                            "$ref": "#/definitions/domain.Section"
                         }
                     },
                     "400": {
@@ -1284,7 +2259,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1302,7 +2277,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1344,7 +2319,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
@@ -1362,7 +2337,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1380,7 +2355,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1421,7 +2396,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.requestSection"
+                            "$ref": "#/definitions/domain.RequestSections"
                         }
                     }
                 ],
@@ -1429,7 +2404,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Section"
+                            "$ref": "#/definitions/domain.Section"
                         }
                     },
                     "400": {
@@ -1437,7 +2412,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1455,7 +2430,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1484,28 +2459,19 @@ const docTemplate = `{
                     "Sellers"
                 ],
                 "summary": "List sellers",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/schemes.Seller"
+                                            "$ref": "#/definitions/domain.Seller"
                                         }
                                     }
                                 }
@@ -1517,7 +2483,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1546,19 +2512,12 @@ const docTemplate = `{
                 "summary": "Create seller",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
                         "description": "seller to create",
                         "name": "Seller",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.requestSellers"
+                            "$ref": "#/definitions/controller.requestCreate"
                         }
                     }
                 ],
@@ -1566,7 +2525,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Seller"
+                            "$ref": "#/definitions/domain.Seller"
                         }
                     },
                     "404": {
@@ -1574,7 +2533,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1592,7 +2551,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1628,20 +2587,13 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "header",
-                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Seller"
+                            "$ref": "#/definitions/domain.Seller"
                         }
                     },
                     "400": {
@@ -1649,7 +2601,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1667,7 +2619,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1701,13 +2653,6 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "header",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -1716,7 +2661,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
@@ -1734,7 +2679,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1752,7 +2697,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1788,19 +2733,12 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
                         "description": "Seller to update",
                         "name": "seller",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.requestSellers"
+                            "$ref": "#/definitions/controller.requestUpdate"
                         }
                     }
                 ],
@@ -1808,7 +2746,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemes.Seller"
+                            "$ref": "#/definitions/domain.Seller"
                         }
                     },
                     "400": {
@@ -1816,7 +2754,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1834,7 +2772,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1869,13 +2807,16 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONSuccessResult"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/warehouses.Warehouse"
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/domain.Warehouse"
+                                            }
                                         }
                                     }
                                 }
@@ -1887,7 +2828,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1921,7 +2862,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/warehouses.CreateWarehouseInput"
+                            "$ref": "#/definitions/domain.CreateWarehouseInput"
                         }
                     }
                 ],
@@ -1929,7 +2870,25 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/warehouses.Warehouse"
+                            "$ref": "#/definitions/domain.Warehouse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "422": {
@@ -1937,7 +2896,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -1979,7 +2938,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/warehouses.Warehouse"
+                            "$ref": "#/definitions/domain.Warehouse"
                         }
                     },
                     "400": {
@@ -1987,7 +2946,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -2005,7 +2964,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -2047,12 +3006,12 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONSuccessResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "data": {
+                                        "error": {
                                             "type": "string"
                                         }
                                     }
@@ -2065,7 +3024,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -2083,7 +3042,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -2124,7 +3083,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/warehouses.UpdateWarehouseInput"
+                            "$ref": "#/definitions/domain.UpdateWarehouseInput"
                         }
                     }
                 ],
@@ -2132,7 +3091,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/warehouses.Warehouse"
+                            "$ref": "#/definitions/domain.Warehouse"
                         }
                     },
                     "400": {
@@ -2140,7 +3099,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -2158,7 +3117,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -2176,7 +3135,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/schemes.JSONBadReqResult"
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
                                 },
                                 {
                                     "type": "object",
@@ -2194,69 +3153,108 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.requestBuyer": {
+        "controller.requestCreate": {
             "type": "object",
+            "required": [
+                "address",
+                "cid",
+                "company_name",
+                "locality_id",
+                "telephone"
+            ],
             "properties": {
-                "card_number_id": {
+                "address": {
                     "type": "string"
                 },
-                "first_name": {
+                "cid": {
+                    "type": "integer"
+                },
+                "company_name": {
                     "type": "string"
                 },
-                "last_name": {
+                "locality_id": {
+                    "type": "integer"
+                },
+                "telephone": {
                     "type": "string"
                 }
             }
         },
-        "controllers.requestEmployee": {
+        "controller.requestCreateLocality": {
             "type": "object",
+            "required": [
+                "locality_name",
+                "province_id"
+            ],
             "properties": {
-                "card_number_id": {
+                "locality_name": {
                     "type": "string"
                 },
-                "first_name": {
-                    "type": "string"
-                },
-                "last_name": {
-                    "type": "string"
-                },
-                "warehouse_id": {
+                "province_id": {
                     "type": "integer"
                 }
             }
         },
-        "controllers.requestSection": {
+        "controller.requestEmployeeCreate": {
             "type": "object",
             "required": [
-                "current_capacity",
-                "current_temperature",
-                "maximum_capacity",
-                "minimum_capacity",
-                "minimum_temperature",
-                "product_type_id",
-                "section_number",
+                "card_number_id",
+                "first_name",
+                "last_name",
                 "warehouse_id"
             ],
             "properties": {
-                "current_capacity": {
+                "card_number_id": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "warehouse_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controller.requestEmployeeUpdate": {
+            "type": "object",
+            "properties": {
+                "card_number_id": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "warehouse_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controller.requestInboundOrderCreate": {
+            "type": "object",
+            "required": [
+                "employee_id",
+                "order_date",
+                "order_number",
+                "product_batch_id",
+                "warehouse_id"
+            ],
+            "properties": {
+                "employee_id": {
                     "type": "integer"
                 },
-                "current_temperature": {
-                    "type": "integer"
+                "order_date": {
+                    "type": "string"
                 },
-                "maximum_capacity": {
-                    "type": "integer"
+                "order_number": {
+                    "type": "string"
                 },
-                "minimum_capacity": {
-                    "type": "integer"
-                },
-                "minimum_temperature": {
-                    "type": "integer"
-                },
-                "product_type_id": {
-                    "type": "integer"
-                },
-                "section_number": {
+                "product_batch_id": {
                     "type": "integer"
                 },
                 "warehouse_id": {
@@ -2264,7 +3262,7 @@ const docTemplate = `{
                 }
             }
         },
-        "controllers.requestSellers": {
+        "controller.requestUpdate": {
             "type": "object",
             "properties": {
                 "address": {
@@ -2276,8 +3274,211 @@ const docTemplate = `{
                 "company_name": {
                     "type": "string"
                 },
+                "locality_id": {
+                    "type": "integer"
+                },
                 "telephone": {
                     "type": "string"
+                }
+            }
+        },
+        "domain.Buyer": {
+            "type": "object",
+            "properties": {
+                "card_number_id": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "last_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Carrier": {
+            "type": "object",
+            "required": [
+                "address",
+                "cid",
+                "company_name",
+                "locality_id",
+                "telephone"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "cid": {
+                    "type": "string"
+                },
+                "company_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "locality_id": {
+                    "type": "integer"
+                },
+                "telephone": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.CarrierReport": {
+            "type": "object",
+            "properties": {
+                "carriers_count": {
+                    "type": "integer"
+                },
+                "locality_id": {
+                    "type": "integer"
+                },
+                "locality_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.CreateCarrierInput": {
+            "type": "object",
+            "required": [
+                "address",
+                "cid",
+                "company_name",
+                "locality_id",
+                "telephone"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "cid": {
+                    "type": "string"
+                },
+                "company_name": {
+                    "type": "string"
+                },
+                "locality_id": {
+                    "type": "integer"
+                },
+                "telephone": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.CreateWarehouseInput": {
+            "type": "object",
+            "required": [
+                "address",
+                "minimum_capacity",
+                "minimum_temperature",
+                "telephone",
+                "warehouse_code"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "minimum_capacity": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "minimum_temperature": {
+                    "type": "number",
+                    "minimum": 1
+                },
+                "telephone": {
+                    "type": "string"
+                },
+                "warehouse_code": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Employee": {
+            "type": "object",
+            "properties": {
+                "card_number_id": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "warehouse_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "domain.GetLocality": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer"
+                },
+                "country_name": {
+                    "type": "string"
+                },
+                "locality_name": {
+                    "type": "string"
+                },
+                "province_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.InboundOrder": {
+            "type": "object",
+            "properties": {
+                "employee_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "order_date": {
+                    "type": "string"
+                },
+                "order_number": {
+                    "type": "string"
+                },
+                "product_batch_id": {
+                    "type": "integer"
+                },
+                "warehouse_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "domain.InboundOrderResponse": {
+            "type": "object",
+            "properties": {
+                "card_number_id": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "inbound_orders_count": {
+                    "type": "integer"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "warehouse_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -2302,7 +3503,7 @@ const docTemplate = `{
                 "length": {
                     "type": "number"
                 },
-                "netweight": {
+                "net_weight": {
                     "type": "number"
                 },
                 "product_code": {
@@ -2322,6 +3523,41 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.ProductBatches": {
+            "type": "object",
+            "properties": {
+                "batch_number": {
+                    "type": "integer"
+                },
+                "current_quantity": {
+                    "type": "integer"
+                },
+                "current_temperature": {
+                    "type": "number"
+                },
+                "due_date": {
+                    "type": "string"
+                },
+                "initial_quantity": {
+                    "type": "integer"
+                },
+                "manufacturing_date": {
+                    "type": "string"
+                },
+                "manufacturing_hour": {
+                    "type": "integer"
+                },
+                "minimum_temperature": {
+                    "type": "number"
+                },
+                "product_id": {
+                    "type": "integer"
+                },
+                "section_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "domain.ProductRecords": {
             "type": "object",
             "properties": {
@@ -2335,6 +3571,259 @@ const docTemplate = `{
                     "type": "number"
                 },
                 "sale_price": {
+                    "type": "number"
+                }
+            }
+        },
+        "domain.PurchaseOrder": {
+            "type": "object",
+            "required": [
+                "buyer_id",
+                "carrier_id",
+                "id",
+                "order_date",
+                "order_number",
+                "order_status_id",
+                "tracking_code",
+                "warehouse_id"
+            ],
+            "properties": {
+                "buyer_id": {
+                    "type": "integer"
+                },
+                "carrier_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "order_date": {
+                    "type": "string"
+                },
+                "order_number": {
+                    "type": "string"
+                },
+                "order_status_id": {
+                    "type": "integer"
+                },
+                "tracking_code": {
+                    "type": "string"
+                },
+                "warehouse_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "domain.PurchaseOrderRequest": {
+            "type": "object",
+            "required": [
+                "buyer_id",
+                "carrier_id",
+                "order_date",
+                "order_number",
+                "order_status_id",
+                "tracking_code",
+                "warehouse_id"
+            ],
+            "properties": {
+                "buyer_id": {
+                    "type": "integer"
+                },
+                "carrier_id": {
+                    "type": "integer"
+                },
+                "order_date": {
+                    "type": "string"
+                },
+                "order_number": {
+                    "type": "string"
+                },
+                "order_status_id": {
+                    "type": "integer"
+                },
+                "tracking_code": {
+                    "type": "string"
+                },
+                "warehouse_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "domain.PurchaseOrdersResponse": {
+            "type": "object",
+            "properties": {
+                "card_number_id": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "purchase_orders_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "domain.QtyOfRecords": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "product_id": {
+                    "type": "integer"
+                },
+                "records_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "domain.QtyOfSellers": {
+            "type": "object",
+            "properties": {
+                "locality_id": {
+                    "type": "integer"
+                },
+                "locality_name": {
+                    "type": "string"
+                },
+                "sellers_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "domain.RequestBuyer": {
+            "type": "object",
+            "properties": {
+                "card_number_id": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.RequestProductBatches": {
+            "type": "object",
+            "required": [
+                "batch_number",
+                "current_quantity",
+                "current_temperature",
+                "due_date",
+                "initial_quantity",
+                "manufacturing_date",
+                "manufacturing_hour",
+                "minimum_temperature",
+                "product_id",
+                "section_id"
+            ],
+            "properties": {
+                "batch_number": {
+                    "type": "integer"
+                },
+                "current_quantity": {
+                    "type": "integer"
+                },
+                "current_temperature": {
+                    "type": "number"
+                },
+                "due_date": {
+                    "type": "string"
+                },
+                "initial_quantity": {
+                    "type": "integer"
+                },
+                "manufacturing_date": {
+                    "type": "string"
+                },
+                "manufacturing_hour": {
+                    "type": "integer"
+                },
+                "minimum_temperature": {
+                    "type": "number"
+                },
+                "product_id": {
+                    "type": "integer"
+                },
+                "section_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "domain.RequestProductRecords": {
+            "type": "object",
+            "required": [
+                "product_id",
+                "purchase_price",
+                "sale_price"
+            ],
+            "properties": {
+                "product_id": {
+                    "type": "integer"
+                },
+                "purchase_price": {
+                    "type": "number"
+                },
+                "sale_price": {
+                    "type": "number"
+                }
+            }
+        },
+        "domain.RequestProducts": {
+            "type": "object",
+            "required": [
+                "description",
+                "expiration_rate",
+                "freezing_rate",
+                "height",
+                "length",
+                "net_weight",
+                "product_code",
+                "product_type_id",
+                "recommended_freezing_temperature",
+                "seller_id",
+                "width"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "expiration_rate": {
+                    "type": "integer"
+                },
+                "freezing_rate": {
+                    "type": "integer"
+                },
+                "height": {
+                    "type": "number"
+                },
+                "length": {
+                    "type": "number"
+                },
+                "net_weight": {
+                    "type": "number"
+                },
+                "product_code": {
+                    "type": "string"
+                },
+                "product_type_id": {
+                    "type": "integer"
+                },
+                "recommended_freezing_temperature": {
+                    "type": "number"
+                },
+                "seller_id": {
+                    "type": "integer"
+                },
+                "width": {
                     "type": "number"
                 }
             }
@@ -2357,7 +3846,7 @@ const docTemplate = `{
                 "length": {
                     "type": "number"
                 },
-                "netweight": {
+                "net_weight": {
                     "type": "number"
                 },
                 "product_code": {
@@ -2377,66 +3866,24 @@ const docTemplate = `{
                 }
             }
         },
-        "schemes.Buyer": {
+        "domain.RequestSections": {
             "type": "object",
-            "properties": {
-                "card_number_id": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "last_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "schemes.Employee": {
-            "type": "object",
-            "properties": {
-                "card_number_id": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "last_name": {
-                    "type": "string"
-                },
-                "warehouse_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "schemes.JSONBadReqResult": {
-            "type": "object",
-            "properties": {
-                "error": {}
-            }
-        },
-        "schemes.JSONSuccessResult": {
-            "type": "object",
-            "properties": {
-                "data": {}
-            }
-        },
-        "schemes.Section": {
-            "type": "object",
+            "required": [
+                "current_capacity",
+                "current_temperature",
+                "maximum_capacity",
+                "minimum_capacity",
+                "minimum_temperature",
+                "product_type_id",
+                "section_number",
+                "warehouse_id"
+            ],
             "properties": {
                 "current_capacity": {
                     "type": "integer"
                 },
                 "current_temperature": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "integer"
+                    "type": "number"
                 },
                 "maximum_capacity": {
                     "type": "integer"
@@ -2445,7 +3892,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "minimum_temperature": {
-                    "type": "integer"
+                    "type": "number"
                 },
                 "product_type_id": {
                     "type": "integer"
@@ -2458,7 +3905,39 @@ const docTemplate = `{
                 }
             }
         },
-        "schemes.Seller": {
+        "domain.Section": {
+            "type": "object",
+            "properties": {
+                "current_capacity": {
+                    "type": "integer"
+                },
+                "current_temperature": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "maximum_capacity": {
+                    "type": "integer"
+                },
+                "minimum_capacity": {
+                    "type": "integer"
+                },
+                "minimum_temperature": {
+                    "type": "number"
+                },
+                "product_type_id": {
+                    "type": "integer"
+                },
+                "section_number": {
+                    "type": "integer"
+                },
+                "warehouse_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "domain.Seller": {
             "type": "object",
             "properties": {
                 "address": {
@@ -2473,41 +3952,15 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "locality_id": {
+                    "type": "integer"
+                },
                 "telephone": {
                     "type": "string"
                 }
             }
         },
-        "warehouses.CreateWarehouseInput": {
-            "type": "object",
-            "required": [
-                "address",
-                "minimum_capacity",
-                "minimum_temperature",
-                "telephone",
-                "warehouse_code"
-            ],
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "minimum_capacity": {
-                    "type": "integer",
-                    "minimum": 1
-                },
-                "minimum_temperature": {
-                    "type": "integer",
-                    "minimum": 1
-                },
-                "telephone": {
-                    "type": "string"
-                },
-                "warehouse_code": {
-                    "type": "string"
-                }
-            }
-        },
-        "warehouses.UpdateWarehouseInput": {
+        "domain.UpdateWarehouseInput": {
             "type": "object",
             "required": [
                 "warehouse_code"
@@ -2521,7 +3974,7 @@ const docTemplate = `{
                     "minimum": 0
                 },
                 "minimum_temperature": {
-                    "type": "integer",
+                    "type": "number",
                     "minimum": 0
                 },
                 "telephone": {
@@ -2532,7 +3985,7 @@ const docTemplate = `{
                 }
             }
         },
-        "warehouses.Warehouse": {
+        "domain.Warehouse": {
             "type": "object",
             "required": [
                 "address",
@@ -2548,12 +4001,15 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "locality_id": {
+                    "type": "integer"
+                },
                 "minimum_capacity": {
                     "type": "integer",
                     "minimum": 1
                 },
                 "minimum_temperature": {
-                    "type": "integer",
+                    "type": "number",
                     "minimum": 1
                 },
                 "telephone": {
@@ -2562,6 +4018,18 @@ const docTemplate = `{
                 "warehouse_code": {
                     "type": "string"
                 }
+            }
+        },
+        "schemas.JSONBadReqResult": {
+            "type": "object",
+            "properties": {
+                "error": {}
+            }
+        },
+        "schemas.JSONSuccessResult": {
+            "type": "object",
+            "properties": {
+                "data": {}
             }
         }
     }

@@ -98,15 +98,15 @@ func (_m *EmployeeService) GetById(ctx context.Context, id int64) (*domain.Emplo
 }
 
 // ReportAllInboundOrders provides a mock function with given fields: ctx
-func (_m *EmployeeService) ReportAllInboundOrders(ctx context.Context) (*[]domain.InboundOrder, error) {
+func (_m *EmployeeService) ReportAllInboundOrders(ctx context.Context) (*[]domain.InboundOrderResponse, error) {
 	ret := _m.Called(ctx)
 
-	var r0 *[]domain.InboundOrder
-	if rf, ok := ret.Get(0).(func(context.Context) *[]domain.InboundOrder); ok {
+	var r0 *[]domain.InboundOrderResponse
+	if rf, ok := ret.Get(0).(func(context.Context) *[]domain.InboundOrderResponse); ok {
 		r0 = rf(ctx)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*[]domain.InboundOrder)
+			r0 = ret.Get(0).(*[]domain.InboundOrderResponse)
 		}
 	}
 
@@ -121,15 +121,15 @@ func (_m *EmployeeService) ReportAllInboundOrders(ctx context.Context) (*[]domai
 }
 
 // ReportInboundOrders provides a mock function with given fields: ctx, employeeId
-func (_m *EmployeeService) ReportInboundOrders(ctx context.Context, employeeId int64) (*domain.InboundOrder, error) {
+func (_m *EmployeeService) ReportInboundOrders(ctx context.Context, employeeId int64) (*domain.InboundOrderResponse, error) {
 	ret := _m.Called(ctx, employeeId)
 
-	var r0 *domain.InboundOrder
-	if rf, ok := ret.Get(0).(func(context.Context, int64) *domain.InboundOrder); ok {
+	var r0 *domain.InboundOrderResponse
+	if rf, ok := ret.Get(0).(func(context.Context, int64) *domain.InboundOrderResponse); ok {
 		r0 = rf(ctx, employeeId)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*domain.InboundOrder)
+			r0 = ret.Get(0).(*domain.InboundOrderResponse)
 		}
 	}
 
