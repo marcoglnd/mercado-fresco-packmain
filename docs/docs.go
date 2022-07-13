@@ -660,8 +660,7 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "employee ID",
                         "name": "id",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     }
                 ],
                 "responses": {
