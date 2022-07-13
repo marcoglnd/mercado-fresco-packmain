@@ -448,3 +448,77 @@ func TestGetQtyOfAllRecords(t *testing.T) {
 		mockReportsRepo.AssertExpectations(t)
 	})
 }
+
+func TestGetQtdProductsBySectionId(t *testing.T) {
+	t.Run("In case of success", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockProductReports := utils.CreateRandomQtdOfProducts()
+		mockProductReportsId := utils.RandomInt64()
+
+		mockProductsRepo.On("GetQtdProductsBySectionId", mock.Anything, mock.AnythingOfType("int64")).
+			Return(&mockProductReports, nil).Once()
+
+		service := NewService(mockProductsRepo)
+
+		productReports, err := service.GetQtdProductsBySectionId(context.Background(), mockProductReportsId)
+
+		assert.NoError(t, err)
+		assert.NotEmpty(t, productReports)
+
+		assert.Equal(t, &mockProductReports, productReports)
+
+		mockProductsRepo.AssertExpectations(t)
+
+	})
+
+	t.Run("In case of error", func(t *testing.T) {
+		mockProductsRepo := mocks.NewRepository(t)
+		mockQtyOfReportsId := utils.RandomInt64()
+
+		mockProductsRepo.On("GetQtdProductsBySectionId", mock.Anything, mock.AnythingOfType("int64")).
+			Return(nil, errors.New("failed to retrieve qtd of product reports")).Once()
+
+		service := NewService(mockProductsRepo)
+
+		productReports, err := service.GetQtdProductsBySectionId(context.Background(), mockQtyOfReportsId)
+
+		assert.Error(t, err)
+		assert.Empty(t, productReports)
+
+		mockProductsRepo.AssertExpectations(t)
+	})
+}
+
+func TestGetQtdProductsInSection(t *testing.T) {
+	t.Run("In case of success", func(t *testing.T) {
+		mockReportsRepo := mocks.NewRepository(t)
+		mockReports := utils.CreateRandomListQtdOfProducts()
+
+		mockReportsRepo.On("GetQtdOfAllProducts", mock.Anything).
+			Return(&mockReports, nil).Once()
+
+		s := NewService(mockReportsRepo)
+		list, err := s.GetQtdOfAllProducts(context.Background())
+
+		assert.NoError(t, err)
+
+		assert.Equal(t, &mockReports, list)
+
+		mockReportsRepo.AssertExpectations(t)
+	})
+
+	t.Run("In case of error", func(t *testing.T) {
+		mockReportsRepo := mocks.NewRepository(t)
+
+		mockReportsRepo.On("GetQtdOfAllProducts", mock.Anything).
+			Return(nil, errors.New("failed to retrieve reports")).
+			Once()
+
+		s := NewService(mockReportsRepo)
+		_, err := s.GetQtdOfAllProducts(context.Background())
+
+		assert.NotNil(t, err)
+
+		mockReportsRepo.AssertExpectations(t)
+	})
+}
