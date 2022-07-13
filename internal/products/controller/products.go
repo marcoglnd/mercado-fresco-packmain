@@ -192,7 +192,7 @@ func (c *Controller) Delete() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param product body domain.RequestProductRecords true "Create a new product record"
-// @Success 201 {object} domain.ProductRecords
+// @Success 201 {object} schemas.JSONSuccessResult{data=domain.ProductRecords}
 // @Failure 409 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 500 {object} schemas.JSONBadReqResult{error=string}
@@ -234,9 +234,9 @@ func (c *Controller) CreateProductRecords() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id query int true "records ID"
-// @Success 201 {object} domain.ProductRecords
-// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Success 201 {object} schemas.JSONSuccessResult{data=domain.QtyOfRecords}
 // @Failure 404 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 500 {object} schemas.JSONBadReqResult{error=string}
 // @Router /products/reportRecords [get]
 func (c *Controller) GetQtyOfRecords() gin.HandlerFunc {
 	return func(ctx *gin.Context) {

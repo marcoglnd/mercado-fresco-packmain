@@ -35,6 +35,14 @@ func NewBuyerController(buyer domain.BuyerService) (*BuyerController, error) {
 	}, nil
 }
 
+// @Summary List buyers
+// @Tags Buyers
+// @Description get all buyers
+// @Accept json
+// @Produce json
+// @Success 200 {object} schemas.JSONSuccessResult{data=domain.Buyer}
+// @Failure 500 {object} schemas.JSONBadReqResult{error=string}
+// @Router /buyers [get]
 func (c BuyerController) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		buyers, err := c.buyer.GetAll(ctx.Request.Context())
@@ -50,6 +58,16 @@ func (c BuyerController) GetAll() gin.HandlerFunc {
 	}
 }
 
+// @Summary Buyer by id
+// @Tags Buyers
+// @Description get buyer by it's id
+// @Accept json
+// @Produce json
+// @Param id path int true "Buyer ID"
+// @Success 200 {object} domain.Buyer
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
+// @Router /buyer/{id} [get]
 func (c BuyerController) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -73,6 +91,16 @@ func (c BuyerController) GetById() gin.HandlerFunc {
 	}
 }
 
+// @Summary Create buyer
+// @Tags Buyer
+// @Description Add a new buyer to the list
+// @Accept json
+// @Produce json
+// @Param buyer body domain.RequestBuyer true "Buyer to create"
+// @Success 201 {object} domain.Buyer
+// @Failure 409 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemas.JSONBadReqResult{error=string}
+// @Router /buyers [post]
 func (c BuyerController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req request
@@ -102,6 +130,18 @@ func (c BuyerController) Create() gin.HandlerFunc {
 	}
 }
 
+// @Summary Update buyer
+// @Tags Buyers
+// @Description Update existing buyer in list
+// @Accept json
+// @Produce json
+// @Param id path int true "Buyer ID"
+// @Param buyer body domain.RequestBuyer true "Buyer to update"
+// @Success 200 {object} domain.Buyer
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemas.JSONBadReqResult{error=string}
+// @Router /buyers/{id} [patch]
 func (c BuyerController) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
@@ -132,6 +172,16 @@ func (c BuyerController) Update() gin.HandlerFunc {
 	}
 }
 
+// @Summary Delete buyer
+// @Tags Buyers
+// @Description Delete existing buyer in list
+// @Accept json
+// @Produce json
+// @Param id path int true "buyer ID"
+// @Success 204 {object} schemas.JSONSuccessResult{data=string}
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
+// @Router /buyers/{id} [delete]
 func (c BuyerController) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
@@ -154,6 +204,16 @@ func (c BuyerController) Delete() gin.HandlerFunc {
 	}
 }
 
+// @Summary Report purchase orders
+// @Tags Buyers
+// @Description Get quantity of purchase orders for buyer
+// @Accept json
+// @Produce json
+// @Param id query int true "buyer ID"
+// @Success 201 {object} domain.PurchaseOrdersResponse
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
+// @Router /buyers/reportPurchaseOrders [get]
 func (c BuyerController) ReportPurchaseOrders() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
