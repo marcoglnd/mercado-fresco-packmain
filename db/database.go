@@ -22,7 +22,7 @@ func GetDBConnection() *sql.DB {
 	)
 	dbConnection, err := sql.Open("mysql", dataSource)
 	if err != nil {
-		log.Fatal("failed to connect to mariadb")
+		log.Fatal(err)
 	}
 	return dbConnection
 }

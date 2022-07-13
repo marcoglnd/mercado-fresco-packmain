@@ -191,7 +191,7 @@ func (c *Controller) Delete() gin.HandlerFunc {
 // @Description Create a new product records
 // @Accept json
 // @Produce json
-// @Param product body domain.RequestProductRecords true "Product record to create"
+// @Param product body domain.RequestProductRecords true "Create a new product record"
 // @Success 201 {object} domain.ProductRecords
 // @Failure 409 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemes.JSONBadReqResult{error=string}
@@ -238,7 +238,7 @@ func (c *Controller) CreateProductRecords() gin.HandlerFunc {
 // @Failure 400 {object} schemes.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemes.JSONBadReqResult{error=string}
 // @Router /products/reportRecords [get]
-func (c *Controller) GetQtyOfRecordsById() gin.HandlerFunc {
+func (c *Controller) GetQtyOfRecords() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req domain.RequestProductRecordId
 		if err := ctx.ShouldBindQuery(&req); err != nil {
