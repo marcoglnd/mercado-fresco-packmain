@@ -671,7 +671,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.InboundOrderE"
+                            "$ref": "#/definitions/domain.InboundOrderResponse"
                         }
                     },
                     "404": {
@@ -3468,7 +3468,7 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.InboundOrderE": {
+        "domain.InboundOrderResponse": {
             "type": "object",
             "properties": {
                 "card_number_id": {
