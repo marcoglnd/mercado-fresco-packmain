@@ -28,6 +28,9 @@ var (
 
 	queryInsertBatch    = regexp.QuoteMeta(sqlCreateBatch)
 	queryGetBatchesById = regexp.QuoteMeta(sqlGetBatch)
+
+	queryGetQtdProductsBySectionId = regexp.QuoteMeta(sqlGetQtdProductsBySectionId)
+	queryGetQtdProductsInSection  = regexp.QuoteMeta(sqlGetQtdProductsInSection)
 )
 
 var rowsProductStruct = []string{
@@ -69,6 +72,12 @@ var rowsProductBatchesStruct = []string{
 	"minimum_temperature",
 	"product_id",
 	"section_id",
+}
+
+var rowsQtdOfProducts = []string{
+	"id",
+	"section_number",
+	"products_count",
 }
 
 func TestCreateNewProduct(t *testing.T) {
@@ -584,7 +593,10 @@ func TestCreateProductBatches(t *testing.T) {
 				mockProductBatches.BatchNumber,
 				mockProductBatches.CurrentQuantity,
 				mockProductBatches.CurrentTemperature,
+				mockProductBatches.DueDate,
 				mockProductBatches.InitialQuantity,
+				mockProductBatches.ManufacturingDate,
+				mockProductBatches.ManufacturingHour,
 				mockProductBatches.MinimumTemperature,
 				mockProductBatches.ProductId,
 				mockProductBatches.SectionId,
@@ -670,6 +682,115 @@ func TestGetProductBatchesById(t *testing.T) {
 		productsRepo := NewMariaDBRepository(db)
 
 		_, err = productsRepo.GetProductBatchesById(context.Background(), 0)
+		assert.Error(t, err)
+	})
+}
+
+func TestGetQtdProductsBySectionId(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mockQtdOfProducts := utils.CreateRandomQtdOfProducts()
+
+		rows := sqlmock.NewRows(rowsQtdOfProducts).AddRow(
+			mockQtdOfProducts.SectionId,
+			mockQtdOfProducts.SectionNumber,
+			mockQtdOfProducts.ProductsCount,
+		)
+
+		mock.ExpectQuery(queryGetQtdProductsBySectionId).WillReturnRows(rows)
+
+		productsRepo := NewMariaDBRepository(db)
+
+		result, err := productsRepo.GetQtdProductsBySectionId(context.Background(), 0)
+		assert.NoError(t, err)
+
+		assert.Equal(t, result, &mockQtdOfProducts)
+	})
+
+	t.Run("fail to scan qtd Of reports", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		rows := sqlmock.NewRows(rowsQtdOfProducts).AddRow("", "", "")
+
+		mock.ExpectQuery(queryGetQtdProductsBySectionId).WillReturnRows(rows)
+
+		productsRepo := NewMariaDBRepository(db)
+
+		_, err = productsRepo.GetQtdProductsBySectionId(context.Background(), 1)
+		assert.Error(t, err)
+	})
+
+	t.Run("fail to select qtd Of reports", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mock.ExpectQuery(queryGetQtdProductsBySectionId).WillReturnError(sql.ErrNoRows)
+
+		productsRepo := NewMariaDBRepository(db)
+
+		_, err = productsRepo.GetQtdProductsBySectionId(context.Background(), 0)
+		assert.Error(t, err)
+	})
+}
+
+func TestGetQtdProductsInSection(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mockQtdProductsInSection := utils.CreateRandomListQtdOfProducts()
+
+		rows := sqlmock.NewRows(rowsQtyOfRecordsStruct)
+		for _, mockQtyOfAllReport := range mockQtdProductsInSection {
+			rows.AddRow(
+				mockQtyOfAllReport.SectionId,
+				mockQtyOfAllReport.SectionNumber,
+				mockQtyOfAllReport.ProductsCount,
+			)
+		}
+
+		mock.ExpectQuery(queryGetQtdProductsInSection).WillReturnRows(rows)
+
+		productsRepo := NewMariaDBRepository(db)
+
+		result, err := productsRepo.GetQtdOfAllProducts(context.Background())
+		assert.NoError(t, err)
+
+		assert.Equal(t, result, &mockQtdProductsInSection)
+	})
+
+	t.Run("fail to scan qtd of all reports", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		rows := sqlmock.NewRows(rowsQtdOfProducts).AddRow("", "", "")
+
+		mock.ExpectQuery(queryGetQtdProductsInSection).WillReturnRows(rows)
+
+		productsRepo := NewMariaDBRepository(db)
+
+		_, err = productsRepo.GetQtdOfAllProducts(context.Background())
+		assert.Error(t, err)
+	})
+
+	t.Run("fail to select qtd of all reports", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
+		mock.ExpectQuery(queryGetQtdProductsInSection).WillReturnError(sql.ErrNoRows)
+
+		productsRepo := NewMariaDBRepository(db)
+
+		_, err = productsRepo.GetQtdOfAllProducts(context.Background())
 		assert.Error(t, err)
 	})
 }
