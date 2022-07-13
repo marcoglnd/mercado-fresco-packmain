@@ -1,10 +1,6 @@
 package controller
 
 import (
-	// "encoding/json"
-	// "net/http"
-	// "net/http/httptest"
-	// "testing"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -14,8 +10,6 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	// "github.com/marcoglnd/mercado-fresco-packmain/cmd/server/controllers"
-	// "github.com/marcoglnd/mercado-fresco-packmain/internal/sections"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/sections/domain"
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/sections/domain/mocks"
 	"github.com/marcoglnd/mercado-fresco-packmain/utils"

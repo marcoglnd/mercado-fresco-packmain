@@ -1,6 +1,5 @@
 package sellers
 
-// Modelo de sellers
 type Seller struct {
 	ID           int    `json:"id"`
 	Cid          int    `json:"cid"`

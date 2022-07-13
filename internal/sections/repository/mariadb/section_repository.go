@@ -8,8 +8,6 @@ import (
 	"github.com/marcoglnd/mercado-fresco-packmain/internal/sections/domain"
 )
 
-// var sectionList []Section = []Section{}
-
 type repository struct{ db *sql.DB }
 
 func NewMariaDBRepository(db *sql.DB) domain.Repository {

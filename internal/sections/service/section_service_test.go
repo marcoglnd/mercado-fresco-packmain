@@ -20,16 +20,7 @@ func TestCreateNewSection(t *testing.T) {
 		mockSectionRepo.On("Create",
 			mock.Anything,
 			mock.Anything,
-			// mock.Anything,
-			// mock.Anything,
-			// mock.Anything,
-			// mock.Anything,
-			// mock.Anything,
-			// mock.Anything,
-			// mock.Anything,
 		).Return(&mockSection, nil).Once()
-
-		// mockSectionRepo.On("GetBySectionNumber", mock.Anything, mock.Anything).Return(nil, nil)
 
 		s := NewService(mockSectionRepo)
 
@@ -48,8 +39,6 @@ func TestCreateNewSection(t *testing.T) {
 		mockSectionRepo.On("Create",
 			mock.Anything,
 			mock.Anything,
-			// mock.Anything,
-			// mock.Anything,
 		).Return(&domain.Section{}, errors.New("failed to create buyer")).Once()
 
 		s := NewService(mockSectionRepo)

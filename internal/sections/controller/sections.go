@@ -53,8 +53,6 @@ func (c *SectionsController) GetAll() gin.HandlerFunc {
 // @Router /sections/{id} [get]
 func (c *SectionsController) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		// sectionId, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
-
 		var req domain.RequestSectionId
 		if err := ctx.ShouldBindUri(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
@@ -66,22 +64,6 @@ func (c *SectionsController) GetById() gin.HandlerFunc {
 			return
 		}
 		ctx.JSON(http.StatusOK, section)
-
-		// vraw
-		// sectionId, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
-		// if err != nil {
-		// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
-		// 	return
-		// }
-		// b, err := c.service.GetById(ctx, sectionId)
-		// if err != nil {
-		// 	ctx.JSON(http.StatusNotFound, gin.H{
-		// 		"error": err.Error(),
-		// 	})
-		// 	return
-		// }
-		// ctx.JSON(http.StatusOK, b)
-		// vraw
 	}
 }
 
@@ -120,25 +102,6 @@ func (c *SectionsController) Create() gin.HandlerFunc {
 			return
 		}
 		ctx.JSON(http.StatusCreated, section)
-
-		// vraw
-		// if err := ctx.ShouldBindJSON(&req); err != nil {
-		// 	ctx.JSON(http.StatusUnprocessableEntity, gin.H{
-		// 		"error": err.Error(),
-		// 	})
-		// 	return
-		// }
-		// b, err := c.service.Create(
-		// 	ctx,
-		// 	req.SectionNumber, req.CurrentTemperature,
-		// 	req.MinimumTemperature, req.CurrentCapacity, req.MinimumCapacity, req.MaximumCapacity,
-		// 	req.WarehouseId, req.ProductTypeId)
-		// if err != nil {
-		// 	ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
-		// 	return
-		// }
-		// ctx.JSON(http.StatusCreated, b)
-		// vraw
 	}
 }
 
@@ -186,32 +149,6 @@ func (c *SectionsController) Update() gin.HandlerFunc {
 			return
 		}
 		ctx.JSON(http.StatusOK, section)
-
-		// vraw
-		// id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
-		// if err != nil {
-		// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
-		// 	return
-		// }
-
-		// var req requestSection
-		// if err := ctx.ShouldBindJSON(&req); err != nil {
-		// 	ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		// 	return
-		// }
-
-		// b, err := c.service.Update(
-		// 	ctx,
-		// 	int(id),
-		// 	req.SectionNumber, req.CurrentTemperature,
-		// 	req.MinimumTemperature, req.CurrentCapacity, req.MinimumCapacity, req.MaximumCapacity,
-		// 	req.WarehouseId, req.ProductTypeId)
-		// if err != nil {
-		// 	ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		// 	return
-		// }
-		// ctx.JSON(http.StatusOK, b)
-		// vraw
 	}
 }
 
@@ -239,32 +176,5 @@ func (c *SectionsController) Delete() gin.HandlerFunc {
 		}
 
 		ctx.JSON(http.StatusNoContent, gin.H{"data": fmt.Sprintf("A section %d foi removida", req.ID)})
-
-		// vraw
-		// id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
-		// if err != nil {
-		// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
-		// 	return
-		// }
-		// err = c.service.Delete(ctx, int(id))
-		// if err != nil {
-		// 	ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		// 	return
-		// }
-		// ctx.JSON(http.StatusNoContent, gin.H{"data": fmt.Sprintf("A section %d foi removido", id)})
-		// vraw
 	}
 }
-
-// vraw
-// type requestSection struct {
-// 	SectionNumber      int64 `json:"section_number" binding:"required"`
-// 	CurrentTemperature int64 `json:"current_temperature" binding:"required"`
-// 	MinimumTemperature int64 `json:"minimum_temperature" binding:"required"`
-// 	CurrentCapacity    int64 `json:"current_capacity" binding:"required"`
-// 	MinimumCapacity    int64 `json:"minimum_capacity" binding:"required"`
-// 	MaximumCapacity    int64 `json:"maximum_capacity" binding:"required"`
-// 	WarehouseId        int64 `json:"warehouse_id" binding:"required"`
-// 	ProductTypeId      int64 `json:"product_type_id" binding:"required"`
-// }
-// vraw

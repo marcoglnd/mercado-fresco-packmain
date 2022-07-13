@@ -113,15 +113,6 @@ type QtyOfRecords struct {
 	RecordsCount int64  `json:"records_count"`
 }
 
-// type RequestProductBatches struct {
-// 	BatchNumber        int64   `json:"batch_number"`
-// 	CurrentQuantity    int64   `json:"current_quantity"`
-// 	CurrentTemperature float64 `json:"current_temperature"`
-// 	InitialQuantity    int64   `json:"initial_quantity"`
-// 	MinumumTemperature float64 `json:"minumum_temperature"`
-// 	ProductId          int64   `json:"product_id"`
-// 	SectionId          int64   `json:"section_id"`
-// }
 type RequestProductBatches struct {
 	BatchNumber        int64   `json:"batch_number" binding:"required"`
 	CurrentQuantity    int64   `json:"current_quantity" binding:"required"`
