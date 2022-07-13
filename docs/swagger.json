@@ -16,74 +16,6 @@
     },
     "host": "localhost:8080",
     "paths": {
-        "/buyer/{id}": {
-            "get": {
-                "description": "get buyer by it's id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Buyers"
-                ],
-                "summary": "Buyer by id",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Buyer ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/domain.Buyer"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
         "/buyers": {
             "get": {
                 "description": "get all buyers",
@@ -274,6 +206,72 @@
             }
         },
         "/buyers/{id}": {
+            "get": {
+                "description": "get buyer by it's id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Buyers"
+                ],
+                "summary": "Buyer by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Buyer ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Buyer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schemas.JSONBadReqResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
             "delete": {
                 "description": "Delete existing buyer in list",
                 "consumes": [
@@ -2027,6 +2025,17 @@
                     "Purchase Orders"
                 ],
                 "summary": "Create purchase order",
+                "parameters": [
+                    {
+                        "description": "Purchase Order to create",
+                        "name": "purchaseOrder",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.PurchaseOrderRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -3582,6 +3591,41 @@
                     "type": "integer"
                 },
                 "id": {
+                    "type": "integer"
+                },
+                "order_date": {
+                    "type": "string"
+                },
+                "order_number": {
+                    "type": "string"
+                },
+                "order_status_id": {
+                    "type": "integer"
+                },
+                "tracking_code": {
+                    "type": "string"
+                },
+                "warehouse_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "domain.PurchaseOrderRequest": {
+            "type": "object",
+            "required": [
+                "buyer_id",
+                "carrier_id",
+                "order_date",
+                "order_number",
+                "order_status_id",
+                "tracking_code",
+                "warehouse_id"
+            ],
+            "properties": {
+                "buyer_id": {
+                    "type": "integer"
+                },
+                "carrier_id": {
                     "type": "integer"
                 },
                 "order_date": {

@@ -58,7 +58,7 @@ CREATE TABLE `employees` (
 
 CREATE TABLE `buyers` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `card_number_id` int NOT NULL UNIQUE,
+  `card_number_id` VARCHAR(255) NOT NULL UNIQUE,
   `first_name` VARCHAR(255) NOT NULL,
   `last_name` VARCHAR(255) NOT NULL
 );
@@ -106,7 +106,7 @@ CREATE TABLE `purchase_orders` (
     `buyer_id` INT NOT NULL,
     `carrier_id` INT NOT NULL,
     `order_status_id` INT NOT NULL,
-    `wareHouse_id` INT NOT NULL
+    `warehouse_id` INT NOT NULL
 );
 
 CREATE TABLE `order_status` (
@@ -155,7 +155,7 @@ CREATE TABLE `products_types` (
 
 CREATE TABLE `product_records` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
-    `last_update_date` DATETIME(6) NOT NULL DEFAULT NOW(),
+    `last_update_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `purchase_price` DECIMAL(19,2) NOT NULL,
     `sale_price` DECIMAL(19,2) NOT NULL,
     `product_id` INT NOT NULL,
