@@ -41,8 +41,8 @@ func NewEmployeeController(service domain.EmployeeService) (*EmployeeController,
 // @Description get all employees
 // @Accept json
 // @Produce json
-// @Success 200 {object} schemes.JSONSuccessResult{data=domain.Employee}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Success 200 {object} schemas.JSONSuccessResult{data=domain.Employee}
+// @Failure 500 {object} schemas.JSONBadReqResult{error=string}
 // @Router /employees [get]
 func (c EmployeeController) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -64,8 +64,8 @@ func (c EmployeeController) GetAll() gin.HandlerFunc {
 // @Produce json
 // @Param id path int true "Employee ID"
 // @Success 200 {object} domain.Employee
-// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /employees/{id} [get]
 func (c EmployeeController) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -92,8 +92,8 @@ func (c EmployeeController) GetById() gin.HandlerFunc {
 // @Produce json
 // @Param employee body requestEmployee true "Employee to create"
 // @Success 201 {object} domain.Employee
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 409 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemas.JSONBadReqResult{error=string}
 // @Router /employees [post]
 func (c EmployeeController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -127,8 +127,8 @@ func (c EmployeeController) Create() gin.HandlerFunc {
 // @Param id path int true "Employee ID"
 // @Param employee body requestEmployee true "Employee to update"
 // @Success 200 {object} domain.Employee
-// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /employees/{id} [patch]
 func (c EmployeeController) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -167,9 +167,9 @@ func (c EmployeeController) Update() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Employee ID"
-// @Success 204 {object} schemes.JSONSuccessResult{data=string}
-// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Success 204 {object} schemas.JSONSuccessResult{data=string}
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /employees/{id} [delete]
 func (c EmployeeController) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -197,8 +197,8 @@ func (c EmployeeController) Delete() gin.HandlerFunc {
 // @Produce json
 // @Param id query int true "employee ID"
 // @Success 200 {object} domain.InboundOrder
-// @Failure 500 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 500 {object} schemas.JSONBadReqResult{error=string}
 // @Router /employees/reportInboundOrders [get]
 func (c EmployeeController) ReportInboundOrders() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
