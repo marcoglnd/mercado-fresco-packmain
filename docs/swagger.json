@@ -663,7 +663,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.InboundOrderE"
+                            "$ref": "#/definitions/domain.InboundOrderResponse"
                         }
                     },
                     "404": {
@@ -3460,7 +3460,7 @@
                 }
             }
         },
-        "domain.InboundOrderE": {
+        "domain.InboundOrderResponse": {
             "type": "object",
             "properties": {
                 "card_number_id": {

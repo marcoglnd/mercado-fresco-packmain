@@ -151,8 +151,8 @@ func (m mariadbRepository) Delete(ctx context.Context, id int64) error {
 	return nil
 }
 
-func (m mariadbRepository) ReportAllInboundOrders(ctx context.Context) (*[]domain.InboundOrderE, error) {
-	var inboundOrders = []domain.InboundOrderE{}
+func (m mariadbRepository) ReportAllInboundOrders(ctx context.Context) (*[]domain.InboundOrderResponse, error) {
+	var inboundOrders = []domain.InboundOrderResponse{}
 
 	rows, err := m.db.QueryContext(ctx, sqlAllInboundOrdersCount)
 
@@ -161,7 +161,7 @@ func (m mariadbRepository) ReportAllInboundOrders(ctx context.Context) (*[]domai
 	}
 
 	for rows.Next() {
-		var inboundOrder = domain.InboundOrderE{}
+		var inboundOrder = domain.InboundOrderResponse{}
 
 		if err := rows.Scan(
 			&inboundOrder.ID,
@@ -180,8 +180,8 @@ func (m mariadbRepository) ReportAllInboundOrders(ctx context.Context) (*[]domai
 	return &inboundOrders, nil
 }
 
-func (m mariadbRepository) ReportInboundOrders(ctx context.Context, employeeId int64) (*domain.InboundOrderE, error) {
-	var inboundOrder = domain.InboundOrderE{}
+func (m mariadbRepository) ReportInboundOrders(ctx context.Context, employeeId int64) (*domain.InboundOrderResponse, error) {
+	var inboundOrder = domain.InboundOrderResponse{}
 
 	row := m.db.QueryRowContext(ctx, sqlInboundOrdersCountByEmployeeId, employeeId)
 

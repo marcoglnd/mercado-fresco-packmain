@@ -207,7 +207,7 @@ definitions:
       warehouse_id:
         type: integer
     type: object
-  domain.InboundOrderE:
+  domain.InboundOrderResponse:
     properties:
       card_number_id:
         type: string
@@ -1044,7 +1044,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.InboundOrderE'
+            $ref: '#/definitions/domain.InboundOrderResponse'
         "404":
           description: Not Found
           schema:
