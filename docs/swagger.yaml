@@ -207,7 +207,7 @@ definitions:
       warehouse_id:
         type: integer
     type: object
-  domain.InboundOrderE:
+  domain.InboundOrderResponse:
     properties:
       card_number_id:
         type: string
@@ -311,6 +311,31 @@ definitions:
     - tracking_code
     - warehouse_id
     type: object
+  domain.PurchaseOrderRequest:
+    properties:
+      buyer_id:
+        type: integer
+      carrier_id:
+        type: integer
+      order_date:
+        type: string
+      order_number:
+        type: string
+      order_status_id:
+        type: integer
+      tracking_code:
+        type: string
+      warehouse_id:
+        type: integer
+    required:
+    - buyer_id
+    - carrier_id
+    - order_date
+    - order_number
+    - order_status_id
+    - tracking_code
+    - warehouse_id
+    type: object
   domain.PurchaseOrdersResponse:
     properties:
       card_number_id:
@@ -397,6 +422,43 @@ definitions:
     - product_id
     - purchase_price
     - sale_price
+    type: object
+  domain.RequestProducts:
+    properties:
+      description:
+        type: string
+      expiration_rate:
+        type: integer
+      freezing_rate:
+        type: integer
+      height:
+        type: number
+      length:
+        type: number
+      net_weight:
+        type: number
+      product_code:
+        type: string
+      product_type_id:
+        type: integer
+      recommended_freezing_temperature:
+        type: number
+      seller_id:
+        type: integer
+      width:
+        type: number
+    required:
+    - description
+    - expiration_rate
+    - freezing_rate
+    - height
+    - length
+    - net_weight
+    - product_code
+    - product_type_id
+    - recommended_freezing_temperature
+    - seller_id
+    - width
     type: object
   domain.RequestProductsUpdated:
     properties:
@@ -550,45 +612,6 @@ info:
   title: MERCADO FRESCOS
   version: "1.0"
 paths:
-  /buyer/{id}:
-    get:
-      consumes:
-      - application/json
-      description: get buyer by it's id
-      parameters:
-      - description: Buyer ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/domain.Buyer'
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemas.JSONBadReqResult'
-            - properties:
-                error:
-                  type: string
-              type: object
-        "404":
-          description: Not Found
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemas.JSONBadReqResult'
-            - properties:
-                error:
-                  type: string
-              type: object
-      summary: Buyer by id
-      tags:
-      - Buyers
   /buyers:
     get:
       consumes:
@@ -701,6 +724,44 @@ paths:
       summary: Delete buyer
       tags:
       - Buyers
+    get:
+      consumes:
+      - application/json
+      description: get buyer by it's id
+      parameters:
+      - description: Buyer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Buyer'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Buyer by id
+      tags:
+      - Buyers
     patch:
       consumes:
       - application/json
@@ -763,7 +824,6 @@ paths:
       - description: buyer ID
         in: query
         name: id
-        required: true
         type: integer
       produces:
       - application/json
@@ -1036,7 +1096,6 @@ paths:
       - description: employee ID
         in: query
         name: id
-        required: true
         type: integer
       produces:
       - application/json
@@ -1044,7 +1103,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.InboundOrderE'
+            $ref: '#/definitions/domain.InboundOrderResponse'
         "404":
           description: Not Found
           schema:
@@ -1422,7 +1481,7 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/domain.RequestProductsUpdated'
+          $ref: '#/definitions/domain.RequestProducts'
       produces:
       - application/json
       responses:
@@ -1595,7 +1654,6 @@ paths:
       - description: section ID
         in: query
         name: id
-        required: true
         type: integer
       produces:
       - application/json
@@ -1634,7 +1692,6 @@ paths:
       - description: records ID
         in: query
         name: id
-        required: true
         type: integer
       produces:
       - application/json
@@ -1674,6 +1731,13 @@ paths:
       consumes:
       - application/json
       description: Create a new purchase order
+      parameters:
+      - description: Purchase Order to create
+        in: body
+        name: purchaseOrder
+        required: true
+        schema:
+          $ref: '#/definitions/domain.PurchaseOrderRequest'
       produces:
       - application/json
       responses:
@@ -1984,11 +2048,6 @@ paths:
         name: id
         required: true
         type: integer
-      - description: token
-        in: header
-        name: token
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -2070,11 +2129,6 @@ paths:
         name: id
         required: true
         type: integer
-      - description: token
-        in: header
-        name: token
-        required: true
-        type: string
       - description: Seller to update
         in: body
         name: seller

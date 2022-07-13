@@ -72,7 +72,7 @@ func (c *Controller) GetById() gin.HandlerFunc {
 // @Description Add a new product to the list
 // @Accept json
 // @Produce json
-// @Param product body domain.RequestProductsUpdated true "Product to create"
+// @Param product body domain.RequestProducts true "Product to create"
 // @Success 201 {object} domain.Product
 // @Failure 409 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemas.JSONBadReqResult{error=string}
@@ -233,7 +233,7 @@ func (c *Controller) CreateProductRecords() gin.HandlerFunc {
 // @Description Get quantity of product records
 // @Accept json
 // @Produce json
-// @Param id query int true "records ID"
+// @Param id query int false "records ID"
 // @Success 201 {object} schemas.JSONSuccessResult{data=domain.QtyOfRecords}
 // @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 500 {object} schemas.JSONBadReqResult{error=string}
@@ -313,7 +313,7 @@ func (c *Controller) CreateProductBatches() gin.HandlerFunc {
 // @Description Get quantity of product in sections
 // @Accept json
 // @Produce json
-// @Param id query int true "section ID"
+// @Param id query int false "section ID"
 // @Success 200 {object} domain.ProductRecords
 // @Failure 400 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemas.JSONBadReqResult{error=string}

@@ -195,8 +195,8 @@ func (c EmployeeController) Delete() gin.HandlerFunc {
 // @Description Get quantity of inbound orders
 // @Accept json
 // @Produce json
-// @Param id query int true "employee ID"
-// @Success 200 {object} domain.InboundOrderE
+// @Param id query int false "employee ID"
+// @Success 200 {object} domain.InboundOrderResponse
 // @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 500 {object} schemas.JSONBadReqResult{error=string}
 // @Router /employees/reportInboundOrders [get]
