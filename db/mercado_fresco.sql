@@ -125,7 +125,7 @@ CREATE TABLE `carriers` (
 
 CREATE TABLE `inbound_orders` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
-    `order_date` DATETIME(6),
+    `order_date` DATETIME(6) NOT NULL,
     `order_number` VARCHAR(255) NOT NULL UNIQUE,
     `employee_id` INT NOT NULL,
     `product_batch_id` INT NOT NULL,
