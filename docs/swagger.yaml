@@ -1984,11 +1984,6 @@ paths:
         name: id
         required: true
         type: integer
-      - description: token
-        in: header
-        name: token
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -2070,11 +2065,6 @@ paths:
         name: id
         required: true
         type: integer
-      - description: token
-        in: header
-        name: token
-        required: true
-        type: string
       - description: Seller to update
         in: body
         name: seller

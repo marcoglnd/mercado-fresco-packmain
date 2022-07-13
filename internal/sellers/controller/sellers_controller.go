@@ -175,7 +175,6 @@ type requestUpdate struct {
 // @Accept json
 // @Produce json
 // @Param id path int true "Seller ID"
-// @Param token header string true "token"
 // @Param seller body requestUpdate true "Seller to update"
 // @Success 200 {object} domain.Seller
 // @Failure 400 {object} schemas.JSONBadReqResult{error=string}
@@ -225,7 +224,6 @@ func (c *SellerController) Update() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Seller ID"
-// @Param token header string true "token"
 // @Success 204 {object} schemas.JSONSuccessResult{data=string}
 // @Failure 400 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemas.JSONBadReqResult{error=string}
