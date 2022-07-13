@@ -266,9 +266,9 @@ func (c *Controller) GetQtyOfRecords() gin.HandlerFunc {
 // @Produce json
 // @Param product body domain.RequestProductBatches true "Product Batche to create"
 // @Success 201 {object} domain.ProductBatches
-// @Failure 409 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 500 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 409 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 500 {object} schemas.JSONBadReqResult{error=string}
 // @Router /productBatches [post]
 func (c *Controller) CreateProductBatches() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -315,8 +315,8 @@ func (c *Controller) CreateProductBatches() gin.HandlerFunc {
 // @Produce json
 // @Param id query int true "section ID"
 // @Success 200 {object} domain.ProductReports
-// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /products/reportProducts [get]
 func (c *Controller) GetQtdProductsBySectionId() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
