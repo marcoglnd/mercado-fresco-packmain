@@ -1096,7 +1096,6 @@ paths:
       - description: employee ID
         in: query
         name: id
-        required: true
         type: integer
       produces:
       - application/json
