@@ -72,8 +72,8 @@ func (c *SectionsController) GetById() gin.HandlerFunc {
 // @Description Add a new section to the list
 // @Accept json
 // @Produce json
-// @Param section body requestSection true "Section to create"
-// @Success 201 {object} schemas.Section
+// @Param section body domain.RequestSections true "Section to create"
+// @Success 201 {object} domain.Section
 // @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sections [post]
@@ -111,8 +111,8 @@ func (c *SectionsController) Create() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Section ID"
-// @Param section body requestSection true "Section to update"
-// @Success 200 {object} schemas.Section
+// @Param section body domain.RequestSections true "Section to update"
+// @Success 200 {object} domain.Section
 // @Failure 400 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sections/{id} [patch]

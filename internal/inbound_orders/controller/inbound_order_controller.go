@@ -55,7 +55,7 @@ func (c InboundOrderController) GetAll() gin.HandlerFunc {
 // @Description Add a new inbound order to the list
 // @Accept json
 // @Produce json
-// @Param inbound order body requestInboundOrder true "Inbound Order to create"
+// @Param inbound order body requestInboundOrderCreate true "Inbound Order to create"
 // @Success 201 {object} domain.InboundOrder
 // @Failure 409 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemas.JSONBadReqResult{error=string}
