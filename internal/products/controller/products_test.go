@@ -616,9 +616,9 @@ func TestGetQtyOfRecords(t *testing.T) {
 
 		_, engine := gin.CreateTestContext(rec)
 
-		localityController := Controller{service: productsServiceMock}
+		productController := Controller{service: productsServiceMock}
 
-		engine.GET("/api/v1/products/reportRecords", localityController.GetQtyOfRecords())
+		engine.GET("/api/v1/products/reportRecords", productController.GetQtyOfRecords())
 
 		engine.ServeHTTP(rec, req)
 
@@ -644,9 +644,9 @@ func TestGetQtyOfRecords(t *testing.T) {
 
 		_, engine := gin.CreateTestContext(rec)
 
-		localityController := Controller{service: productsServiceMock}
+		productController := Controller{service: productsServiceMock}
 
-		engine.GET("/api/v1/products/reportRecords", localityController.GetQtyOfRecords())
+		engine.GET("/api/v1/products/reportRecords", productController.GetQtyOfRecords())
 
 		engine.ServeHTTP(rec, req)
 
@@ -669,9 +669,9 @@ func TestGetQtyOfRecords(t *testing.T) {
 
 		_, engine := gin.CreateTestContext(rec)
 
-		localityController := Controller{service: productsServiceMock}
+		productController := Controller{service: productsServiceMock}
 
-		engine.GET("/api/v1/products/reportRecords", localityController.GetQtyOfRecords())
+		engine.GET("/api/v1/products/reportRecords", productController.GetQtyOfRecords())
 
 		engine.ServeHTTP(rec, req)
 
