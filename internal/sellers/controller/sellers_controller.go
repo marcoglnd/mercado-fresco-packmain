@@ -30,7 +30,7 @@ func NewSellerController(service domain.SellerService) (*SellerController, error
 // @Description get all sellers
 // @Accept json
 // @Produce json
-// @Success 200 {object} schemas.JSONSuccessResult{data=schemas.Seller}
+// @Success 200 {object} schemas.JSONSuccessResult{data=domain.Seller}
 // @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sellers [get]
 func (c SellerController) GetAll() gin.HandlerFunc {
@@ -54,7 +54,7 @@ func (c SellerController) GetAll() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Seller ID"
-// @Success 200 {object} schemas.Seller
+// @Success 200 {object} domain.Seller
 // @Failure 400 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sellers/{id} [get]
@@ -95,8 +95,8 @@ type requestCreate struct {
 // @Description Add a new Seller to the list
 // @Accept json
 // @Produce json
-// @Param Seller body requestSellers true "seller to create"
-// @Success 201 {object} schemas.Seller
+// @Param Seller body requestCreate true "seller to create"
+// @Success 201 {object} domain.Seller
 // @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sellers [post]
@@ -176,8 +176,8 @@ type requestUpdate struct {
 // @Produce json
 // @Param id path int true "Seller ID"
 // @Param token header string true "token"
-// @Param seller body requestSellers true "Seller to update"
-// @Success 200 {object} schemas.Seller
+// @Param seller body requestUpdate true "Seller to update"
+// @Success 200 {object} domain.Seller
 // @Failure 400 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sellers/{id} [patch]

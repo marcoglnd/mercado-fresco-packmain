@@ -314,7 +314,7 @@ func (c *Controller) CreateProductBatches() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id query int true "section ID"
-// @Success 200 {object} domain.ProductReports
+// @Success 200 {object} domain.ProductRecords
 // @Failure 400 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /products/reportProducts [get]
