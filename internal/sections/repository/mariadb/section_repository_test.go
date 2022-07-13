@@ -132,9 +132,9 @@ func TestGetAll(t *testing.T) {
 
 		mock.ExpectQuery(queryGetAllSections).WillReturnError(sql.ErrNoRows)
 
-		productsRepo := NewMariaDBRepository(db)
+		sectionsRepo := NewMariaDBRepository(db)
 
-		_, err = productsRepo.GetAll(context.Background())
+		_, err = sectionsRepo.GetAll(context.Background())
 		assert.Error(t, err)
 	})
 }
