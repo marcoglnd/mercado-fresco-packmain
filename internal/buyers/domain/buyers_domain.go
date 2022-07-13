@@ -11,6 +11,12 @@ type Buyer struct {
 	LastName     string `json:"last_name"`
 }
 
+type RequestBuyer struct {
+	CardNumberID string `json:"card_number_id"`
+	FirstName    string `json:"first_name"`
+	LastName     string `json:"last_name"`
+}
+
 type PurchaseOrdersResponse struct {
 	ID                  int64  `json:"id"`
 	CardNumberID        string `json:"card_number_id"`

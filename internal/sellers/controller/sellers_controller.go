@@ -30,9 +30,8 @@ func NewSellerController(service domain.SellerService) (*SellerController, error
 // @Description get all sellers
 // @Accept json
 // @Produce json
-// @Param token header string true "token"
-// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Seller}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Success 200 {object} schemas.JSONSuccessResult{data=domain.Seller}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sellers [get]
 func (c SellerController) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -55,10 +54,9 @@ func (c SellerController) GetAll() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Seller ID"
-// @Param token header string true "token"
-// @Success 200 {object} schemes.Seller
-// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Success 200 {object} domain.Seller
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sellers/{id} [get]
 func (c SellerController) GetByID() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -97,11 +95,10 @@ type requestCreate struct {
 // @Description Add a new Seller to the list
 // @Accept json
 // @Produce json
-// @Param token header string true "token"
-// @Param Seller body requestSellers true "seller to create"
-// @Success 201 {object} schemes.Seller
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
+// @Param Seller body requestCreate true "seller to create"
+// @Success 201 {object} domain.Seller
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sellers [post]
 func (c SellerController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -179,10 +176,10 @@ type requestUpdate struct {
 // @Produce json
 // @Param id path int true "Seller ID"
 // @Param token header string true "token"
-// @Param seller body requestSellers true "Seller to update"
-// @Success 200 {object} schemes.Seller
-// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Param seller body requestUpdate true "Seller to update"
+// @Success 200 {object} domain.Seller
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sellers/{id} [patch]
 func (c *SellerController) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -229,9 +226,9 @@ func (c *SellerController) Update() gin.HandlerFunc {
 // @Produce json
 // @Param id path int true "Seller ID"
 // @Param token header string true "token"
-// @Success 204 {object} schemes.JSONSuccessResult{data=string}
-// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Success 204 {object} schemas.JSONSuccessResult{data=string}
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sellers/{id} [delete]
 func (c *SellerController) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -255,70 +252,3 @@ func (c *SellerController) Delete() gin.HandlerFunc {
 		ctx.JSON(http.StatusNoContent, nil)
 	}
 }
-
-// type requestCreateLocality struct {
-// 	LocalityName string `json:"locality_name" binding:"required"`
-// 	ProvinceID   int64  `json:"province_id" binding:"required"`
-// }
-
-// func (c *SellerController) CreateLocality() gin.HandlerFunc {
-// 	return func(ctx *gin.Context) {
-// 		var req requestCreateLocality
-// 		if err := ctx.ShouldBindJSON(&req); err != nil {
-// 			ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid inputs"})
-// 			return
-// 		}
-// 		localId, err := c.service.CreateLocality(
-// 			ctx.Request.Context(),
-// 			&domain.Locality{
-// 				LocalityName: req.LocalityName,
-// 				ProvinceID:   req.ProvinceID,
-// 			},
-// 		)
-// 		if err != nil {
-// 			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
-// 			return
-// 		}
-// 		if err != nil {
-// 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-// 			return
-// 		}
-
-// 		locality, err := c.service.GetLocalityByID(ctx, localId)
-// 		if err != nil {
-// 			ctx.JSON(http.StatusInternalServerError, gin.H{
-// 				"message": err.Error(),
-// 			})
-// 			return
-// 		}
-
-// 		ctx.JSON(http.StatusCreated, locality)
-// 	}
-// }
-
-// func (c SellerController) GetAllQtyOfSellers() gin.HandlerFunc {
-// 	return func(ctx *gin.Context) {
-
-// 		strId := ctx.Query("id")
-// 		intId, _ := strconv.ParseInt(strId, 10, 64)
-// 		if intId == 0 {
-// 			listsOfSellers, err := c.service.GetAllQtyOfSellers(ctx)
-// 			if err != nil {
-// 				ctx.JSON(http.StatusInternalServerError, gin.H{
-// 					"message": err.Error(),
-// 				})
-// 				return
-// 			}
-// 			ctx.JSON(http.StatusOK, listsOfSellers)
-// 		}
-
-// 		sellersByLocality, err := c.service.GetQtyOfSellersByLocalityId(ctx, intId)
-// 		if err != nil {
-// 			ctx.JSON(http.StatusNotFound, gin.H{
-// 				"message": err.Error(),
-// 			})
-// 			return
-// 		}
-// 		ctx.JSON(http.StatusOK, sellersByLocality)
-// 	}
-// }

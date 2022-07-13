@@ -21,9 +21,10 @@ func NewWarehouseController(ws domain.WarehouseService) *WarehouseController {
 // @Description Add a new warehouse checking for duplicate warehouses code before
 // @Accept json
 // @Produce json
-// @Param warehouse body warehouses.CreateWarehouseInput true "Warehouse to create"
-// @Success 201 {object} warehouses.Warehouse
-// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
+// @Param warehouse body domain.CreateWarehouseInput true "Warehouse to create"
+// @Success 201 {object} domain.Warehouse
+// @Failure 422 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 409 {object} schemas.JSONBadReqResult{error=string}
 // @Router /warehouses [post]
 func (wc *WarehouseController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -73,8 +74,8 @@ func (wc *WarehouseController) Create() gin.HandlerFunc {
 // @Description get all warehouses
 // @Accept json
 // @Produce json
-// @Success 200 {object} schemes.JSONSuccessResult{data=warehouses.Warehouse}
-// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
+// @Success 200 {object} schemas.JSONSuccessResult{data=[]domain.Warehouse}
+// @Failure 422 {object} schemas.JSONBadReqResult{error=string}
 // @Router /warehouses [get]
 func (wc *WarehouseController) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -102,9 +103,9 @@ func (wc *WarehouseController) GetAll() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Warehouse ID"
-// @Success 200 {object} warehouses.Warehouse
-// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Success 200 {object} domain.Warehouse
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /warehouses/{id} [get]
 func (wc *WarehouseController) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -137,11 +138,11 @@ func (wc *WarehouseController) GetById() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Warehouse ID"
-// @Param warehouse body warehouses.UpdateWarehouseInput true "Warehouse to update"
-// @Success 200 {object} warehouses.Warehouse
-// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Param warehouse body domain.UpdateWarehouseInput true "Warehouse to update"
+// @Success 200 {object} domain.Warehouse
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /warehouses/{id} [patch]
 func (wc *WarehouseController) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -200,9 +201,9 @@ func (wc *WarehouseController) Update() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "warehouse ID"
-// @Success 204 {object} schemes.JSONSuccessResult{data=string}
-// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Success 204 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /warehouses/{id} [delete]
 func (wc *WarehouseController) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {

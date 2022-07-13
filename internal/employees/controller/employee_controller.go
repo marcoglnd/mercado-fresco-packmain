@@ -90,7 +90,7 @@ func (c EmployeeController) GetById() gin.HandlerFunc {
 // @Description Add a new employee to the list
 // @Accept json
 // @Produce json
-// @Param employee body requestEmployee true "Employee to create"
+// @Param employee body requestEmployeeCreate true "Employee to create"
 // @Success 201 {object} domain.Employee
 // @Failure 409 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 422 {object} schemas.JSONBadReqResult{error=string}
@@ -125,7 +125,7 @@ func (c EmployeeController) Create() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Employee ID"
-// @Param employee body requestEmployee true "Employee to update"
+// @Param employee body requestEmployeeUpdate true "Employee to update"
 // @Success 200 {object} domain.Employee
 // @Failure 400 {object} schemas.JSONBadReqResult{error=string}
 // @Failure 404 {object} schemas.JSONBadReqResult{error=string}

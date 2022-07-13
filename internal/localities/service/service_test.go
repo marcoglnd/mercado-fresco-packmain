@@ -51,25 +51,6 @@ func TestCreateLocality(t *testing.T) {
 }
 
 func TestGetLocalityByID(t *testing.T) {
-	// t.Run("ok", func(t *testing.T) {
-	// 	localitiesRepositoryMock := mocks.NewLocalityRepository(t)
-	// 	mockLocality := utils.CreateRandomLocality()
-	// 	mockLocalityId := utils.RandomInt64()
-
-	// 	localitiesRepositoryMock.On("GetLocalityByID", mock.Anything, mock.AnythingOfType("int64")).
-	// 		Return(&mockLocality, nil).Once()
-
-	// 	service := NewService(localitiesRepositoryMock)
-	// 	locality, err := service.GetLocalityByID(context.Background(), mockLocalityId)
-
-	// 	assert.NoError(t, err)
-	// 	assert.NotEmpty(t, locality)
-
-	// 	assert.Equal(t, &mockLocality, locality)
-
-	// 	localitiesRepositoryMock.AssertExpectations(t)
-	// })
-
 	t.Run("In case of error", func(t *testing.T) {
 		localitiesRepositoryMock := mocks.NewLocalityRepository(t)
 		mockLocalityId := utils.RandomInt64()

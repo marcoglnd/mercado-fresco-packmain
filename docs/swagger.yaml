@@ -1,61 +1,107 @@
 definitions:
-  controllers.requestBuyer:
+  domain.Buyer:
     properties:
       card_number_id:
         type: string
       first_name:
         type: string
+      id:
+        type: integer
       last_name:
         type: string
     type: object
-  controllers.requestEmployee:
-    properties:
-      card_number_id:
-        type: string
-      first_name:
-        type: string
-      last_name:
-        type: string
-      warehouse_id:
-        type: integer
-    type: object
-  controllers.requestSection:
-    properties:
-      current_capacity:
-        type: integer
-      current_temperature:
-        type: integer
-      maximum_capacity:
-        type: integer
-      minimum_capacity:
-        type: integer
-      minimum_temperature:
-        type: integer
-      product_type_id:
-        type: integer
-      section_number:
-        type: integer
-      warehouse_id:
-        type: integer
-    required:
-    - current_capacity
-    - current_temperature
-    - maximum_capacity
-    - minimum_capacity
-    - minimum_temperature
-    - product_type_id
-    - section_number
-    - warehouse_id
-    type: object
-  controllers.requestSellers:
+  domain.Carrier:
     properties:
       address:
         type: string
       cid:
-        type: integer
+        type: string
       company_name:
         type: string
+      id:
+        type: integer
+      locality_id:
+        type: integer
       telephone:
+        type: string
+    required:
+    - address
+    - cid
+    - company_name
+    - locality_id
+    - telephone
+    type: object
+  domain.CarrierReport:
+    properties:
+      carriers_count:
+        type: integer
+      locality_id:
+        type: integer
+      locality_name:
+        type: string
+    type: object
+  domain.CreateCarrierInput:
+    properties:
+      address:
+        type: string
+      cid:
+        type: string
+      company_name:
+        type: string
+      locality_id:
+        type: integer
+      telephone:
+        type: string
+    required:
+    - address
+    - cid
+    - company_name
+    - locality_id
+    - telephone
+    type: object
+  domain.CreateWarehouseInput:
+    properties:
+      address:
+        type: string
+      minimum_capacity:
+        minimum: 1
+        type: integer
+      minimum_temperature:
+        minimum: 1
+        type: number
+      telephone:
+        type: string
+      warehouse_code:
+        type: string
+    required:
+    - address
+    - minimum_capacity
+    - minimum_temperature
+    - telephone
+    - warehouse_code
+    type: object
+  domain.Employee:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+      warehouse_id:
+        type: integer
+    type: object
+  domain.GetLocality:
+    properties:
+      ID:
+        type: integer
+      country_name:
+        type: string
+      locality_name:
+        type: string
+      province_name:
         type: string
     type: object
   domain.Product:
@@ -72,7 +118,7 @@ definitions:
         type: integer
       length:
         type: number
-      netweight:
+      net_weight:
         type: number
       product_code:
         type: string
@@ -85,6 +131,29 @@ definitions:
       width:
         type: number
     type: object
+  domain.ProductBatches:
+    properties:
+      batch_number:
+        type: integer
+      current_quantity:
+        type: integer
+      current_temperature:
+        type: number
+      due_date:
+        type: string
+      initial_quantity:
+        type: integer
+      manufacturing_date:
+        type: string
+      manufacturing_hour:
+        type: integer
+      minimum_temperature:
+        type: number
+      product_id:
+        type: integer
+      section_id:
+        type: integer
+    type: object
   domain.ProductRecords:
     properties:
       last_update_date:
@@ -95,6 +164,121 @@ definitions:
         type: number
       sale_price:
         type: number
+    type: object
+  domain.PurchaseOrder:
+    properties:
+      buyer_id:
+        type: integer
+      carrier_id:
+        type: integer
+      id:
+        type: integer
+      order_date:
+        type: string
+      order_number:
+        type: string
+      order_status_id:
+        type: integer
+      tracking_code:
+        type: string
+      warehouse_id:
+        type: integer
+    required:
+    - buyer_id
+    - carrier_id
+    - id
+    - order_date
+    - order_number
+    - order_status_id
+    - tracking_code
+    - warehouse_id
+    type: object
+  domain.PurchaseOrdersResponse:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+      purchase_orders_count:
+        type: integer
+    type: object
+  domain.QtyOfRecords:
+    properties:
+      description:
+        type: string
+      product_id:
+        type: integer
+      records_count:
+        type: integer
+    type: object
+  domain.QtyOfSellers:
+    properties:
+      locality_id:
+        type: integer
+      locality_name:
+        type: string
+      sellers_count:
+        type: integer
+    type: object
+  domain.RequestBuyer:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+    type: object
+  domain.RequestProductBatches:
+    properties:
+      batch_number:
+        type: integer
+      current_quantity:
+        type: integer
+      current_temperature:
+        type: number
+      due_date:
+        type: string
+      initial_quantity:
+        type: integer
+      manufacturing_date:
+        type: string
+      manufacturing_hour:
+        type: integer
+      minimum_temperature:
+        type: number
+      product_id:
+        type: integer
+      section_id:
+        type: integer
+    required:
+    - batch_number
+    - current_quantity
+    - current_temperature
+    - due_date
+    - initial_quantity
+    - manufacturing_date
+    - manufacturing_hour
+    - minimum_temperature
+    - product_id
+    - section_id
+    type: object
+  domain.RequestProductRecords:
+    properties:
+      product_id:
+        type: integer
+      purchase_price:
+        type: number
+      sale_price:
+        type: number
+    required:
+    - product_id
+    - purchase_price
+    - sale_price
     type: object
   domain.RequestProductsUpdated:
     properties:
@@ -108,7 +292,7 @@ definitions:
         type: number
       length:
         type: number
-      netweight:
+      net_weight:
         type: number
       product_code:
         type: string
@@ -121,44 +305,40 @@ definitions:
       width:
         type: number
     type: object
-  schemes.Buyer:
-    properties:
-      card_number_id:
-        type: string
-      first_name:
-        type: string
-      id:
-        type: integer
-      last_name:
-        type: string
-    type: object
-  schemes.Employee:
-    properties:
-      card_number_id:
-        type: string
-      first_name:
-        type: string
-      id:
-        type: integer
-      last_name:
-        type: string
-      warehouse_id:
-        type: integer
-    type: object
-  schemes.JSONBadReqResult:
-    properties:
-      error: {}
-    type: object
-  schemes.JSONSuccessResult:
-    properties:
-      data: {}
-    type: object
-  schemes.Section:
+  domain.RequestSections:
     properties:
       current_capacity:
         type: integer
       current_temperature:
+        type: number
+      maximum_capacity:
         type: integer
+      minimum_capacity:
+        type: integer
+      minimum_temperature:
+        type: number
+      product_type_id:
+        type: integer
+      section_number:
+        type: integer
+      warehouse_id:
+        type: integer
+    required:
+    - current_capacity
+    - current_temperature
+    - maximum_capacity
+    - minimum_capacity
+    - minimum_temperature
+    - product_type_id
+    - section_number
+    - warehouse_id
+    type: object
+  domain.Section:
+    properties:
+      current_capacity:
+        type: integer
+      current_temperature:
+        type: number
       id:
         type: integer
       maximum_capacity:
@@ -166,7 +346,7 @@ definitions:
       minimum_capacity:
         type: integer
       minimum_temperature:
-        type: integer
+        type: number
       product_type_id:
         type: integer
       section_number:
@@ -174,7 +354,7 @@ definitions:
       warehouse_id:
         type: integer
     type: object
-  schemes.Seller:
+  domain.Seller:
     properties:
       address:
         type: string
@@ -184,31 +364,12 @@ definitions:
         type: string
       id:
         type: integer
-      telephone:
-        type: string
-    type: object
-  warehouses.CreateWarehouseInput:
-    properties:
-      address:
-        type: string
-      minimum_capacity:
-        minimum: 1
-        type: integer
-      minimum_temperature:
-        minimum: 1
+      locality_id:
         type: integer
       telephone:
         type: string
-      warehouse_code:
-        type: string
-    required:
-    - address
-    - minimum_capacity
-    - minimum_temperature
-    - telephone
-    - warehouse_code
     type: object
-  warehouses.UpdateWarehouseInput:
+  domain.UpdateWarehouseInput:
     properties:
       address:
         type: string
@@ -217,7 +378,7 @@ definitions:
         type: integer
       minimum_temperature:
         minimum: 0
-        type: integer
+        type: number
       telephone:
         type: string
       warehouse_code:
@@ -225,18 +386,20 @@ definitions:
     required:
     - warehouse_code
     type: object
-  warehouses.Warehouse:
+  domain.Warehouse:
     properties:
       address:
         type: string
       id:
         type: integer
+      locality_id:
+        type: integer
       minimum_capacity:
         minimum: 1
         type: integer
       minimum_temperature:
         minimum: 1
-        type: integer
+        type: number
       telephone:
         type: string
       warehouse_code:
@@ -247,6 +410,220 @@ definitions:
     - minimum_temperature
     - telephone
     - warehouse_code
+    type: object
+  github.com_marcoglnd_mercado-fresco-packmain_internal_employees_controller.requestEmployeeCreate:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      warehouse_id:
+        type: integer
+    required:
+    - card_number_id
+    - first_name
+    - last_name
+    - warehouse_id
+    type: object
+  github.com_marcoglnd_mercado-fresco-packmain_internal_employees_controller.requestEmployeeUpdate:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      warehouse_id:
+        type: integer
+    type: object
+  github.com_marcoglnd_mercado-fresco-packmain_internal_employees_domain.InboundOrder:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      inbound_orders_count:
+        type: integer
+      last_name:
+        type: string
+      warehouse_id:
+        type: integer
+    type: object
+  github.com_marcoglnd_mercado-fresco-packmain_internal_inbound_orders_controller.requestInboundOrderCreate:
+    properties:
+      employee_id:
+        type: integer
+      order_date:
+        type: string
+      order_number:
+        type: string
+      product_batch_id:
+        type: integer
+      warehouse_id:
+        type: integer
+    required:
+    - employee_id
+    - order_date
+    - order_number
+    - product_batch_id
+    - warehouse_id
+    type: object
+  github.com_marcoglnd_mercado-fresco-packmain_internal_inbound_orders_domain.InboundOrder:
+    properties:
+      employee_id:
+        type: integer
+      id:
+        type: integer
+      order_date:
+        type: string
+      order_number:
+        type: string
+      product_batch_id:
+        type: integer
+      warehouse_id:
+        type: integer
+    type: object
+  github.com_marcoglnd_mercado-fresco-packmain_internal_localities_controller.requestCreateLocality:
+    properties:
+      locality_name:
+        type: string
+      province_id:
+        type: integer
+    required:
+    - locality_name
+    - province_id
+    type: object
+  github.com_marcoglnd_mercado-fresco-packmain_internal_sellers_controller.requestCreate:
+    properties:
+      address:
+        type: string
+      cid:
+        type: integer
+      company_name:
+        type: string
+      locality_id:
+        type: integer
+      telephone:
+        type: string
+    required:
+    - address
+    - cid
+    - company_name
+    - locality_id
+    - telephone
+    type: object
+  github.com_marcoglnd_mercado-fresco-packmain_internal_sellers_controller.requestUpdate:
+    properties:
+      address:
+        type: string
+      cid:
+        type: integer
+      company_name:
+        type: string
+      locality_id:
+        type: integer
+      telephone:
+        type: string
+    type: object
+  internal_employees_controller.requestEmployeeCreate:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      warehouse_id:
+        type: integer
+    required:
+    - card_number_id
+    - first_name
+    - last_name
+    - warehouse_id
+    type: object
+  internal_employees_controller.requestEmployeeUpdate:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      warehouse_id:
+        type: integer
+    type: object
+  internal_inbound_orders_controller.requestInboundOrderCreate:
+    properties:
+      employee_id:
+        type: integer
+      order_date:
+        type: string
+      order_number:
+        type: string
+      product_batch_id:
+        type: integer
+      warehouse_id:
+        type: integer
+    required:
+    - employee_id
+    - order_date
+    - order_number
+    - product_batch_id
+    - warehouse_id
+    type: object
+  internal_localities_controller.requestCreateLocality:
+    properties:
+      locality_name:
+        type: string
+      province_id:
+        type: integer
+    required:
+    - locality_name
+    - province_id
+    type: object
+  internal_sellers_controller.requestCreate:
+    properties:
+      address:
+        type: string
+      cid:
+        type: integer
+      company_name:
+        type: string
+      locality_id:
+        type: integer
+      telephone:
+        type: string
+    required:
+    - address
+    - cid
+    - company_name
+    - locality_id
+    - telephone
+    type: object
+  internal_sellers_controller.requestUpdate:
+    properties:
+      address:
+        type: string
+      cid:
+        type: integer
+      company_name:
+        type: string
+      locality_id:
+        type: integer
+      telephone:
+        type: string
+    type: object
+  schemas.JSONBadReqResult:
+    properties:
+      error: {}
+    type: object
+  schemas.JSONSuccessResult:
+    properties:
+      data: {}
     type: object
 host: localhost:8080
 info:
@@ -261,6 +638,45 @@ info:
   title: MERCADO FRESCOS
   version: "1.0"
 paths:
+  /buyer/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get buyer by it's id
+      parameters:
+      - description: Buyer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Buyer'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Buyer by id
+      tags:
+      - Buyers
   /buyers:
     get:
       consumes:
@@ -273,15 +689,20 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - $ref: '#/definitions/schemas.JSONSuccessResult'
             - properties:
                 data:
-                  $ref: '#/definitions/schemes.Buyer'
+                  $ref: '#/definitions/domain.Buyer'
               type: object
-        "404":
-          description: Not Found
+        "500":
+          description: Internal Server Error
           schema:
-            $ref: '#/definitions/schemes.JSONBadReqResult'
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
       summary: List buyers
       tags:
       - Buyers
@@ -295,32 +716,42 @@ paths:
         name: buyer
         required: true
         schema:
-          $ref: '#/definitions/controllers.requestBuyer'
+          $ref: '#/definitions/domain.RequestBuyer'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/schemes.Buyer'
-        "404":
-          description: Not Found
+            $ref: '#/definitions/domain.Buyer'
+        "409":
+          description: Conflict
           schema:
-            $ref: '#/definitions/schemes.JSONBadReqResult'
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
         "422":
           description: Unprocessable Entity
           schema:
-            $ref: '#/definitions/schemes.JSONBadReqResult'
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
       summary: Create buyer
       tags:
-      - Buyers
+      - Buyer
   /buyers/{id}:
     delete:
       consumes:
       - application/json
       description: Delete existing buyer in list
       parameters:
-      - description: Buyer ID
+      - description: buyer ID
         in: path
         name: id
         required: true
@@ -332,7 +763,7 @@ paths:
           description: No Content
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - $ref: '#/definitions/schemas.JSONSuccessResult'
             - properties:
                 data:
                   type: string
@@ -341,7 +772,7 @@ paths:
           description: Bad Request
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -350,40 +781,12 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
               type: object
       summary: Delete buyer
-      tags:
-      - Buyers
-    get:
-      consumes:
-      - application/json
-      description: get buyer by its id
-      parameters:
-      - description: Buyer ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schemes.Buyer'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/schemes.JSONBadReqResult'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/schemes.JSONBadReqResult'
-      summary: Buyer by id
       tags:
       - Buyers
     patch:
@@ -401,25 +804,123 @@ paths:
         name: buyer
         required: true
         schema:
-          $ref: '#/definitions/controllers.requestBuyer'
+          $ref: '#/definitions/domain.RequestBuyer'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schemes.Buyer'
+            $ref: '#/definitions/domain.Buyer'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/schemes.JSONBadReqResult'
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/schemes.JSONBadReqResult'
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
       summary: Update buyer
       tags:
       - Buyers
+  /buyers/reportPurchaseOrders:
+    get:
+      consumes:
+      - application/json
+      description: Get quantity of purchase orders for buyer
+      parameters:
+      - description: buyer ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.PurchaseOrdersResponse'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Report purchase orders
+      tags:
+      - Buyers
+  /carriers:
+    post:
+      consumes:
+      - application/json
+      description: Add a new carrier checking for duplicate carriers cid before
+      parameters:
+      - description: Carrier to create
+        in: body
+        name: carrier
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreateCarrierInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Carrier'
+        "409":
+          description: Conflict
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Create carrier
+      tags:
+      - Carriers
   /employees:
     get:
       consumes:
@@ -432,16 +933,16 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - $ref: '#/definitions/schemas.JSONSuccessResult'
             - properties:
                 data:
-                  $ref: '#/definitions/schemes.Employee'
+                  $ref: '#/definitions/domain.Employee'
               type: object
-        "404":
-          description: Not Found
+        "500":
+          description: Internal Server Error
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -459,19 +960,19 @@ paths:
         name: employee
         required: true
         schema:
-          $ref: '#/definitions/controllers.requestEmployee'
+          $ref: '#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_employees_controller.requestEmployeeCreate'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/schemes.Employee'
-        "404":
-          description: Not Found
+            $ref: '#/definitions/domain.Employee'
+        "409":
+          description: Conflict
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -480,7 +981,7 @@ paths:
           description: Unprocessable Entity
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -506,7 +1007,7 @@ paths:
           description: No Content
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - $ref: '#/definitions/schemas.JSONSuccessResult'
             - properties:
                 data:
                   type: string
@@ -515,7 +1016,7 @@ paths:
           description: Bad Request
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -524,7 +1025,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -548,12 +1049,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schemes.Employee'
+            $ref: '#/definitions/domain.Employee'
         "400":
           description: Bad Request
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -562,7 +1063,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -585,19 +1086,19 @@ paths:
         name: employee
         required: true
         schema:
-          $ref: '#/definitions/controllers.requestEmployee'
+          $ref: '#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_employees_controller.requestEmployeeUpdate'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schemes.Employee'
+            $ref: '#/definitions/domain.Employee'
         "400":
           description: Bad Request
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -606,7 +1107,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -614,32 +1115,29 @@ paths:
       summary: Update employee
       tags:
       - Employees
-  /productRecords:
-    post:
+  /employees/reportInboundOrders:
+    get:
       consumes:
       - application/json
-      description: Create a new product records
+      description: Get quantity of inbound orders
+      parameters:
+      - description: employee ID
+        in: query
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
-            $ref: '#/definitions/domain.ProductRecords'
-        "409":
-          description: Conflict
-          schema:
-            allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
-            - properties:
-                error:
-                  type: string
-              type: object
-        "422":
-          description: Unprocessable Entity
+            $ref: '#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_employees_domain.InboundOrder'
+        "404":
+          description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -648,7 +1146,324 @@ paths:
           description: Internal Server Error
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Quantity of inbound orders
+      tags:
+      - Employees
+  /inboundOrders:
+    get:
+      consumes:
+      - application/json
+      description: get all inbound orders
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_inbound_orders_domain.InboundOrder'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: List Inbound Orders
+      tags:
+      - Inbound Orders
+    post:
+      consumes:
+      - application/json
+      description: Add a new inbound order to the list
+      parameters:
+      - description: Inbound Order to create
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_inbound_orders_controller.requestInboundOrderCreate'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_inbound_orders_domain.InboundOrder'
+        "409":
+          description: Conflict
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Create inbound order
+      tags:
+      - Inbound Orders
+  /localities:
+    post:
+      consumes:
+      - application/json
+      description: Add a new Locality to the list
+      parameters:
+      - description: locality to create
+        in: body
+        name: Locality
+        required: true
+        schema:
+          $ref: '#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_localities_controller.requestCreateLocality'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.GetLocality'
+              type: object
+        "409":
+          description: Conflict
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Create locality
+      tags:
+      - Localities
+  /localities/reportCarriers:
+    get:
+      consumes:
+      - application/json
+      description: Get quantity of carriers by locality id
+      parameters:
+      - description: locality ID
+        in: query
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONSuccessResult'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/domain.CarrierReport'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Report Carriers
+      tags:
+      - Carriers
+  /localities/reportSellers:
+    get:
+      consumes:
+      - application/json
+      description: get AllQtyOfSellers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.QtyOfSellers'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: List of reports AllQtyOfSellers
+      tags:
+      - Localities
+  /productBatches:
+    post:
+      consumes:
+      - application/json
+      description: Create a new product records
+      parameters:
+      - description: Product Batche to create
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/domain.RequestProductBatches'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.ProductBatches'
+        "409":
+          description: Conflict
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Create product records
+      tags:
+      - Products
+  /productRecords:
+    post:
+      consumes:
+      - application/json
+      description: Create a new product records
+      parameters:
+      - description: Create a new product record
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/domain.RequestProductRecords'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONSuccessResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.ProductRecords'
+              type: object
+        "409":
+          description: Conflict
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -668,7 +1483,7 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - $ref: '#/definitions/schemas.JSONSuccessResult'
             - properties:
                 data:
                   $ref: '#/definitions/domain.Product'
@@ -677,7 +1492,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -707,7 +1522,7 @@ paths:
           description: Conflict
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -716,7 +1531,7 @@ paths:
           description: Unprocessable Entity
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -742,7 +1557,7 @@ paths:
           description: No Content
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - $ref: '#/definitions/schemas.JSONSuccessResult'
             - properties:
                 data:
                   type: string
@@ -751,7 +1566,7 @@ paths:
           description: Bad Request
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -760,7 +1575,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -789,7 +1604,7 @@ paths:
           description: Bad Request
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -798,7 +1613,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -833,7 +1648,7 @@ paths:
           description: Bad Request
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -842,7 +1657,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -851,12 +1666,51 @@ paths:
           description: Unprocessable Entity
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
               type: object
       summary: Update product
+      tags:
+      - Products
+  /products/reportProducts:
+    get:
+      consumes:
+      - application/json
+      description: Get quantity of product in sections
+      parameters:
+      - description: section ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.ProductRecords'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Quantity of products report
       tags:
       - Products
   /products/reportRecords:
@@ -876,21 +1730,26 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/domain.ProductRecords'
-        "400":
-          description: Bad Request
-          schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONSuccessResult'
             - properties:
-                error:
-                  type: string
+                data:
+                  $ref: '#/definitions/domain.QtyOfRecords'
               type: object
         "404":
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -898,6 +1757,48 @@ paths:
       summary: Quantity of records
       tags:
       - Products
+  /purchaseOrders:
+    post:
+      consumes:
+      - application/json
+      description: Create a new purchase order
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.PurchaseOrder'
+        "409":
+          description: Conflict
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Create purchase order
+      tags:
+      - Purchase Orders
   /sections:
     get:
       consumes:
@@ -910,16 +1811,16 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - $ref: '#/definitions/schemas.JSONSuccessResult'
             - properties:
                 data:
-                  $ref: '#/definitions/schemes.Section'
+                  $ref: '#/definitions/domain.Section'
               type: object
         "404":
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -937,19 +1838,19 @@ paths:
         name: section
         required: true
         schema:
-          $ref: '#/definitions/controllers.requestSection'
+          $ref: '#/definitions/domain.RequestSections'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/schemes.Section'
+            $ref: '#/definitions/domain.Section'
         "404":
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -958,7 +1859,7 @@ paths:
           description: Unprocessable Entity
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -984,7 +1885,7 @@ paths:
           description: No Content
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - $ref: '#/definitions/schemas.JSONSuccessResult'
             - properties:
                 data:
                   type: string
@@ -993,7 +1894,7 @@ paths:
           description: Bad Request
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1002,7 +1903,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1026,12 +1927,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schemes.Section'
+            $ref: '#/definitions/domain.Section'
         "400":
           description: Bad Request
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1040,7 +1941,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1063,19 +1964,19 @@ paths:
         name: section
         required: true
         schema:
-          $ref: '#/definitions/controllers.requestSection'
+          $ref: '#/definitions/domain.RequestSections'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schemes.Section'
+            $ref: '#/definitions/domain.Section'
         "400":
           description: Bad Request
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1084,7 +1985,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1097,12 +1998,6 @@ paths:
       consumes:
       - application/json
       description: get all sellers
-      parameters:
-      - description: token
-        in: header
-        name: token
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -1110,16 +2005,16 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - $ref: '#/definitions/schemas.JSONSuccessResult'
             - properties:
                 data:
-                  $ref: '#/definitions/schemes.Seller'
+                  $ref: '#/definitions/domain.Seller'
               type: object
         "404":
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1132,29 +2027,24 @@ paths:
       - application/json
       description: Add a new Seller to the list
       parameters:
-      - description: token
-        in: header
-        name: token
-        required: true
-        type: string
       - description: seller to create
         in: body
         name: Seller
         required: true
         schema:
-          $ref: '#/definitions/controllers.requestSellers'
+          $ref: '#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_sellers_controller.requestCreate'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/schemes.Seller'
+            $ref: '#/definitions/domain.Seller'
         "404":
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1163,7 +2053,7 @@ paths:
           description: Unprocessable Entity
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1194,7 +2084,7 @@ paths:
           description: No Content
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - $ref: '#/definitions/schemas.JSONSuccessResult'
             - properties:
                 data:
                   type: string
@@ -1203,7 +2093,7 @@ paths:
           description: Bad Request
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1212,7 +2102,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1230,23 +2120,18 @@ paths:
         name: id
         required: true
         type: integer
-      - description: token
-        in: header
-        name: token
-        required: true
-        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schemes.Seller'
+            $ref: '#/definitions/domain.Seller'
         "400":
           description: Bad Request
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1255,7 +2140,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1283,19 +2168,19 @@ paths:
         name: seller
         required: true
         schema:
-          $ref: '#/definitions/controllers.requestSellers'
+          $ref: '#/definitions/github.com_marcoglnd_mercado-fresco-packmain_internal_sellers_controller.requestUpdate'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schemes.Seller'
+            $ref: '#/definitions/domain.Seller'
         "400":
           description: Bad Request
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1304,7 +2189,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1324,16 +2209,18 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - $ref: '#/definitions/schemas.JSONSuccessResult'
             - properties:
                 data:
-                  $ref: '#/definitions/warehouses.Warehouse'
+                  items:
+                    $ref: '#/definitions/domain.Warehouse'
+                  type: array
               type: object
         "422":
           description: Unprocessable Entity
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1351,19 +2238,28 @@ paths:
         name: warehouse
         required: true
         schema:
-          $ref: '#/definitions/warehouses.CreateWarehouseInput'
+          $ref: '#/definitions/domain.CreateWarehouseInput'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/warehouses.Warehouse'
+            $ref: '#/definitions/domain.Warehouse'
+        "409":
+          description: Conflict
+          schema:
+            allOf:
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
+            - properties:
+                error:
+                  type: string
+              type: object
         "422":
           description: Unprocessable Entity
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1389,16 +2285,16 @@ paths:
           description: No Content
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONSuccessResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
-                data:
+                error:
                   type: string
               type: object
         "400":
           description: Bad Request
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1407,7 +2303,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1431,12 +2327,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/warehouses.Warehouse'
+            $ref: '#/definitions/domain.Warehouse'
         "400":
           description: Bad Request
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1445,7 +2341,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1469,19 +2365,19 @@ paths:
         name: warehouse
         required: true
         schema:
-          $ref: '#/definitions/warehouses.UpdateWarehouseInput'
+          $ref: '#/definitions/domain.UpdateWarehouseInput'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/warehouses.Warehouse'
+            $ref: '#/definitions/domain.Warehouse'
         "400":
           description: Bad Request
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1490,7 +2386,7 @@ paths:
           description: Not Found
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
@@ -1499,7 +2395,7 @@ paths:
           description: Unprocessable Entity
           schema:
             allOf:
-            - $ref: '#/definitions/schemes.JSONBadReqResult'
+            - $ref: '#/definitions/schemas.JSONBadReqResult'
             - properties:
                 error:
                   type: string
