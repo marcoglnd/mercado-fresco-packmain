@@ -26,7 +26,7 @@ CREATE TABLE `products` (
   `seller_id` int NOT NULL
 );
 
-CREATE TABLE `warehouse` (
+CREATE TABLE `warehouses` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `address` varchar(255) NOT NULL,
   `telephone` varchar(255) NOT NULL,
@@ -125,7 +125,7 @@ CREATE TABLE `carriers` (
 
 CREATE TABLE `inbound_orders` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
-    `order_date` DATETIME(6),
+    `order_date` DATETIME(6) NOT NULL,
     `order_number` VARCHAR(255) NOT NULL UNIQUE,
     `employee_id` INT NOT NULL,
     `product_batch_id` INT NOT NULL,
@@ -177,13 +177,13 @@ ALTER TABLE `products` ADD FOREIGN KEY (`seller_id`) REFERENCES `sellers` (`id`)
 
 ALTER TABLE `products` ADD FOREIGN KEY (`product_type_id`) REFERENCES `products_types` (`id`);
 
-ALTER TABLE `sections` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouse` (`id`);
+ALTER TABLE `sections` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`id`);
 
 ALTER TABLE `sections` ADD FOREIGN KEY (`product_type_id`) REFERENCES `products_types` (`id`);
 
-ALTER TABLE `employees` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouse` (`id`);
+ALTER TABLE `employees` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`id`);
 
-ALTER TABLE `warehouse` ADD FOREIGN KEY (`locality_id`) REFERENCES `localities` (`id`);
+ALTER TABLE `warehouses` ADD FOREIGN KEY (`locality_id`) REFERENCES `localities` (`id`);
 
 ALTER TABLE `sellers` ADD FOREIGN KEY (`locality_id`) REFERENCES `localities` (`id`);
 
@@ -201,7 +201,7 @@ ALTER TABLE `purchase_orders` ADD FOREIGN KEY (`carrier_id`) REFERENCES `carrier
 
 ALTER TABLE `purchase_orders` ADD FOREIGN KEY (`order_status_id`) REFERENCES `order_status` (`id`);
 
-ALTER TABLE `purchase_orders` ADD FOREIGN KEY (`wareHouse_id`) REFERENCES `warehouse` (`id`);
+ALTER TABLE `purchase_orders` ADD FOREIGN KEY (`wareHouse_id`) REFERENCES `warehouses` (`id`);
 
 ALTER TABLE `carriers` ADD FOREIGN KEY (`locality_id`) REFERENCES `localities` (`id`);
 
@@ -209,4 +209,4 @@ ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`employee_id`) REFERENCES `employe
 
 ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`product_batch_id`) REFERENCES `product_batches` (`id`);
 
-ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouse` (`id`);
+ALTER TABLE `inbound_orders` ADD FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`id`);
