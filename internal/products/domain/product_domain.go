@@ -34,6 +34,9 @@ type Repository interface {
 
 	CreateProductBatches(ctx context.Context, batch *ProductBatches) (int64, error)
 	GetProductBatchesById(ctx context.Context, id int64) (*ProductBatches, error)
+
+	GetQtdProductsBySectionId(ctx context.Context, id int64) (*QtdOfProducts, error)
+	GetQtdOfAllProducts(ctx context.Context) (*[]QtdOfProducts, error)
 }
 
 type Service interface {
@@ -51,6 +54,9 @@ type Service interface {
 
 	CreateProductBatches(ctx context.Context, batch *ProductBatches) (int64, error)
 	GetProductBatchesById(ctx context.Context, id int64) (*ProductBatches, error)
+
+	GetQtdProductsBySectionId(ctx context.Context, id int64) (*QtdOfProducts, error)
+	GetQtdOfAllProducts(ctx context.Context) (*[]QtdOfProducts, error)
 }
 
 type RequestProducts struct {
@@ -117,16 +123,16 @@ type QtyOfRecords struct {
 // 	SectionId          int64   `json:"section_id"`
 // }
 type RequestProductBatches struct {
-	BatchNumber        int64   `json:"batch_number"`
-	CurrentQuantity    int64   `json:"current_quantity"`
-	CurrentTemperature float64 `json:"current_temperature"`
-	DueDate            string  `json:"due_date"`
-	InitialQuantity    int64   `json:"initial_quantity"`
-	ManufacturingDate  string  `json:"manufacturing_date"`
-	ManufacturingHour  string  `json:"manufacturing_hour"`
-	MinimumTemperature float64 `json:"minimum_temperature"`
-	ProductId          int64   `json:"product_id"`
-	SectionId          int64   `json:"section_id"`
+	BatchNumber        int64   `json:"batch_number" binding:"required"`
+	CurrentQuantity    int64   `json:"current_quantity" binding:"required"`
+	CurrentTemperature float64 `json:"current_temperature" binding:"required"`
+	DueDate            string  `json:"due_date" binding:"required"`
+	InitialQuantity    int64   `json:"initial_quantity" binding:"required"`
+	ManufacturingDate  string  `json:"manufacturing_date" binding:"required"`
+	ManufacturingHour  int64   `json:"manufacturing_hour" binding:"required"`
+	MinimumTemperature float64 `json:"minimum_temperature" binding:"required"`
+	ProductId          int64   `json:"product_id" binding:"required"`
+	SectionId          int64   `json:"section_id" binding:"required"`
 }
 
 type ProductBatches struct {
@@ -136,8 +142,17 @@ type ProductBatches struct {
 	DueDate            string  `json:"due_date"`
 	InitialQuantity    int64   `json:"initial_quantity"`
 	ManufacturingDate  string  `json:"manufacturing_date"`
-	ManufacturingHour  string  `json:"manufacturing_hour"`
+	ManufacturingHour  int64   `json:"manufacturing_hour"`
 	MinimumTemperature float64 `json:"minimum_temperature"`
 	ProductId          int64   `json:"product_id"`
 	SectionId          int64   `json:"section_id"`
+}
+
+type RequestQtdProductsBySectionId struct {
+	Id int64 `form:"id" binding:"required,min=1"`
+}
+type QtdOfProducts struct {
+	SectionId     int64 `json:"section_id"`
+	SectionNumber int64 `json:"section_number"`
+	ProductsCount int64 `json:"products_count"`
 }

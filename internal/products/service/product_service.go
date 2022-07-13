@@ -158,3 +158,21 @@ func (s *service) GetProductBatchesById(ctx context.Context, id int64) (*domain.
 	}
 	return newBatch, nil
 }
+
+func (s service) GetQtdProductsBySectionId(ctx context.Context, id int64) (*domain.QtdOfProducts, error) {
+	report, err := s.repository.GetQtdProductsBySectionId(ctx, id)
+	if err != nil {
+		return report, err
+	}
+
+	return report, nil
+}
+
+func (s service) GetQtdOfAllProducts(ctx context.Context) (*[]domain.QtdOfProducts, error) {
+	report, err := s.repository.GetQtdOfAllProducts(ctx)
+	if err != nil {
+		return report, err
+	}
+
+	return report, nil
+}

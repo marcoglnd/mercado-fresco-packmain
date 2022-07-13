@@ -344,3 +344,51 @@ func (r *repository) GetQtyOfAllRecords(ctx context.Context) (*[]domain.QtyOfRec
 
 	return &reports, nil
 }
+
+func (r *repository) GetQtdProductsBySectionId(ctx context.Context, id int64) (*domain.QtdOfProducts, error) {
+	row := r.db.QueryRowContext(ctx, sqlGetQtdProductsBySectionId, id)
+
+	report := domain.QtdOfProducts{}
+
+	err := row.Scan(
+		&report.SectionId,
+		&report.SectionNumber,
+		&report.ProductsCount,
+	)
+	if errors.Is(err, sql.ErrNoRows) {
+		return &report, domain.ErrIDNotFound
+	}
+
+	if err != nil {
+		return &report, err
+	}
+
+	return &report, nil
+}
+
+func (r *repository) GetQtdOfAllProducts(ctx context.Context) (*[]domain.QtdOfProducts, error) {
+	reports := []domain.QtdOfProducts{}
+
+	rows, err := r.db.QueryContext(ctx, sqlGetQtdProductsInSection)
+	if err != nil {
+		return &reports, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var report domain.QtdOfProducts
+
+		if err := rows.Scan(
+			&report.SectionId,
+			&report.SectionNumber,
+			&report.ProductsCount,
+		); err != nil {
+			return &reports, err
+		}
+
+		reports = append(reports, report)
+	}
+
+	return &reports, nil
+}

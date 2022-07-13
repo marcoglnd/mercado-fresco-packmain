@@ -141,7 +141,7 @@ CREATE TABLE `product_batches` (
     `due_date` DATETIME(6),
     `initial_quantity` INT NOT NULL,
     `manufacturing_date` DATETIME(6),
-    `manufacturing_hour` DATETIME(6),
+    `manufacturing_hour` INT,
     `minimum_temperature` DECIMAL(19,2),
     `product_id` INT NOT NULL,
     `section_id` INT NOT NULL,
