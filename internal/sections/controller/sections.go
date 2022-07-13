@@ -23,8 +23,8 @@ func NewSection(s domain.Service) *SectionsController {
 // @Description get all sections
 // @Accept json
 // @Produce json
-// @Success 200 {object} schemes.JSONSuccessResult{data=schemes.Section}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Success 200 {object} schemas.JSONSuccessResult{data=domain.Section}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sections [get]
 func (c *SectionsController) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -47,9 +47,9 @@ func (c *SectionsController) GetAll() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Section ID"
-// @Success 200 {object} schemes.Section
-// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Success 200 {object} domain.Section
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sections/{id} [get]
 func (c *SectionsController) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -73,9 +73,9 @@ func (c *SectionsController) GetById() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param section body requestSection true "Section to create"
-// @Success 201 {object} schemes.Section
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 422 {object} schemes.JSONBadReqResult{error=string}
+// @Success 201 {object} schemas.Section
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 422 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sections [post]
 func (c *SectionsController) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -112,9 +112,9 @@ func (c *SectionsController) Create() gin.HandlerFunc {
 // @Produce json
 // @Param id path int true "Section ID"
 // @Param section body requestSection true "Section to update"
-// @Success 200 {object} schemes.Section
-// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Success 200 {object} schemas.Section
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sections/{id} [patch]
 func (c *SectionsController) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -158,9 +158,9 @@ func (c *SectionsController) Update() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Section ID"
-// @Success 204 {object} schemes.JSONSuccessResult{data=string}
-// @Failure 400 {object} schemes.JSONBadReqResult{error=string}
-// @Failure 404 {object} schemes.JSONBadReqResult{error=string}
+// @Success 204 {object} schemas.JSONSuccessResult{data=string}
+// @Failure 400 {object} schemas.JSONBadReqResult{error=string}
+// @Failure 404 {object} schemas.JSONBadReqResult{error=string}
 // @Router /sections/{id} [delete]
 func (c *SectionsController) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
